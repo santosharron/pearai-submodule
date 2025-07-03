@@ -1,0 +1,34 @@
+<svg width="400" height="250" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glowGradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(200 200) rotate(90) scale(180 300)">
+      <stop offset="0%" stop-color="#007BFF" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#007BFF" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="buttonGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="white" />
+      <stop offset="100%" stop-color="#007BFF" />
+    </linearGradient>
+
+    <filter id="blurBg" x="0" y="0" width="400" height="250" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="25" result="blur" />
+    </filter>
+  </defs>
+
+  <!-- Background Glow -->
+  <g filter="url(#blurBg)">
+    <ellipse cx="200" cy="150" rx="180" ry="90" fill="url(#glowGradient)" />
+  </g>
+
+  <!-- Central Button -->
+  <rect x="50" y="200" width="300" height="36" rx="12" fill="url(#buttonGradient)" fill-opacity="0.9" />
+
+  <!-- Magnifying Glass Icon (symbolic) -->
+  <circle cx="70" cy="218" r="7" stroke="#007BFF" stroke-width="2" fill="white" />
+  <line x1="75" y1="223" x2="80" y2="228" stroke="#007BFF" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Text Bar Placeholder -->
+  <rect x="90" y="212" width="130" height="10" rx="5" fill="#007BFF" fill-opacity="0.3" />
+</svg>
