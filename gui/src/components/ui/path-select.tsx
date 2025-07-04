@@ -16,7 +16,7 @@ interface PathSelectProps {
   className?: string;
 }
 
-export function PathSelect({ defaultPath = "~/pearai-projects/", onPathChange, className }: PathSelectProps) {
+export function PathSelect({ defaultPath = "~/dropstone-projects/", onPathChange, className }: PathSelectProps) {
   const [path, setPath] = useState(defaultPath);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

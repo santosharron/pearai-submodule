@@ -219,7 +219,7 @@ function StepContainer({
               text={stripImages(item.message.content)}
               color={lightGray}
             />
-            
+
             <HeaderButtonWithText
               text="Regenerate"
               onClick={(e) => {
@@ -233,7 +233,7 @@ function StepContainer({
                 strokeWidth={2}
               />
             </HeaderButtonWithText>
-          
+
             <HeaderButtonWithText text="Delete Message">
               <TrashIcon
                 color={lightGray}
@@ -260,7 +260,7 @@ function StepContainer({
             }}
           >
             <ArrowLeftEndOnRectangleIcon className="w-4 h-4" />
-            Add to PearAI chat context {isLast && <span className="ml-1 text-xs opacity-60"><kbd className="font-mono">{getMetaKeyLabel()}</kbd> <kbd className="font-mono bg-vscButtonBackground/10 px-1">G</kbd></span>}
+            Add to Dropstone chat context {isLast && <span className="ml-1 text-xs opacity-60"><kbd className="font-mono">{getMetaKeyLabel()}</kbd> <kbd className="font-mono bg-vscButtonBackground/10 px-1">G</kbd></span>}
           </HeaderButtonWithText>
         )}
       </div>

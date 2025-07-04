@@ -175,7 +175,7 @@ function HelpPage() {
 
       <div className="flex flex-col items-center justify-center w-full">
         <ButtonContainer>
-          <StyledButton
+          {/* <StyledButton
             className={`inline-flex flex-shrink-0 ${buttonBorders}`}
             themeType={themeType}
             onClick={() => {
@@ -192,36 +192,38 @@ function HelpPage() {
             className={`${buttonBorders}`}
           >
             Dropstone Website
-          </StyledLink>
+          </StyledLink> */}
 
-          <StyledButton
+          <StyledLink
             className={`inline-flex flex-shrink-0 ${buttonBorders}`}
+            href="https://dropstone.io/usage/"
+            target="_blank"
             themeType={themeType}
-            onClick={() => {
-              navigate("/stats");
-            }}
+            // onClick={() => {
+            //   navigate("/stats");
+            // }}
           >
-            View Usage
-          </StyledButton>
-          <StyledButton
+            Usage
+          </StyledLink>
+          {/* <StyledButton
             className={`inline-flex flex-shrink-0 ${buttonBorders}`}
             themeType={themeType}
             onClick={handleOpenTutorial}
           >
             Open Tutorial
-          </StyledButton>
+          </StyledButton> */}
           <StyledLink
             className={`flex items-center justify-center gap-2 ${buttonBorders}`}
-            href="https://github.com/trypear/pearai-app/"
+            href="https://dropstone.io/dashboard/"
             target="_blank"
             themeType={themeType}
           >
-            <span className="icon">
+            {/* <span className="icon">
               <GithubSVG />
-            </span>
-            Github
+            </span> */}
+            Dashboard
           </StyledLink>
-          <StyledLink
+          {/* <StyledLink
             className={`flex items-center justify-center gap-2 ${buttonBorders}`}
             href="https://discord.gg/Uw9mVvFUk3"
             target="_blank"
@@ -231,7 +233,7 @@ function HelpPage() {
               <DiscordSVG />
             </span>
             Discord
-          </StyledLink>
+          </StyledLink> */}
         </ButtonContainer>
       </div>
 

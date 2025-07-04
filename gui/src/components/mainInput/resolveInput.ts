@@ -26,7 +26,7 @@ function formatMemoriesAsContext(memories: { content: string }[]): ContextItemWi
       itemId: "memories",
       providerTitle: "memories"
     },
-    name: "PearAI Memories",
+    name: "Dropstone Memories",
     description: "User memories and context",
     content: "<Beginning of relevant user context separated by comma, refer these only if required>\n" +
             memories.map(m => m.content).join(", ") + "\n" +
@@ -120,7 +120,7 @@ async function resolveEditorContent(
   const history = state.state?.history || [];
   const memories = state.state?.memories || [];
 
-  // following is the condition to check for very first msg in chat 
+  // following is the condition to check for very first msg in chat
   // Verifies that no messages have content yet, meaning this is truly the first message being composed
   const isFirstMessage = history.length <= 2 && history.every(item => !item?.message?.content);
   if (isFirstMessage && memories.length > 0) {

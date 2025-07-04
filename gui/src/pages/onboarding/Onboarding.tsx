@@ -61,9 +61,9 @@ function Onboarding() {
         }}
         className="mx-3"
       >
-        Note: Having trouble logging in? Open PearAI from the dashboard on the{" "}
+        Note: Having trouble logging in? Open Dropstone from the dashboard on the{" "}
         <a
-          href="https://trypear.ai/dashboard"
+          href="https://dropstone.io/dashboard"
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { useContext, useMemo, useState } from "react";
 import { IdeMessengerContext } from "@/context/IdeMessenger";
 import { useDropstoneAuth } from "@/context/DropstoneAuthContext";
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight, ExternalLink, X } from "lucide-react";
 import { useWebviewListener } from "@/hooks/useWebviewListener";
 import { useAccountSettings } from "./hooks/useAccountSettings";
 import { Eye, Files } from "lucide-react";
@@ -71,7 +71,15 @@ const AccountSettings = () => {
   const userDisplayInfo = dropstoneUserInfo || accountDetails;
 
   return (
-    <div className="border border-solidd h-full flex-col justify-start items-start gap-5 inline-flex overflow-auto no-scrollbar">
+    <div className="border border-solidd h-full flex-col justify-start items-start gap-5 inline-flex overflow-auto no-scrollbar relative">
+      {/* Close Button */}
+      <button
+        className="absolute top-2 right-2 z-10 p-2 rounded-full bg-transparent border-none text-[#888888] cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={() => ideMessenger.post("closeOverlay", undefined)}
+        aria-label="Close"
+      >
+        <X size={20} />
+      </button>
       <div className="border border-solidd w-full flex flex-col justify-start items-start gap-5">
         <div className="justify-center items-center inline-flex">
           <div className="text-lg font-['SF Pro']">General</div>
@@ -290,14 +298,17 @@ const AccountSettings = () => {
           </>
         ) : (
           <div className="self-stretch rounded-lg justify-start items-center gap-3 inline-flex">
-            <Button onClick={() => {
-              // Prioritize Dropstone authentication
-              if (showDropstoneAuthDialog) {
-                showDropstoneAuthDialog();
-              } else {
-                handleLogin();
-              }
-            }}>
+            <Button
+              className="!bg-blue-600 !text-white !border-none hover:!bg-blue-700 rounded-full px-6 py-2 font-medium transition-colors duration-200"
+              onClick={() => {
+                // Prioritize Dropstone authentication
+                if (showDropstoneAuthDialog) {
+                  showDropstoneAuthDialog();
+                } else {
+                  handleLogin();
+                }
+              }}
+            >
               Log in
             </Button>
             <div className="opacity-50 text-xs font-normal font-['SF Pro']">

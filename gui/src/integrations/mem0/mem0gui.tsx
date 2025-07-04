@@ -455,7 +455,7 @@ export function DeprecatedMem0GUI() {
             ) : memories.length === 0 ? (
             <StatusCard
                 title="No Memories Yet"
-                description="PearAI will automatically generate memories by learning about your coding style and preferences as we chat! "
+                description="Dropstone will automatically generate memories by learning about your coding style and preferences as we chat! "
                 icon="brain"
                 showSparkles
                 secondaryDescription="You can also add memories manually by clicking the + button above!"

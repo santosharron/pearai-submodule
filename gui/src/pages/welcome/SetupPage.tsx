@@ -175,7 +175,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
   };
 
   const handleSignUp = () => {
-    ideMessenger.post("openUrl", "https://trypear.ai/signup");
+    ideMessenger.post("openUrl", "https://dropstone.io/signup");
   };
 
   //#endregion Sign In

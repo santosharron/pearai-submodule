@@ -191,7 +191,7 @@ export const CreatorFeedback = () => {
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <label htmlFor="contactConsent" className="text-sm font-normal">
-                I'm open to being contacted by the PearAI team.
+                I'm open to being contacted by the Dropstone team.
               </label>
             </div>
           </div>

@@ -609,7 +609,7 @@ function PerplexityGUI() {
 
 const tutorialContent = {
   goodFor: "Searching documentation, debugging errors, quick look-ups",
-  notGoodFor: "Direct feature implementations (use PearAI Creator instead)",
+  notGoodFor: "Direct feature implementations (use Dropstone Creator instead)",
   example: {
     text: '"What\'s new in the latest python version?"',
     copyText: "What's new in the latest python version?",

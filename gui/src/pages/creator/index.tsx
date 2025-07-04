@@ -104,7 +104,7 @@ export const CreatorOverlay = () => {
     Partial<CSSStyleDeclaration> | undefined
   >();
   const [projectConfig, setProjectConfig] = useState<ProjectConfig>({
-    path: "~/Documents/PearAI", // TODO: FIX FOR WINDOWS MAYBE?
+    path: "~/Documents/Dropstone", // TODO: FIX FOR WINDOWS MAYBE?
     name: uniqueNamesGenerator({
       dictionaries: [adjectives, colors, animals],
       style: "lowerCase",

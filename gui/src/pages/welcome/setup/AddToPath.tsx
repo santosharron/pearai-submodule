@@ -48,7 +48,7 @@ const Terminal = () => {
             $&nbsp;
           </span>
           <span className="text-[var(--vscode-terminal-ansiCyan)]">
-            pearai .
+            dropstone .
           </span>
           <span className="ml-1 animate-pulse">▋</span>
         </div>

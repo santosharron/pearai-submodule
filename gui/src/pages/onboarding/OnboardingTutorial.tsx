@@ -157,7 +157,7 @@ const OnboardingTutorial: React.FC<OnboardingTutorialProps> = ({
               className="no-underline font-mono decoration-current hover:underline cursor-pointer font-bold"
               onClick={() => ideMessenger.post("showTutorial", undefined)}
             >
-              pearai_tutorial.py
+              dropstone_tutorial.py
             </kbd>{" "}
             to open a sample file
           </span>
@@ -281,10 +281,10 @@ const OnboardingTutorial: React.FC<OnboardingTutorialProps> = ({
             there! <br />
             <br />
             If you have questions, feel free to ask us in our{" "}
-            <a href="https://discord.gg/7QMraJUsQt">Discord</a>, or through{" "}
-            <a href="mailto:pear@trypear.ai">email</a>.
+            <a href="https://dropstone.io/contact">Contact Section</a>, or through{" "}
+            <a href="mailto:support@dropstone.io">Email</a>.
           </p>
-          Enjoy PearAI!
+          Enjoy Dropstone!
         </>
       ),
     },
@@ -430,7 +430,7 @@ const OnboardingTutorial: React.FC<OnboardingTutorialProps> = ({
           <div className="flex flex-col justify-between mt-1">
             <div>
               <h2 className="text-lg font-semibold tracking-tight mb-0">
-                Learn how to use PearAI chat
+                Learn how to use Dropstone chat
               </h2>
 
               <ContentWrapper

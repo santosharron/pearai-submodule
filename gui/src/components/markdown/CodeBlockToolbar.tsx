@@ -89,7 +89,7 @@ function CodeBlockToolBar(props: CodeBlockToolBarProps) {
 			</div>
       <SecondDiv bottom={props.bottom || false}>
         {isPerplexityMode() && <HeaderButtonWithText
-          text="Add to PearAI chat context"
+          text="Add to Dropstone chat context"
           style={{ backgroundColor: vscEditorBackground }}
           onClick={() => {
             ideMessenger.post("addPerplexityContext", { text: props.text, language: props.language });

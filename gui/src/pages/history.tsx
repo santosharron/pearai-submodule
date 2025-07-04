@@ -452,7 +452,7 @@ export function History({
       </div>
       <div className="flex-grow"></div>
       <div className="text-center text-sm mb-4 text-gray-500">
-        All session data is saved in ~/.pearai/sessions
+        All session data is saved in ~/.dropstone/sessions
       </div>
     </div>
   );

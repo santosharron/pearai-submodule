@@ -169,7 +169,7 @@ export const PlanEditor: React.FC<PlanEditorProps> = ({
                     className={`flex flex-col ${msg.role === "user" ? "border-2 border-white" : ""}`}
                   >
                     <div className="text-xs text-[var(--foreground)] opacity-70 mb-1 flex justify-start gap-4">
-                      <span className="text-nowrap">{msg.role === "assistant" ? "PearAI Creator" : "You"}</span>
+                      <span className="text-nowrap">{msg.role === "assistant" ? "Dropstone Creator" : "You"}</span>
                       {
                         // Show loading dots for the latest assistant message when it's empty and streaming
                         isStreaming &&

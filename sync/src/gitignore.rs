@@ -12,7 +12,7 @@ pub fn local_find_gitignores(workspace_dir: &Path) -> io::Result<HashMap<PathBuf
             gitignores.extend(local_find_gitignores(&path)?);
         } else {
             match path.file_name().and_then(|name| name.to_str()) {
-                Some(file_name) if file_name.ends_with(".gitignore") || file_name.ends_with(".pearaiignore") => {
+                Some(file_name) if file_name.ends_with(".gitignore") || file_name.ends_with(".dropstoneignore") => {
                     let mut contents = String::new();
                     fs::File::open(&path)?.read_to_string(&mut contents)?;
                     gitignores.insert(path, contents);
@@ -49,10 +49,10 @@ mod tests {
         let temp_dir = tempdir()?;
         let temp_path = temp_dir.path();
 
-        // Create some directories and .gitignore/.pearaiignore files
+        // Create some directories and .gitignore/.dropstoneignore files
         let dir_structure = [
             ("dir1", Some(".gitignore"), "node_modules/"),
-            ("dir2", Some(".pearaiignore"), "target/"),
+            ("dir2", Some(".dropstoneignore"), "target/"),
             ("dir3", None, ""),
         ];
 

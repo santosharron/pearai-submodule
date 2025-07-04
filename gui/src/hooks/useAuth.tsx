@@ -42,7 +42,7 @@ export function useAuth(): {
             setDialogMessage(
               <ConfirmationDialog
                 text={
-                  "Welcome to Dropstone for teams! Using the toggle in the bottom right, you can switch between your local profile (defined by config.json) and team profiles (defined in the Dropstone for teams web app). Each profile defines a set of models, slash commands, context providers, and other settings to customize PearAI."
+                  "Welcome to Dropstone for teams! Using the toggle in the bottom right, you can switch between your local profile (defined by config.json) and team profiles (defined in the Dropstone for teams web app). Each profile defines a set of models, slash commands, context providers, and other settings to customize Dropstone."
                 }
                 hideCancelButton={true}
                 confirmText="Ok"
@@ -61,7 +61,7 @@ export function useAuth(): {
       setDialogMessage(
         <ConfirmationDialog
           confirmText="Yes, log out"
-          text={"Are you sure you want to log out of PearAI?"}
+          text={"Are you sure you want to log out of Dropstone?"}
           onConfirm={() => {
             ideMessenger.request("logoutOfControlPlane", undefined);
           }}

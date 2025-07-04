@@ -146,7 +146,7 @@ function ProfileSwitcher(props: {}) {
         !lastControlServerBetaEnabledStatus && enableControlServerBeta;
 
       if (shouldShowPopup) {
-        ideMessenger.ide.infoPopup("PearAI for Teams enabled");
+        ideMessenger.ide.infoPopup("Dropstone for Teams enabled");
       }
 
       setControlServerBetaEnabled(enableControlServerBeta);
@@ -238,7 +238,7 @@ function ProfileSwitcher(props: {}) {
         onClick={() => {
           ideMessenger.post("openConfigJson", undefined);
         }}
-        text="Configure PearAI"
+        text="Configure Dropstone"
       >
         <CogIcon width="1.4em" height="1.4em" />
       </HeaderButtonWithText>

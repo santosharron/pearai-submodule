@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input } from '..';
 import styled from 'styled-components';
 import { lightGray, vscBackground, vscForeground } from '..';
+import { X } from 'lucide-react';
 
 const DialogOverlay = styled.div`
   position: fixed;
@@ -185,6 +186,33 @@ const SuccessMessage = styled.div`
   text-align: center;
 `;
 
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 interface DropstoneAuthDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -242,7 +270,7 @@ export const DropstoneAuthDialog: React.FC<DropstoneAuthDialogProps> = ({
   };
 
   const openDropstoneServer = () => {
-    window.open('http://localhost:3000', '_blank');
+    window.open('http://localhost:3002/dashboard', '_blank');
   };
 
   const handleClose = () => {
@@ -258,6 +286,9 @@ export const DropstoneAuthDialog: React.FC<DropstoneAuthDialogProps> = ({
   return (
     <DialogOverlay onClick={(e) => e.target === e.currentTarget && handleClose()}>
       <DialogContent>
+        <CloseButton onClick={handleClose} disabled={isLoading}>
+          <X size={20} />
+        </CloseButton>
         <DialogTitle>Welcome back</DialogTitle>
         <DialogSubtitle>Sign in to your account to continue</DialogSubtitle>
 
