@@ -69,6 +69,7 @@ export type ToIdeFromWebviewProtocol = ToIdeFromWebviewOrCoreProtocol & {
   replaceWorkspaceFolder: [{ path: string }, void];
   getWorkspacePaths: [undefined, string[]];
   pearSelectFolder: [{ openLabel?: string; title?: string; defaultPath?: string }, string | undefined];
+  changeColorScheme: [{ isDark: boolean }, void];
 };
 
 export type ToWebviewFromIdeProtocol = ToWebviewFromIdeOrCoreProtocol & {

@@ -19,7 +19,7 @@ export interface AuthSyncListener {
 
 /**
  * Centralized authentication manager for Dropstone
- * Syncs authentication across PearAI-Roo-Code, GUI, and Core
+ * Syncs authentication across Dropstone-Agent, GUI, and Core
  */
 export class AuthManager {
   private static instance: AuthManager | null = null;
@@ -232,7 +232,7 @@ export class AuthManager {
   private async syncToAllComponents(authInfo: DropstoneAuthInfo): Promise<void> {
     const syncPromises: Promise<void>[] = [];
 
-    // Sync to PearAI-Roo-Code extension (via postMessage)
+    // Sync to Dropstone-Agent extension (via postMessage)
     syncPromises.push(this.syncToRooCodeExtension(authInfo));
 
     // Sync to GUI (via localStorage and context)
@@ -250,7 +250,7 @@ export class AuthManager {
   private async clearFromAllComponents(): Promise<void> {
     const clearPromises: Promise<void>[] = [];
 
-    // Clear from PearAI-Roo-Code extension
+    // Clear from Dropstone-Agent extension
     clearPromises.push(this.clearFromRooCodeExtension());
 
     // Clear from GUI
@@ -263,7 +263,7 @@ export class AuthManager {
   }
 
   /**
-   * Sync authentication to PearAI-Roo-Code extension
+   * Sync authentication to Dropstone-Agent extension
    */
   private async syncToRooCodeExtension(authInfo: DropstoneAuthInfo): Promise<void> {
     try {
@@ -315,7 +315,7 @@ export class AuthManager {
   }
 
   /**
-   * Clear authentication from PearAI-Roo-Code extension
+   * Clear authentication from Dropstone-Agent extension
    */
   private async clearFromRooCodeExtension(): Promise<void> {
     try {

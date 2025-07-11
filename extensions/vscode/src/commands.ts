@@ -1,4 +1,4 @@
-/* Note: This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue)." */
+/* Note: This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. dropstone-submodule is a fork of Continue (https://github.com/continuedev/continue)." */
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import * as fs from "node:fs";
@@ -515,8 +515,8 @@ const commandsMap: (
     "dropstone.viewLogs": async () => {
       captureCommandTelemetry("viewLogs");
 
-      // Open ~/.pearai/dropstone.log
-      const logFile = path.join(os.homedir(), ".pearai", "dropstone.log");
+      // Open ~/.dropstone/dropstone.log
+      const logFile = path.join(os.homedir(), ".dropstone", "dropstone.log");
       // Make sure the file/directory exist
       if (!fs.existsSync(logFile)) {
         fs.mkdirSync(path.dirname(logFile), { recursive: true });
@@ -830,7 +830,7 @@ const commandsMap: (
       }
     },
     "dropstone.debug2": async () => {
-      const extensionUrl = `${vscode.env.uriScheme}://dropstone.pearai/auth?token=TOKEN&refresh=REFRESH`;
+      const extensionUrl = `${vscode.env.uriScheme}://dropstone.dropstone/auth?token=TOKEN&refresh=REFRESH`;
       const extensionUrlParsed = vscode.Uri.parse(extensionUrl);
       const callbackUri = await vscode.env.asExternalUri(
         vscode.Uri.parse(extensionUrl),
@@ -861,7 +861,7 @@ const commandsMap: (
       await extensionContext.secrets.delete("pearai-token");
       await extensionContext.secrets.delete("pearai-refresh");
       core.invoke("llm/setPearAICredentials", { accessToken: undefined, refreshToken: undefined });
-      
+
       // Also clear Dropstone API keys from config.json to prevent requests after logout
       try {
         console.log('Clearing Dropstone authentication...');
@@ -919,8 +919,8 @@ const commandsMap: (
       } catch (error) {
         console.error("Error clearing Dropstone auth during logout:", error);
       }
-      
-      vscode.commands.executeCommand("dropstone.pearaiLogout")
+
+      vscode.commands.executeCommand("dropstone.dropstoneLogout")
       sidebar.webviewProtocol?.request("pearAISignedOut", undefined);
       vscode.window.showInformationMessage("PearAI: Successfully logged out!");
     },
@@ -942,7 +942,7 @@ const commandsMap: (
       core.invoke("llm/setPearAICredentials", { accessToken: data.accessToken, refreshToken: data.refreshToken });
       if (data.fromLogin) {
         sidebar.webviewProtocol?.request("pearAISignedIn", undefined);
-        vscode.commands.executeCommand("dropstone.pearaiLogin", data)
+        vscode.commands.executeCommand("dropstone.dropstoneLogin", data)
         vscode.window.showInformationMessage("PearAI: Successfully logged in!");
       }
     },

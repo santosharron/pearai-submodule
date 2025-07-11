@@ -6,7 +6,7 @@
   "version": "1.8.9",
   "repository": {
     "type": "git",
-    "url": "https://github.com/santosharron/pearai-submodule"
+    "url": "https://github.com/santosharron/dropstone-submodule"
   },
   "extensionKind": [
     "ui",
@@ -795,7 +795,7 @@
     "@vscode/test-electron": "^2.3.9",
     "apache-arrow": "^14.0.2",
     "axios": "^1.2.5",
-    "core": "file:../pearai-submodule/core",
+    "core": "file:../dropstone-submodule/core",
     "cors": "^2.8.5",
     "dbinfoz": "^0.1.4",
     "downshift": "^7.6.0",

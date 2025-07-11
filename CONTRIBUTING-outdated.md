@@ -1,4 +1,4 @@
-Note: This file has been modified from its original contents. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue).
+Note: This file has been modified from its original contents. dropstone-submodule is a fork of Continue (https://github.com/continuedev/continue).
 
 ## Updated Contributing Docs
 Go [here](https://github.com/trypear/pearai-master/blob/main/README.md) for the most up-to-date setup and contributing information.
@@ -50,7 +50,7 @@ After you've written your context provider, make sure to complete the following 
 
 ### 🤖 Adding an LLM Provider
 
-PearAI has support for more than a dozen different LLM "providers", making it easy to use models running on OpenAI, Ollama, Together, LM Studio, and more. You can find all of the existing providers [here](https://github.com/trypear/pearai-submodule/tree/main/core/llm/llms), and if you see one missing, you can add it with the following steps:
+PearAI has support for more than a dozen different LLM "providers", making it easy to use models running on OpenAI, Ollama, Together, LM Studio, and more. You can find all of the existing providers [here](https://github.com/trypear/dropstone-submodule/tree/main/core/llm/llms), and if you see one missing, you can add it with the following steps:
 
 1. 🆕 Create a new file in the `core/llm/llms` directory. The name of the file should be the name of the provider, and it should export a class that extends `BaseLLM`. This class should contain the following minimal implementation. We recommend viewing pre-existing providers for more details. The [LlamaCpp Provider](./core/llm/llms/LlamaCpp.ts) is a good simple example.
 

@@ -1,4 +1,4 @@
-/* Note: This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue)." */
+/* Note: This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. dropstone-submodule is a fork of Continue (https://github.com/continuedev/continue)." */
 import * as vscode from "vscode";
 import { Battery } from "../util/battery";
 import {

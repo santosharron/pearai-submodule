@@ -344,11 +344,11 @@ function ModelSelect() {
 
       // Combine options with deduplication
       const combinedOptions = [...regularOptions];
-      
+
       // Add Dropstone models, avoiding duplicates by title
       dropstoneOptions.forEach(dropstoneOption => {
-        const existingOption = combinedOptions.find(option => 
-          option.title === dropstoneOption.title || 
+        const existingOption = combinedOptions.find(option =>
+          option.title === dropstoneOption.title ||
           option.value === dropstoneOption.value
         );
         if (!existingOption) {
@@ -562,7 +562,7 @@ function ModelSelect() {
           }, [open]);
 
           // Check if current model is thinking model
-          const isCurrentModelThinking = defaultModel?.title?.toLowerCase().includes(':thinking') || 
+          const isCurrentModelThinking = defaultModel?.title?.toLowerCase().includes(':thinking') ||
                                        defaultModel?.title?.toLowerCase().endsWith(':thinking');
 
           return (

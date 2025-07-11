@@ -272,16 +272,12 @@ export const DropstoneAuthDialog: React.FC<DropstoneAuthDialogProps> = ({
   };
 
   const openDropstoneServer = () => {
-    const url = 'http://localhost:3002/dashboard';
+    const url = 'https://dropstone.io/dashboard/';
     try {
-      // Prefer VS Code command to open external URL when running inside the IDE
-      // @ts-ignore – not part of protocol typings
-      ideMessenger?.post('invokeVSCodeCommandById', {
-        commandId: 'vscode.openExternal',
-        args: [url],
-      });
+      // Use the standard openUrl message that the IDE extension handles
+      ideMessenger?.post('openUrl', url);
     } catch (err) {
-      console.warn('Failed to open link via VS Code command, falling back to window.open', err);
+      console.warn('Failed to open link via IDE messenger, falling back to window.open', err);
       window.open(url, '_blank');
     }
   };

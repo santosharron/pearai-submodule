@@ -1,4 +1,4 @@
-Note: This file has been modified from its original contents. The contact email has been changed from Continue's to PearAI's. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue).
+Note: This file has been modified from its original contents. The contact email has been changed from Continue's to PearAI's. dropstone-submodule is a fork of Continue (https://github.com/continuedev/continue).
 
 
 # Contributor Covenant Code of Conduct

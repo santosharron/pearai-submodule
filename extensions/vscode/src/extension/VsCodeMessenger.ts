@@ -1,4 +1,4 @@
-// Note: This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue).
+// Note: This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. dropstone-submodule is a fork of Continue (https://github.com/continuedev/continue).
 
 import { ConfigHandler } from "core/config/ConfigHandler";
 import PearAIServer from "core/llm/llms/PearAIServer";
@@ -141,9 +141,9 @@ export class VsCodeMessenger {
     this.onWebview("pearInstallCommandLine", (msg) => {
       vscode.commands.executeCommand("workbench.action.installCommandLine");
     });
-    this.onWebview("changeColorScheme", (msg) => {
-      const selectedTheme = msg.data.isDark ? "Default Dropstone Dark" : "Default Dropstone Light";
-      vscode.workspace.getConfiguration().update('workbench.colorTheme', selectedTheme, true);
+    this.onWebview("changeColorScheme", async (msg) => {
+      const themeId = msg.data.isDark ? "Default Dropstone Dark" : "Default Dropstone Light";
+      await vscode.workspace.getConfiguration().update("workbench.colorTheme", themeId, vscode.ConfigurationTarget.Global);
     });
 
     // END welcome stuff

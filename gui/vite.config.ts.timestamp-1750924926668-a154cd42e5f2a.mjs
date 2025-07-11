@@ -1,8 +1,8 @@
 // vite.config.ts
 import path from "path";
-import react from "file:///D:/tmp/dd-2/pearai-app/extensions/pearai-submodule/gui/node_modules/@vitejs/plugin-react-swc/index.mjs";
-import { defineConfig } from "file:///D:/tmp/dd-2/pearai-app/extensions/pearai-submodule/gui/node_modules/vite/dist/node/index.js";
-var __vite_injected_original_dirname = "D:\\tmp\\dd-2\\pearai-app\\extensions\\pearai-submodule\\gui";
+import react from "file:///D:/tmp/dd-2/pearai-app/extensions/dropstone-submodule/gui/node_modules/@vitejs/plugin-react-swc/index.mjs";
+import { defineConfig } from "file:///D:/tmp/dd-2/pearai-app/extensions/dropstone-submodule/gui/node_modules/vite/dist/node/index.js";
+var __vite_injected_original_dirname = "D:\\tmp\\dd-2\\pearai-app\\extensions\\dropstone-submodule\\gui";
 var vite_config_default = defineConfig({
   plugins: [react()],
   build: {

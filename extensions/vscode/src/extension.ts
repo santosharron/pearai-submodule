@@ -1,7 +1,7 @@
 /**
  * This is the entry point for the extension.
  *
- * Note: This file has been significantly modified from its original contents. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue).
+ * Note: This file has been significantly modified from its original contents. dropstone-submodule is a fork of Continue (https://github.com/continuedev/continue).
  */
 
 import { setupCa } from "core/util/ca";
