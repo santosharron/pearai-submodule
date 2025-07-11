@@ -8,7 +8,7 @@ export async function getFastApplyChangesWithRelace(
 ): Promise<string> {
     try {
         const baseHeaders = await getHeaders();
-        const auth: any = await vscode.commands.executeCommand("pearai.getPearAuth");
+        const auth: any = await vscode.commands.executeCommand("dropstone.getPearAuth");
         const response = await fetch(`${SERVER_URL}/integrations/relace/apply`, {
             method: "POST",
             headers: {

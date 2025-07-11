@@ -2,7 +2,7 @@ import {
   Button,
 } from "@/components";
 import { Progress } from "@/components/ui/progress";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import { IdeMessengerContext } from "@/context/IdeMessenger";
 import { useDropstoneAuth } from "@/context/DropstoneAuthContext";
 import { ChevronRight, ExternalLink, X } from "lucide-react";
@@ -70,6 +70,20 @@ const AccountSettings = () => {
   const isAuthenticated = isDropstoneLoggedIn || !!accountDetails;
   const userDisplayInfo = dropstoneUserInfo || accountDetails;
 
+  // ------------------------------------------------------------
+  // DEBUG: log whenever authentication-related state changes so
+  // we can verify that AccountSettings detects login/logout and
+  // bridges tokens correctly.
+  // ------------------------------------------------------------
+  useEffect(() => {
+    console.log('[AccountSettings] auth state', {
+      isAuthenticated,
+      isDropstoneLoggedIn,
+      accountDetails,
+      dropstoneUserInfo,
+    });
+  }, [isAuthenticated, isDropstoneLoggedIn, accountDetails, dropstoneUserInfo]);
+
   return (
     <div className="border border-solidd h-full flex-col justify-start items-start gap-5 inline-flex overflow-auto no-scrollbar relative">
       {/* Close Button */}
@@ -82,7 +96,7 @@ const AccountSettings = () => {
       </button>
       <div className="border border-solidd w-full flex flex-col justify-start items-start gap-5">
         <div className="justify-center items-center inline-flex">
-          <div className="text-lg font-['SF Pro']">General</div>
+          <div className="text-lg font-['Inter']">General</div>
         </div>
 
         {isAuthenticated ? (
@@ -112,13 +126,13 @@ const AccountSettings = () => {
                 )
               ) : null}
               <div className="grow shrink basis-0 flex-col justify-center items-start gap-1 inline-flex">
-                <div className="self-stretch text-xs font-normal font-['SF Pro']">
+                <div className="self-stretch text-xs font-normal font-['Inter']">
                   {isDropstoneLoggedIn
                     ? (dropstoneUserInfo?.userName || dropstoneUserInfo?.name || "Dropstone User")
                     : `${accountDetails?.first_name} ${accountDetails?.last_name || ""}`
                   }
                 </div>
-                <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                <div className="opacity-50 text-xs font-normal font-['Inter']">
                   {isDropstoneLoggedIn
                     ? "Connected to Dropstone Server"
                     : accountDetails?.email
@@ -132,21 +146,21 @@ const AccountSettings = () => {
 
             {accountDetails && (
               <>
-                <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                <div className="opacity-50 text-xs font-normal font-['Inter']">
                   USAGE
                 </div>
                 <div className="flex w-full gap-3">
                   <div className="flex-1 border border-solid p-4 rounded-lg flex flex-col gap-3">
-                    <div className="font-normal font-['SF Pro']">Dropstone Credits</div>
+                    <div className="font-normal font-['Inter']">Dropstone Credits</div>
                     <div className="self-stretch justify-start items-baseline gap-1 inline-flex">
-                      <div className="text-2xl font-['SF Pro']">
+                      <div className="text-2xl font-['Inter']">
                         {isUsageLoading ? (
                           <LoadingPlaceholder />
                         ) : (
                           `${usageDetails ? usageDetails.percent_credit_used.toFixed(2) : 0}%`
                         )}
                       </div>
-                      <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                      <div className="opacity-50 text-xs font-normal font-['Inter']">
                         used
                       </div>
                     </div>
@@ -156,33 +170,35 @@ const AccountSettings = () => {
                         className={`h-2 bg-input [&>div]:bg-button ${isUsageLoading ? 'animate-pulse' : ''}`}
                       />
                     </div>
-                    <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                    <div className="opacity-50 text-xs font-normal font-['Inter']">
                       Credits refills monthly ({timeLeftUntilRefill})
                     </div>
                   </div>
                   <div className="flex-1 border border-solid p-4 rounded-lg flex flex-col gap-3">
-                    <div className="font-normal font-['SF Pro']">
+                    <div className="font-normal font-['Inter']">
                       Pay-As-You-Go Extra Credits
                     </div>
                     <div className="self-stretch justify-start items-baseline gap-1 inline-flex">
-                      <div className="text-2xl font-['SF Pro']">
+                      <div className="text-2xl font-['Inter']">
                         {isUsageLoading ? (
                           <LoadingPlaceholder />
                         ) : (
                           `$${usageDetails ? usageDetails.pay_as_you_go_credits.toFixed(2) : 0}`
                         )}
                       </div>
-                      <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                      <div className="opacity-50 text-xs font-normal font-['Inter']">
                         used
                       </div>
                     </div>
                     <div>
-                      <div className="opacity-50 text-xs font-normal font-['SF Pro'] -mt-1">
+                      <div className="opacity-50 text-xs font-normal font-['Inter'] -mt-1">
                         Credits billed monthly
                       </div>
                       <a
-                        className="text-xs font-normal font-['SF Pro'] no-underline"
+                        className="text-xs font-normal font-['Inter'] no-underline"
                         href="https://dropstone.io/pay-as-you-go"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         Read More
                       </a>
@@ -192,12 +208,12 @@ const AccountSettings = () => {
 
                 {usageDetails?.remaining_topup_credits && <div className="flex flex-col w-full justify-center gap-3">
                   <div className="border border-solid p-4 rounded-lg flex flex-col gap-3">
-                    <div className="font-normal font-['SF Pro']">TopUp Credits</div>
+                    <div className="font-normal font-['Inter']">TopUp Credits</div>
                     <div className="self-stretch justify-start items-baseline gap-1 inline-flex">
-                      <div className="text-2xl font-['SF Pro']">
+                      <div className="text-2xl font-['Inter']">
                         ${usageDetails.remaining_topup_credits.toFixed(2)}
                       </div>
-                      <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                      <div className="opacity-50 text-xs font-normal font-['Inter']">
                         remaining
                       </div>
                     </div>
@@ -205,7 +221,7 @@ const AccountSettings = () => {
                 </div>}
 
                 <div className="flex flex-col w-full justify-center gap-3">
-                  <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+                  <div className="opacity-50 text-xs font-normal font-['Inter']">
                     PLAN
                   </div>
                   <div className="flex gap-3">
@@ -224,7 +240,7 @@ const AccountSettings = () => {
                         ).toLocaleDateString()
                         : "Now"}
                       &nbsp;
-                      <span className="opacity-50  text-xs font-normal font-['SF Pro']">
+                      <span className="opacity-50  text-xs font-normal font-['Inter']">
                         Current Period
                       </span>
                     </div>
@@ -235,8 +251,10 @@ const AccountSettings = () => {
                   <a
                     className="p-3 bg-list-hoverBackground rounded-lg border border-solid justify-between items-center flex self-stretch no-underline text-inherit hover:text-inherit"
                     href={UPGRADE_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <div className="text-xs font-normal font-['SF Pro']">
+                    <div className="text-xs font-normal font-['Inter']">
                       Upgrade
                     </div>
                     <ExternalLink className="size-4" />
@@ -247,7 +265,7 @@ const AccountSettings = () => {
 
             <div className="flex flex-col w-full gap-3">
               <div className="flex">
-                <div className="grow opacity-50 text-xs font-normal font-['SF Pro']">
+                <div className="grow opacity-50 text-xs font-normal font-['Inter']">
                   {isDropstoneLoggedIn ? "JWT Token" : "API Key"}
                 </div>
                 <div className="flex gap-3">
@@ -311,14 +329,14 @@ const AccountSettings = () => {
             >
               Log in
             </Button>
-            <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+            <div className="opacity-50 text-xs font-normal font-['Inter']">
               Login to use Dropstone Pro services
             </div>
           </div>
         )}
 
         <div className="flex flex-col w-full justify-center gap-3">
-          <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+          <div className="opacity-50 text-xs font-normal font-['Inter']">
             EDITOR SETTINGS
           </div>
           <div className="flex gap-3">
@@ -326,7 +344,7 @@ const AccountSettings = () => {
               className="flex-1 p-3 bg-list-hoverBackground rounded-lg border border-solid justify-between items-center flex self-stretch no-underline text-inherit hover:text-inherit"
               href="command:workbench.action.openSettings"
             >
-              <div className="text-xs font-normal font-['SF Pro']">
+              <div className="text-xs font-normal font-['Inter']">
                 Open editor settings
               </div>
               <ChevronRight className="size-4" />
@@ -335,7 +353,7 @@ const AccountSettings = () => {
               className="flex-1 p-3 bg-list-hoverBackground rounded-lg border border-solid justify-between items-center flex self-stretch no-underline text-inherit hover:text-inherit"
               href="command:workbench.action.openGlobalKeybindings"
             >
-              <div className="text-xs font-normal font-['SF Pro']">
+              <div className="text-xs font-normal font-['Inter']">
                 Configure keyboard shortcuts
               </div>
               <ChevronRight className="size-4" />
@@ -344,24 +362,24 @@ const AccountSettings = () => {
               className="flex-1 p-3 bg-list-hoverBackground rounded-lg border border-solid justify-between items-center flex self-stretch no-underline text-inherit hover:text-inherit"
               href="command:workbench.userDataSync.actions.turnOn"
             >
-              <div className="text-xs font-normal font-['SF Pro']">
+              <div className="text-xs font-normal font-['Inter']">
                 Backup and sync settings
               </div>
               <ChevronRight className="size-4" />
             </a>
           </div>
-          <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+          <div className="opacity-50 text-xs font-normal font-['Inter']">
             Settings can also be configured with <span className="px-1 py-px rounded-md border-2 border-solid justify-center items-center gap-0.5">
-              <span className="text-center font-['SF Pro']">
+              <span className="text-center font-['Inter']">
                 {getMetaKeyLabel()}
               </span>
-              <span className="opacity-50 font-['SF Pro'] leading-[17px] mx-0.5">
+              <span className="opacity-50 font-['Inter'] leading-[17px] mx-0.5">
                 +
               </span>
               <span className="font-medium font-['SF Mono'] leading-3">
                 Shift
               </span>
-              <span className="opacity-50 font-['SF Pro'] leading-[17px] mx-0.5">
+              <span className="opacity-50 font-['Inter'] leading-[17px] mx-0.5">
                 +
               </span>
               <span className="font-medium font-['SF Mono'] leading-3">
@@ -373,7 +391,7 @@ const AccountSettings = () => {
           </div>
         </div>
         <div className="flex flex-col w-full justify-center gap-3">
-          <div className="opacity-50 text-xs font-normal font-['SF Pro']">
+          <div className="opacity-50 text-xs font-normal font-['Inter']">
             DROPSTONE AGENT SETTINGS
           </div>
           <div
@@ -381,14 +399,14 @@ const AccountSettings = () => {
             onClick={() => {
               ideMessenger.post("closeOverlay", undefined);
               ideMessenger.post("invokeVSCodeCommandById", {
-                commandId: "pearai-roo-cline.SidebarProvider.focus",
+                commandId: "dropstone-roo-cline.SidebarProvider.focus",
               });
               ideMessenger.post("invokeVSCodeCommandById", {
                 commandId: "roo-cline.settingsButtonClicked",
               });
             }}
           >
-            <div className="text-xs font-normal font-['SF Pro']">
+            <div className="text-xs font-normal font-['Inter']">
               Open Dropstone Agent Settings
             </div>
             <ChevronRight className="size-4" />

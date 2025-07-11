@@ -30,10 +30,10 @@ const HelpSettings = () => {
   return (
     <div className="border border-solidd h-full flex-col justify-start items-start gap-5 inline-flex overflow-hidden">
       <div className="justify-center items-center inline-flex">
-        <div className=" text-lg font-['SF Pro']">Help</div>
+        <div className=" text-lg font-['Inter']">Help</div>
       </div>
       <div className="self-stretch pb-2 flex-col justify-start items-start gap-3 flex">
-        <div className="self-stretch opacity-50  text-[10px] font-bold font-['SF Pro'] tracking-tight">
+        <div className="self-stretch opacity-50  text-[10px] font-bold font-['Inter'] tracking-tight">
           REACH US
         </div>
         <div className="self-stretch justify-start items-center gap-5 inline-flex">
@@ -43,7 +43,7 @@ const HelpSettings = () => {
               href={item.link}
               key={item.title}
             >
-              <div className=" text-xs font-normal font-['SF Pro']">
+              <div className=" text-xs font-normal font-['Inter']">
                 {item.title}
               </div>
               <LucideExternalLink className="size-4" />
@@ -53,14 +53,14 @@ const HelpSettings = () => {
       </div>
 
       <div className="self-stretch pb-2 flex-col justify-start items-start gap-3 flex">
-        <div className="self-stretch  opacity-50  text-[10px] font-bold font-['SF Pro'] tracking-tight">
+        <div className="self-stretch  opacity-50  text-[10px] font-bold font-['Inter'] tracking-tight">
           HAVING ISSUES?
         </div>
         <a
           className="p-3 bg-list-hoverBackground rounded-lg border border-solid justify-between items-center flex self-stretch no-underline text-inherit hover:text-inherit"
           href="https://dropstone.io/contact"
         >
-          <div className=" text-xs font-normal font-['SF Pro']">
+          <div className=" text-xs font-normal font-['Inter']">
             Contact Us
           </div>
           <ChevronRight className="size-4"></ChevronRight>
@@ -68,7 +68,7 @@ const HelpSettings = () => {
       </div>
 
       <div className="self-stretch pb-2 flex-col justify-start items-start gap-3 flex">
-        <div className="self-stretch opacity-50  text-[10px] font-bold font-['SF Pro'] tracking-tight">
+        <div className="self-stretch opacity-50  text-[10px] font-bold font-['Inter'] tracking-tight">
           KEYBOARD SHORTCUTS
         </div>
         <div className="self-stretch  flex-col justify-center items-start gap-3 flex overflow-hidden">
@@ -78,17 +78,17 @@ const HelpSettings = () => {
               className="justify-start items-center gap-3 inline-flex"
             >
               <div className="px-1 py-px rounded-md border-2 border-solid flex justify-center items-center gap-0.5">
-                <div className="text-center font-['SF Pro']">
+                <div className="text-center font-['Inter']">
                   {getMetaKeyLabel()}
                 </div>
-                <div className="opacity-50 font-['SF Pro'] leading-[17px]">
+                <div className="opacity-50 font-['Inter'] leading-[17px]">
                   +
                 </div>
                 <div className="font-medium font-['SF Mono'] leading-3">
                   {shortcut.key}
                 </div>
               </div>
-              <div className="font-normal font-['SF Pro']">
+              <div className="font-normal font-['Inter']">
                 {shortcut.description}
               </div>
             </div>

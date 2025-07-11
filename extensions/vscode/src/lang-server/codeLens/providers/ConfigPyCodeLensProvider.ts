@@ -34,7 +34,7 @@ export class ConfigPyCodeLensProvider implements vscode.CodeLensProvider {
       codeLenses.push(
         new vscode.CodeLens(range, {
           title: "✏️ Edit in UI",
-          command: "pearai.openSettingsUI",
+          command: "dropstone.openSettingsUI",
         }),
       );
     }

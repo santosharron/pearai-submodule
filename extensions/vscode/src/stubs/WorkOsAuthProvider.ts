@@ -16,7 +16,7 @@ import {
 } from "vscode";
 import { PromiseAdapter, promiseFromEvent } from "./promiseUtils";
 
-export const AUTH_TYPE = "pearai";
+export const AUTH_TYPE = "dropstone";
 const AUTH_NAME = "Continue";
 const CLIENT_ID =
   process.env.CONTROL_PLANE_ENV === "local"
@@ -404,7 +404,7 @@ export async function getControlPlaneSessionInfo(
   silent: boolean,
 ): Promise<ControlPlaneSessionInfo | undefined> {
   const session = await authentication.getSession(
-    "pearai",
+    "dropstone",
     [],
     silent ? { silent: true } : { createIfNone: true },
   );

@@ -7,21 +7,21 @@ const darkCodeTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "PearAI",
+  title: "Dropstone",
   tagline:
     "the open-source library for accelerating software development with language models",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://trypear.ai",
+  url: "https://dropstone.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "trypearai", // Usually your GitHub org/user name.
-  projectName: "pearai", // Usually your repo name.
+  organizationName: "Dropstone", // Usually your GitHub org/user name.
+  projectName: "Dropstone", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -67,13 +67,13 @@ const config = {
         },
       ],
       // Replace with your project's social card
-      image: "https://trypear.ai/img/continue-social-card.png",
+      image: "https://dropstone.io/img/continue-social-card.png",
       navbar: {
-        title: "PearAI",
+        title: "Dropstone",
         logo: {
-          alt: "PearAI Logo",
+          alt: "Dropstone Logo",
           src: "img/logo-dark.png",
-          href: "https://trypear.ai",
+          href: "https://dropstone.io",
           srcDark: "img/logo.png",
         },
         items: [

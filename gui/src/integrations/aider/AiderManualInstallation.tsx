@@ -25,7 +25,7 @@
 //           If you followed the above instructions correctly and restarted PearAI, then PearAI Creator should work!
 //           <br />
 //           If not, please view{" "}
-//           <a className="text-blue-500 hover:underline" href="https://trypear.ai/creator-troubleshooting">
+//           <a className="text-blue-500 hover:underline" href="https://dropstone.io/creator-troubleshooting">
 //             PearAI Troubleshooting
 //           </a>
 //           , or contact PearAI Support on{" "}
@@ -34,7 +34,7 @@
 //         <div className="text-[10px] text-muted-foreground mt-4">
 //           *View PearAI Disclaimer page
 //           <Link
-//             to="https://trypear.ai/disclaimer/"
+//             to="https://dropstone.io/disclaimer/"
 //             target="_blank"
 //             className="text-muted-foreground no-underline hover:no-underline ml-1"
 //           >

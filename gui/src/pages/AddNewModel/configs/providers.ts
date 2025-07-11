@@ -74,8 +74,8 @@ export const providers: Partial<Record<ModelProvider, ProviderInfo>> = {
         inputType: "text",
         key: "serverUrl",
         label: "Server URL",
-        placeholder: "http://localhost:3000",
-        defaultValue: "http://localhost:3000",
+        placeholder: "https://dropstone-server-bjlp.onrender.com",
+        defaultValue: "https://dropstone-server-bjlp.onrender.com",
         required: true,
       },
       {
@@ -94,7 +94,7 @@ export const providers: Partial<Record<ModelProvider, ProviderInfo>> = {
     refPage: "pearai_server",
     description:
       "Enjoy effortless integration and lower your costs with our reliable hosted services via Dropstone authentication.",
-    icon: "pearai.png",
+    icon: "dropstone.png",
     tags: [ModelProviderTags.Recommended, ModelProviderTags.Hosted],
     packages: [],
     showInMenu: true,
@@ -190,7 +190,7 @@ export const providers: Partial<Record<ModelProvider, ProviderInfo>> = {
     provider: "azure",
     description:
       "Azure OpenAI Service offers industry-leading coding and language AI models that you can fine-tune to your specific needs for a variety of use cases.",
-    longDescription: `[Visit our documentation](https://trypear.ai/reference/Model%20Providers/azure) for information on obtaining an API key.
+    longDescription: `[Visit our documentation](https://dropstone.io/reference/Model%20Providers/azure) for information on obtaining an API key.
 
 Select the \`GPT-4o\` model below to complete your provider configuration, but note that this will not affect the specific model you need to select when creating your Azure deployment.`,
     icon: "azure.png",

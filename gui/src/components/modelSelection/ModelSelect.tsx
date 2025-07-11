@@ -25,12 +25,12 @@ import {
 } from "../../util";
 import ConfirmationDialog from "../dialogs/ConfirmationDialog";
 import { DropstoneAuthDialog } from "../dialogs/DropstoneAuthDialog";
-import { useDropstoneAuth } from "../../hooks/useDropstoneAuth";
+import { useDropstoneAuth } from "../../context/DropstoneAuthContext";
 import { getCombinedModels, StaticModel, STATIC_DROPSTONE_MODELS } from "../../util/staticModels";
 
-const StyledListboxButton = styled(Listbox.Button)`
-  border: solid 1px ${lightGray}30;
-  background-color: transparent;
+const StyledListboxButton = styled(Listbox.Button)<{ isThinking?: boolean }>`
+  border: solid 1px ${props => props.isThinking ? '#1e40af' : `${lightGray}30`};
+  background-color: ${props => props.isThinking ? '#1e40af10' : 'transparent'};
   border-radius: 4px;
   padding: 2px 4px;
   margin: 0 2px;
@@ -39,6 +39,7 @@ const StyledListboxButton = styled(Listbox.Button)`
 	user-select: none;
   cursor: pointer;
   font-size: ${getFontSize() - 3}px;
+  font-family: 'Inter', sans-serif;
   color: ${lightGray};
   &:focus {
     outline: none;
@@ -57,6 +58,7 @@ const StyledListboxOptions = styled(Listbox.Options) <{ newSession: boolean }>`
   max-height: 300px;
   overflow-y: auto;
 	font-size: ${getFontSize() - 2}px;
+	font-family: 'Inter', sans-serif;
 	user-select: none;
 	outline:none;
 
@@ -80,6 +82,7 @@ const StyledListboxOption = styled(Listbox.Option) <ListboxOptionProps>`
   cursor: pointer;
   border-radius: 6px;
   padding: 5px 4px;
+  font-family: 'Inter', sans-serif;
 
   &:hover {
     background: ${(props) =>
@@ -109,6 +112,7 @@ const AuthRequiredOption = styled.div`
   padding: 8px 4px;
   color: ${lightGray};
   font-style: italic;
+  font-family: 'Inter', sans-serif;
   border: 1px dashed ${lightGray}30;
   border-radius: 4px;
   margin: 4px 0;
@@ -126,6 +130,7 @@ interface Option {
   isDefault?: boolean;
   isDropstone?: boolean;
   requiresAuth?: boolean;
+  isThinking?: boolean;
 }
 
 function modelSelectTitle(model: any): string {
@@ -153,7 +158,7 @@ function ModelOption({
   const ideMessenger = useContext(IdeMessengerContext);
   const dispatch = useDispatch();
   const [hovered, setHovered] = useState(false);
-  const { isAuthenticated } = useDropstoneAuth();
+  const { isLoggedIn: isAuthenticated } = useDropstoneAuth();
 
   // Check if this option should be disabled
   const isDisabled = option.isDropstone && !isAuthenticated;
@@ -218,7 +223,12 @@ function ModelOption({
           <span style={{ color: isDisabled ? `${lightGray}80` : 'inherit' }}>
             {option.title || 'Unknown Model'}
           </span>
-          {option.isDropstone && (
+          {/* Show thinking badge for thinking models, otherwise show dropstone badge */}
+          {option.isThinking ? (
+            <span className="ml-2 text-xs px-1 py-0.5 rounded bg-[#1e40af] text-white">
+              Thinking
+            </span>
+          ) : option.isDropstone && (
             <span className={`ml-2 text-xs px-1 py-0.5 rounded ${
               isDisabled
                 ? 'bg-gray-600 text-gray-300'
@@ -264,7 +274,16 @@ function ModelSelect() {
     (store: RootState) => store.state.selectedProfileId
   );
 
-  const { isAuthenticated, token, authenticate } = useDropstoneAuth();
+  const { isLoggedIn: isAuthenticated, token, authenticate } = useDropstoneAuth();
+
+  /* -----------------------------------------------------------
+   * DEBUG: whenever Dropstone authentication changes, print the
+   *        current status so we can confirm ModelSelect picks up
+   *        the broadcast immediately.
+   * ---------------------------------------------------------*/
+  useEffect(() => {
+    console.log('[ModelSelect] auth change', { isAuthenticated, hasToken: !!token });
+  }, [isAuthenticated, token]);
 
   // Load Dropstone models on mount and when authentication changes
   useEffect(() => {
@@ -284,6 +303,11 @@ function ModelSelect() {
 
   useEffect(() => {
     try {
+      // Helper function to check if a model is a thinking model
+      const isThinkingModel = (title: string) => {
+        return title.toLowerCase().includes(':thinking') || title.toLowerCase().endsWith(':thinking');
+      };
+
       // Combine regular models with Dropstone models
       const regularOptions = allModels
         .filter((model) => {
@@ -292,7 +316,7 @@ function ModelSelect() {
             model.title &&
             !model?.title?.toLowerCase().includes("creator") &&
             !model?.title?.toLowerCase().includes("perplexity") &&
-            !model?.title?.toLowerCase().includes("pearai") &&
+            !model?.title?.toLowerCase().includes("dropstone") &&
             model?.provider !== "pearai_server"
           );
         })
@@ -302,6 +326,7 @@ function ModelSelect() {
           provider: model.provider || '',
           isDefault: model?.isDefault || false,
           isDropstone: false,
+          isThinking: isThinkingModel(model.title || ''),
         }));
 
       // Add Dropstone models
@@ -314,9 +339,23 @@ function ModelSelect() {
           isDefault: false,
           isDropstone: true,
           requiresAuth: !isAuthenticated,
+          isThinking: isThinkingModel(model.title || ''),
         }));
 
-      const combinedOptions = [...regularOptions, ...dropstoneOptions];
+      // Combine options with deduplication
+      const combinedOptions = [...regularOptions];
+      
+      // Add Dropstone models, avoiding duplicates by title
+      dropstoneOptions.forEach(dropstoneOption => {
+        const existingOption = combinedOptions.find(option => 
+          option.title === dropstoneOption.title || 
+          option.value === dropstoneOption.value
+        );
+        if (!existingOption) {
+          combinedOptions.push(dropstoneOption);
+        }
+      });
+
       setOptions(combinedOptions);
 
       // Debug logging to help identify issues
@@ -434,7 +473,7 @@ function ModelSelect() {
                 title: dropstoneModel.title || val,
                 provider: "openai", // Use openai provider for OpenAI-compatible API
                 model: dropstoneModel.id || val,
-                apiBase: "http://localhost:3000/v1", // Correct OpenAI-compatible endpoint
+                apiBase: "https://dropstone-server-bjlp.onrender.com/v1", // Correct OpenAI-compatible endpoint
                 apiKey: token || "dropstone-auth-token", // Use the auth token
                 contextLength: 100000, // Default context length for Dropstone models
                 systemMessage: "You are an expert software developer. You give helpful and concise responses based on latest documentation and software engineering best practices.",
@@ -522,11 +561,16 @@ function ModelSelect() {
             setIsOpen(open);
           }, [open]);
 
+          // Check if current model is thinking model
+          const isCurrentModelThinking = defaultModel?.title?.toLowerCase().includes(':thinking') || 
+                                       defaultModel?.title?.toLowerCase().endsWith(':thinking');
+
           return (
             <>
               <StyledListboxButton
                 ref={buttonRef}
                 className="h-[18px] flex overflow-hidden"
+                isThinking={isCurrentModelThinking}
               >
                 {defaultModel ? (defaultModel?.provider === 'pearai_server' ? (
                   <div className="flex flex-initial items-center">
@@ -583,45 +627,45 @@ function ModelSelect() {
                     left: `${menuPosition.left}px`,
                   }}
                 >
-                  <span
-                    style={{
-                      color: lightGray,
-                      padding: "2px",
-                      marginTop: "2px",
-                      display: "block",
-                      textAlign: "center",
-                      fontSize: getFontSize() - 3,
-                    }}
-                  >
-                    Press <kbd className="font-mono">{getMetaKeyLabel()}</kbd>{" "}
-                    <kbd className="font-mono">'</kbd> to cycle between models.
-                  </span>
-                  <Divider />
-                  <StyledListboxOption
-                    key={options.length}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      navigate("/addModel");
-                    }}
-                    value={"addModel" as any}
-                  >
-                    <div className="flex items-center">
-                      <PlusIcon className="w-4 h-4 mr-2" />
-                      Add Model
-                    </div>
-                  </StyledListboxOption>
-                  <Divider />
+                  {/* Regular Models Section */}
+                  {options.filter((option) => !option.isDropstone).length > 0 && (
+                    <>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '4px',
+                        fontSize: getFontSize() - 4,
+                        color: lightGray,
+                        fontWeight: 'bold',
+                      }}>
+                        Regular Models ({options.filter((option) => !option.isDropstone).length})
+                      </div>
+                      {options
+                        .filter((option) => !option.isDropstone)
+                        .map((option, idx) => (
+                          <ModelOption
+                            key={`regular-${idx}`}
+                            option={option}
+                            idx={idx}
+                            showDelete={true}
+                          />
+                        ))}
+                      <Divider />
+                    </>
+                  )}
 
                   {/* Dropstone Models Section */}
-                  <>
                     <div style={{
-                      padding: "4px",
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '4px',
                       fontSize: getFontSize() - 4,
                       color: lightGray,
-                      fontWeight: "bold"
+                    fontWeight: 'bold',
                     }}>
-                      🪨 Dropstone Models ({dropstoneModels.length})
+                    Dropstone Models ({dropstoneModels.length})
                     </div>
                     {!isAuthenticated && (
                       <AuthRequiredOption onClick={() => setShowAuthDialog(true)}>
@@ -639,36 +683,6 @@ function ModelSelect() {
                           showDelete={false}
                         />
                       ))}
-                    <Divider />
-                  </>
-
-                  {/* Regular Models */}
-                  {options
-                    .filter((option) => !option.isDropstone && option.isDefault)
-                    .map((option, idx) => (
-                      <ModelOption
-                        option={option}
-                        idx={idx}
-                        key={idx}
-                        showDelete={!option.isDefault}
-                      />
-                    ))}
-
-                  {selectedProfileId === "local" && (
-                    <>
-                      {options.filter(o => !o.isDropstone).length > 0 && <Divider />}
-                      {options
-                        .filter((option) => !option.isDropstone && !option.isDefault)
-                        .map((option, idx) => (
-                          <ModelOption
-                            key={idx}
-                            option={option}
-                            idx={idx}
-                            showDelete={!option.isDefault}
-                          />
-                        ))}
-                    </>
-                  )}
                 </StyledListboxOptions>
               )}
             </>

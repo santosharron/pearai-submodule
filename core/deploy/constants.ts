@@ -1,6 +1,6 @@
 export const constants = {
   a: "https://proxy-server-blue-l6vsfbzhba-uw.a.run.app",
-  // a: "http://localhost:3000",
+  // a: "https://dropstone-server-bjlp.onrender.com",
   b: "1710787199603",
   c: "NfZFVegMpdyT3P5UmAggr7T7Hb6PlcbB",
 };

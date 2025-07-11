@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 import { IMessenger } from "../../../core/util/messenger.js";
 import { getExtensionUri } from "./util/vscode";
+import { editConfigJson } from "../../../core/util/paths.js";
 
 export async function showTutorial() {
   const tutorialPath = path.join(
@@ -80,6 +81,10 @@ export class VsCodeWebviewProtocol
   _webviews: Map<string, vscode.Webview> = new Map();
   _webviewListeners: Map<string, vscode.Disposable> = new Map();
 
+  // Keep the last authenticated Dropstone token so newly created webviews can immediately hydrate.
+  private _dropstoneToken: string | undefined;
+  private _dropstoneUserInfo: any;
+
   get webviews(): Map<string, vscode.Webview> {
     return this._webviews;
   }
@@ -90,7 +95,7 @@ export class VsCodeWebviewProtocol
   }
 
   resetWebviewToDefault() {
-    const defaultViewKey = "pearai.chatView";
+    const defaultViewKey = "dropstone.chatView";
 
     // Remove all entries except for the chat view
     this._webviews.forEach((value, key) => {
@@ -110,9 +115,83 @@ export class VsCodeWebviewProtocol
 
   addWebview(viewType: string, webView: vscode.Webview) {
     this._webviews.set(viewType, webView);
+    // If we already have a cached Dropstone auth token (e.g. from a previous
+    // login in this window), proactively inform the just-registered webview
+    // so its DropstoneAuthContext can hydrate without waiting for an explicit
+    // request.
+    if (this._dropstoneToken) {
+      webView.postMessage({
+        messageType: "dropstoneAuthUpdated",
+        messageId: uuidv4(),
+        data: { token: this._dropstoneToken, userInfo: this._dropstoneUserInfo },
+      });
+    }
     const listener = webView.onDidReceiveMessage(async (msg) => {
       if (!msg.messageType || !msg.messageId) {
         throw new Error(`Invalid webview protocol msg: ${JSON.stringify(msg)}`);
+      }
+
+      // ------------------------------------------------------------------
+      // Handle unified authentication sync BEFORE touching the try/catch
+      // that wraps normal message processing.  This guarantees the update
+      // path executes even when no error is thrown (previously it was
+      // inside the catch-block).
+      // ------------------------------------------------------------------
+      if (msg.messageType === "auth_sync_login") {
+        const { token, userInfo } = msg.data || {};
+        this._dropstoneToken = token;
+        this._dropstoneUserInfo = userInfo;
+
+        /*
+         * ------------------------------------------------------------------
+         * Persist the updated Dropstone JWT into the user's config.json.
+         * We update any model entry that is clearly a Dropstone model –
+         * currently identified by either:
+         *   1. apiBase pointing at the local Dropstone proxy (localhost:3000)
+         *   2. the model title containing the word "dropstone" (case-insensitive)
+         * This keeps the Authorization header & apiKey fields in sync so that
+         * subsequent LLM requests are authenticated correctly.
+         * ------------------------------------------------------------------*/
+        try {
+          if (token) {
+            console.log('[VsCodeWebviewProtocol] Persisting Dropstone token to config.json');
+            editConfigJson((config) => {
+              if (!config.models) {
+                return config;
+              }
+
+              config.models = config.models.map((m: any) => {
+                const isDropstoneModel =
+                  (typeof m.apiBase === "string" && m.apiBase.includes("localhost:3000")) ||
+                  (typeof m.title === "string" && m.title.toLowerCase().includes("dropstone"));
+
+                if (isDropstoneModel) {
+                  m.apiKey = token;
+                  // Ensure requestOptions + headers objects exist
+                  m.requestOptions = m.requestOptions ?? {};
+                  m.requestOptions.headers = {
+                    ...m.requestOptions.headers,
+                    Authorization: `Bearer ${token}`,
+                  };
+                }
+                return m;
+              });
+
+              return config;
+            });
+
+            // Inform core / other components that configuration has changed
+            this.reloadConfig();
+            console.log('[VsCodeWebviewProtocol] Config reloaded after persisting token');
+          }
+        } catch (err) {
+          console.warn("Failed to persist Dropstone auth token to config.json:", err);
+        }
+
+        console.log('[VsCodeWebviewProtocol] received auth_sync_login – broadcasting dropstoneAuthUpdated');
+        this.send("dropstoneAuthUpdated", { token, updatedCount: 0 });
+        // No need to continue processing this message further.
+        return;
       }
 
       const respond = (message: any) =>
@@ -165,7 +244,7 @@ export class VsCodeWebviewProtocol
                 if (selection === 'Login To Dropstone') {
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'http://localhost:3000/login',
+                      'https://dropstone-server-bjlp.onrender.com/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -179,9 +258,9 @@ export class VsCodeWebviewProtocol
 
           if (e.cause) {
             if (e.cause.name === "ConnectTimeoutError") {
-              message = `Connection timed out. If you expect it to take a long time to connect, you can increase the timeout in config.json by setting "requestOptions": { "timeout": 10000 }. You can find the full config reference here: https://trypear.ai/reference/config`;
+              message = `Connection timed out. If you expect it to take a long time to connect, you can increase the timeout in config.json by setting "requestOptions": { "timeout": 10000 }. You can find the full config reference here: https://dropstone.io/reference/config`;
             } else if (e.cause.code === "ECONNREFUSED") {
-              message = `Connection was refused. This likely means that there is no server running at the specified URL. If you are running your own server you may need to set the "apiBase" parameter in config.json. For example, you can set up an OpenAI-compatible server like here: https://trypear.ai/reference/Model%20Providers/openai#openai-compatible-servers--apis`;
+              message = `Connection was refused. This likely means that there is no server running at the specified URL. If you are running your own server you may need to set the "apiBase" parameter in config.json. For example, you can set up an OpenAI-compatible server like here: https://dropstone.io/reference/Model%20Providers/openai#openai-compatible-servers--apis`;
             } else {
               message = `The request failed with "${e.cause.name}": ${e.cause.message}. If you're having trouble setting up PearAI, please see the troubleshooting guide for help.`;
             }
@@ -199,7 +278,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to auth login URL
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'http://localhost:3000/login',
+                      'https://dropstone-server-bjlp.onrender.com/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -222,7 +301,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to Dropstone server login
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'http://localhost:3000/login',
+                      'https://dropstone-server-bjlp.onrender.com/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -248,7 +327,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to Dropstone server login
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'http://localhost:3000/login',
+                      'https://dropstone-server-bjlp.onrender.com/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -271,7 +350,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to auth login URL
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'https://trypear.ai/pricing',
+                      'https://dropstone.io/pricing',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -335,11 +414,43 @@ export class VsCodeWebviewProtocol
                 } else if (selection === "Troubleshooting") {
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      "https://trypear.ai/troubleshooting",
+                      "https://dropstone.io/troubleshooting",
                     ),
                   );
                 }
               });
+          }
+
+          // Handle simple token fetch request from newly mounted webviews
+          if (msg.messageType === "get_dropstone_token") {
+            console.log('[VsCodeWebviewProtocol] get_dropstone_token request received');
+            // If we haven't cached it yet, attempt to load from the current
+            // config.  reloadConfig might return a promise – we cast to any to
+            // support both sync/async callbacks.
+            try {
+              if (!this._dropstoneToken) {
+                console.log('[VsCodeWebviewProtocol] No cached token, loading from config');
+                const cfg: any = await (this.reloadConfig as any)();
+                const dropModel = cfg?.models?.find((m: any) =>
+                  (typeof m.apiBase === "string" && m.apiBase.includes("localhost:3000")) ||
+                  (typeof m.title === "string" && m.title.toLowerCase().includes("dropstone"))
+                );
+                console.log('[VsCodeWebviewProtocol] Model matched from config:', dropModel?.title);
+                if (dropModel?.apiKey) {
+                  this._dropstoneToken = dropModel.apiKey;
+                  console.log('[VsCodeWebviewProtocol] Token loaded from config');
+                }
+              }
+            } catch (err) {
+              console.warn("Failed to load Dropstone token from config:", err);
+            }
+            // Respond directly with token (or null) using same messageId so caller's IdeMessenger.request resolves
+            webView.postMessage({
+              messageType: msg.messageType,
+              messageId: msg.messageId,
+              data: { token: this._dropstoneToken, userInfo: this._dropstoneUserInfo },
+            });
+            return;
           }
         }
       }

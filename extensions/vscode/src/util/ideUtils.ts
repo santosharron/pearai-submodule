@@ -138,7 +138,7 @@ export class VsCodeIdeUtils {
   showMultiFileEdit(edits: FileEdit[]) {
     vscode.commands.executeCommand("workbench.action.closeAuxiliaryBar");
     // const panel = vscode.window.createWebviewPanel(
-    //   "pearai.chatView",
+    //   "dropstone.chatView",
     //   "PearAI",
     //   vscode.ViewColumn.One,
     // );
@@ -186,20 +186,20 @@ export class VsCodeIdeUtils {
 
   async getUserSecret(key: string) {
     // Check if secret already exists in VS Code settings (global)
-    let secret = vscode.workspace.getConfiguration("pearai").get(key);
+    let secret = vscode.workspace.getConfiguration("dropstone").get(key);
     if (typeof secret !== "undefined" && secret !== null) {
       return secret;
     }
 
     // If not, ask user for secret
     secret = await vscode.window.showInputBox({
-      prompt: `Either enter secret for ${key} or press enter to try PearAI for free.`,
+      prompt: `Either enter secret for ${key} or press enter to try Dropstone for free.`,
       password: true,
     });
 
     // Add secret to VS Code settings
     vscode.workspace
-      .getConfiguration("pearai")
+      .getConfiguration("dropstone")
       .update(key, secret, vscode.ConfigurationTarget.Global);
 
     return secret;
@@ -659,20 +659,20 @@ export class VsCodeIdeUtils {
    * Request credentials object from vscode
    */
   async getPearCredentials(): Promise<PearAuth> {
-    return await vscode.commands.executeCommand("pearai.getPearAuth");
+    return await vscode.commands.executeCommand("dropstone.getPearAuth");
   }
 
   /**
    * Send login request to IDE via commands, this opens the website
    */
   async executePearLogin() {
-    vscode.commands.executeCommand("pearai.login");
+    vscode.commands.executeCommand("dropstone.login");
   }
 
   /**
    * Set the stored credentials in vscode
    */
   async updatePearAICredentials(auth: PearAuth) {
-    await vscode.commands.executeCommand("pearai.updateUserAuth", auth);
+    await vscode.commands.executeCommand("dropstone.updateUserAuth", auth);
   }
 }

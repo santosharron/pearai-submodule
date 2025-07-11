@@ -3,7 +3,7 @@
 declare global {
     interface Window {
       isPearOverlay?: boolean;
-      viewType?: 'pearai.chatView' | 'pearai.mem0View' | 'pearai.searchView';
+      viewType?: 'dropstone.chatView' | 'dropstone.mem0View' | 'dropstone.searchView';
     }
   }
 

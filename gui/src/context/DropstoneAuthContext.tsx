@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { PEARAI_AUTH_URL } from '../util/constants';
+import { DROPSTONE_AUTH_URL } from '../util/constants';
 import { DropstoneAuthDialog } from '../components/dialogs/DropstoneAuthDialog';
 import { useWebviewListener } from '../hooks/useWebviewListener';
 import { IdeMessengerContext } from './IdeMessenger';
@@ -16,6 +16,7 @@ interface DropstoneAuthContextType {
     closeAuthDialog: () => void;
     fetchAvailableModels: () => Promise<any>;
     isPremiumUser: boolean;
+    authenticate: (usernameOrToken: string, password?: string) => Promise<boolean>;
 }
 
 const DropstoneAuthContext = createContext<DropstoneAuthContextType | null>(null);
@@ -64,7 +65,7 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
 
     const validateAndSetUserInfo = useCallback(async (authToken: string) => {
         try {
-            const response = await fetch(`${PEARAI_AUTH_URL}/api/user`, {
+            const response = await fetch(`${DROPSTONE_AUTH_URL}/api/user`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -91,24 +92,56 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
         }
     }, []);
 
-    const checkAuthStatus = useCallback(async () => {
-        const storedToken = localStorage.getItem('dropstone_token');
-        setToken(storedToken);
+    const handleAuthExpired = useCallback(async () => {
+        console.log('Authentication expired, logging out user and clearing token');
 
-        if (storedToken) {
-            await validateAndSetUserInfo(storedToken);
-        } else {
-            setIsLoggedIn(false);
-            setUserInfo(null);
-            setToken(null);
-            setIsPremiumUser(false);
+        // Clear the token from localStorage first
+        localStorage.removeItem('dropstone_token');
+        setToken(null);
+
+        // Clear authentication from the extension as well
+        try {
+            console.log('Clearing authentication from extension...');
+            // @ts-ignore: unify authentication across webviews
+            await ideMessenger.post('auth_sync_logout', undefined);
+            console.log('Overlay: sent auth_sync_logout due to expiration');
+        } catch (error) {
+            console.warn('Failed to clear extension authentication:', error);
         }
-        setLoading(false);
-    }, [validateAndSetUserInfo]);
+
+        // Update state to reflect logged out status
+        setIsLoggedIn(false);
+        setUserInfo(null);
+
+        // Show the authentication dialog
+        setAuthDialogVisible(true);
+
+        console.log('User logged out due to token expiration, auth dialog shown');
+    }, [ideMessenger]);
+
+    // Listen for unified auth_sync messages from extension host
+    useEffect(() => {
+        const handler = (event: MessageEvent) => {
+            const msg = event.data;
+            if (msg.type === 'action') {
+                if (msg.action === 'dropstoneAuthUpdated' && msg.text) {
+                    console.log('Overlay: received dropstoneAuthUpdated');
+                    localStorage.setItem('dropstone_token', msg.text);
+                    setToken(msg.text);
+                    validateAndSetUserInfo(msg.text);
+                } else if (msg.action === 'clearDropstoneAuth') {
+                    console.log('Overlay: received clearDropstoneAuth');
+                    handleAuthExpired();
+                }
+            }
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, [validateAndSetUserInfo, handleAuthExpired]);
 
     const login = useCallback(async (username: string, password: string) => {
         try {
-            const response = await fetch(`${PEARAI_AUTH_URL}/login`, {
+            const response = await fetch(`${DROPSTONE_AUTH_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,11 +164,18 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
             // Save authentication to config file
             try {
                 console.log('Saving authentication to config file...');
-                const result = await ideMessenger.post('saveDropstoneAuth', {
+                // @ts-ignore: unify authentication across webviews
+                await ideMessenger.post('auth_sync_login', {
                     token: data.token,
                     userInfo: data.user
                 });
-                console.log('Dropstone authentication saved to config file:', result);
+                console.log('Overlay: sent auth_sync_login to extension host');
+
+                // Also invoke VS Code command so Roo-Code extension updates immediately
+                await ideMessenger.post('invokeVSCodeCommandById', {
+                    commandId: 'dropstone-roo-cline.pearaiLogin',
+                    args: [{ token: data.token, userInfo: data.user }]
+                });
 
                 // Add a small delay to ensure config is fully updated
                 await new Promise(resolve => setTimeout(resolve, 1000));
@@ -162,7 +202,7 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
                 setToken(usernameOrToken);
 
                 // Validate the token by checking user info
-                const response = await fetch(`${PEARAI_AUTH_URL}/api/user`, {
+                const response = await fetch(`${DROPSTONE_AUTH_URL}/api/user`, {
                     headers: {
                         'Authorization': `Bearer ${usernameOrToken}`
                     }
@@ -187,11 +227,18 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
                     // Save authentication to config file
                     try {
                         console.log('Saving token authentication to config file...');
-                        const result = await ideMessenger.post('saveDropstoneAuth', {
+                        // @ts-ignore: unify authentication across webviews
+                        await ideMessenger.post('auth_sync_login', {
                             token: usernameOrToken,
                             userInfo: user
                         });
-                        console.log('Dropstone authentication saved to config file:', result);
+                        console.log('Overlay: sent auth_sync_login (token auth) to extension host');
+
+                        // Also invoke VS Code command so Roo-Code extension updates immediately
+                        await ideMessenger.post('invokeVSCodeCommandById', {
+                            commandId: 'dropstone-roo-cline.pearaiLogin',
+                            args: [{ token: usernameOrToken, userInfo: user }]
+                        });
 
                         // Add a small delay to ensure config is fully updated
                         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -221,7 +268,15 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
         setAuthDialogVisible(false);
         setIsPremiumUser(false);
         console.log('User logged out');
-    }, []);
+        // @ts-ignore: unify authentication across webviews
+        ideMessenger.post('auth_sync_logout', undefined);
+        console.log('Overlay: sent auth_sync_logout to extension host');
+
+        // Also notify Roo-Code extension via command
+        ideMessenger.post('invokeVSCodeCommandById', {
+            commandId: 'dropstone-roo-cline.dropstoneLogout'
+        });
+    }, [ideMessenger]);
 
     const showAuthDialog = useCallback(() => {
         setAuthDialogVisible(true);
@@ -231,35 +286,9 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
         setAuthDialogVisible(false);
     }, []);
 
-    const handleAuthExpired = useCallback(async () => {
-        console.log('Authentication expired, logging out user and clearing token');
-
-        // Clear the token from localStorage first
-        localStorage.removeItem('dropstone_token');
-        setToken(null);
-
-        // Clear authentication from the extension as well
-        try {
-            console.log('Clearing authentication from extension...');
-            await ideMessenger.post('clearDropstoneAuth', undefined);
-            console.log('Successfully cleared authentication from extension');
-        } catch (error) {
-            console.warn('Failed to clear extension authentication:', error);
-        }
-
-        // Update state to reflect logged out status
-        setIsLoggedIn(false);
-        setUserInfo(null);
-
-        // Show the authentication dialog
-        setAuthDialogVisible(true);
-
-        console.log('User logged out due to token expiration, auth dialog shown');
-    }, [ideMessenger]);
-
     const fetchAvailableModels = useCallback(async () => {
         try {
-            const response = await fetch(`${PEARAI_AUTH_URL}/api/models/public`);
+            const response = await fetch(`${DROPSTONE_AUTH_URL}/api/models/public`);
             if (response.ok) {
                 const data = await response.json();
                 return data.models;
@@ -270,6 +299,39 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
             return {};
         }
     }, []);
+
+    const checkAuthStatus = useCallback(async () => {
+        const storedToken = localStorage.getItem('dropstone_token');
+        setToken(storedToken);
+
+        if (storedToken) {
+            await validateAndSetUserInfo(storedToken);
+        } else {
+            // No token in localStorage – ask extension host in case another webview already logged in.
+            try {
+                // @ts-ignore – not part of protocol typings
+                const response: any = await ideMessenger.request("get_dropstone_token", undefined);
+                const extToken = response?.token as string | undefined;
+                if (extToken) {
+                    localStorage.setItem('dropstone_token', extToken);
+                    setToken(extToken);
+                    await validateAndSetUserInfo(extToken);
+                } else {
+                    setIsLoggedIn(false);
+                    setUserInfo(null);
+                    setToken(null);
+                    setIsPremiumUser(false);
+                }
+            } catch (err) {
+                console.warn('Failed to fetch token from extension host', err);
+                setIsLoggedIn(false);
+                setUserInfo(null);
+                setToken(null);
+                setIsPremiumUser(false);
+            }
+        }
+        setLoading(false);
+    }, [validateAndSetUserInfo]);
 
     useEffect(() => {
         checkAuthStatus();
@@ -286,7 +348,8 @@ export const DropstoneAuthProvider: React.FC<DropstoneAuthProviderProps> = ({ ch
         authDialogVisible,
         closeAuthDialog,
         fetchAvailableModels,
-        isPremiumUser
+        isPremiumUser,
+        authenticate: handleAuthentication
     };
 
     return (

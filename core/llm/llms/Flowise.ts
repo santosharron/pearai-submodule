@@ -59,7 +59,7 @@ interface IFlowiseProviderLLMOptions extends LLMOptions {
 class Flowise extends BaseLLM {
   static providerName: ModelProvider = "flowise";
   static defaultOptions: Partial<IFlowiseProviderLLMOptions> = {
-    apiBase: "http://localhost:3000",
+    apiBase: "https://dropstone-server-bjlp.onrender.com",
   };
   static FlowiseMessageType = {
     User: "userMessage",

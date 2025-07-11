@@ -3,8 +3,8 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from "vscode";
 
-export const OLD_FIRST_LAUNCH_KEY = 'pearai.firstLaunch';
-export const FIRST_LAUNCH_KEY = 'pearai.firstLaunchKeyV2';
+export const OLD_FIRST_LAUNCH_KEY = 'dropstone.firstLaunch';
+export const FIRST_LAUNCH_KEY = 'dropstone.firstLaunchKeyV2';
 const pearAISettingsDir = path.join(os.homedir(), '.dropstone');
 const pearAIDevExtensionsDir = path.join(os.homedir(), '.dropstone', 'extensions');
 
@@ -66,7 +66,7 @@ async function copyVSCodeSettingsToPearAIDir() {
     }
 
     const baseExclusions = new Set([
-        'pearai.pearai',
+        'dropstone.pearai',
         'ms-python.vscode-pylance',
         'ms-python.python',
         'codeium',

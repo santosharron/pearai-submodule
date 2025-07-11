@@ -349,11 +349,11 @@ function PerplexitySidebarGUI() {
                     />
                     <div className="w-[300px] flex-col justify-start items-start gap-5 inline-flex">
                       <div className="flex flex-col text-left">
-                        <div className="text-2xl font-['SF Pro']">Dropstone Search</div>
-                        <div className="h-[18px] opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">Powered by Perplexity</div>
+                        <div className="text-2xl font-['Inter']">Dropstone Search</div>
+                        <div className="h-[18px] opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">Powered by Perplexity</div>
                       </div>
                     </div>
-                    <div className="w-[300px] text-left opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+                    <div className="w-[300px] text-left opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
                       AI-powered search engine: up-to-date information for docs, libraries, etc. Also good for non-coding specific questions.
                     </div>
                   </div>
@@ -590,7 +590,7 @@ function PerplexitySidebarGUI() {
       {/* <div className="text-[10px] text-muted-foreground mb-4 flex justify-end pr-2 pb-2">
         *View PearAI Disclaimer page{" "}
         <Link
-          to="https://trypear.ai/disclaimer/"
+          to="https://dropstone.io/disclaimer/"
           target="_blank"
           className="text-muted-foreground no-underline hover:no-underline ml-1"
         >

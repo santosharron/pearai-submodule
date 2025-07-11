@@ -42,7 +42,7 @@ export const useDropstoneAuth = () => {
       // If no password provided, treat as JWT token
       if (!password) {
         // Validate the token by making a test request
-        const response = await fetch('http://localhost:3000/api/user', {
+        const response = await fetch('https://dropstone-server-bjlp.onrender.com/api/user', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${usernameOrToken}`,
@@ -74,7 +74,7 @@ export const useDropstoneAuth = () => {
       }
 
       // Traditional username/password login
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('https://dropstone-server-bjlp.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ export const useDropstoneAuth = () => {
     if (!authState.token) return false;
 
     try {
-      const response = await fetch('http://localhost:3000/api/user', {
+      const response = await fetch('https://dropstone-server-bjlp.onrender.com/api/user', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${authState.token}`,

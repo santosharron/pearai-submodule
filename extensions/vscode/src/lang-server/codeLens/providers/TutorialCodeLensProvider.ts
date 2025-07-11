@@ -20,7 +20,7 @@ const actions: TutorialCodeLensItems[] = [
     commands: [
       {
         title: `${cmdCtrl}+L`,
-        command: "pearai.focusContinueInput",
+        command: "dropstone.focusContinueInput",
       },
     ],
   },
@@ -29,12 +29,12 @@ const actions: TutorialCodeLensItems[] = [
     commands: [
       {
         title: `"what does this code do?"`,
-        command: "pearai.sendMainUserInput",
+        command: "dropstone.sendMainUserInput",
         arguments: ["what does this code do?"],
       },
       {
         title: `"what is an alternative to this?"`,
-        command: "pearai.sendMainUserInput",
+        command: "dropstone.sendMainUserInput",
         arguments: ["what is an alternative to this?"],
       },
     ],
@@ -44,7 +44,7 @@ const actions: TutorialCodeLensItems[] = [
     commands: [
       {
         title: `${cmdCtrl}+I`,
-        command: "pearai.quickEdit",
+        command: "dropstone.quickEdit",
         arguments: [{ initialPrompt: "Add comments" } as QuickEditShowParams],
       },
     ],
@@ -54,7 +54,7 @@ const actions: TutorialCodeLensItems[] = [
     commands: [
       {
         title: "Run the file",
-        command: "pearai.sendToTerminal",
+        command: "dropstone.sendToTerminal",
         arguments: [
           `python ${path.join(
             getExtensionUri().fsPath,
@@ -69,7 +69,7 @@ const actions: TutorialCodeLensItems[] = [
     commands: [
       {
         title: "Debug the error",
-        command: "pearai.debugTerminal",
+        command: "dropstone.debugTerminal",
       },
     ],
   },
@@ -78,7 +78,7 @@ const actions: TutorialCodeLensItems[] = [
     commands: [
       {
         title: `${cmdCtrl}+Shift+R`,
-        command: "pearai.debugTerminal",
+        command: "dropstone.debugTerminal",
       },
     ],
   },
@@ -122,7 +122,7 @@ export class TutorialCodeLensProvider implements vscode.CodeLensProvider {
       codeLenses.push(
         new vscode.CodeLens(range, {
           title: "Highlight the function",
-          command: "pearai.selectRange",
+          command: "dropstone.selectRange",
           arguments: [lineOf10 + 1, lineOf10 + 8],
         }),
       );
@@ -135,7 +135,7 @@ export class TutorialCodeLensProvider implements vscode.CodeLensProvider {
       codeLenses.push(
         new vscode.CodeLens(range, {
           title: "Highlight the function",
-          command: "pearai.selectRange",
+          command: "dropstone.selectRange",
           arguments: [lineOf30 + 1, lineOf30 + 12],
         }),
       );
@@ -157,7 +157,7 @@ export class TutorialCodeLensProvider implements vscode.CodeLensProvider {
     //   codeLenses.push(
     //     new vscode.CodeLens(range, {
     //       title: `Begin Section`,
-    //       command: "pearai.foldAndUnfold",
+    //       command: "dropstone.foldAndUnfold",
     //       arguments: [linesToFold, [lineOfRegion, lineOfRegion + 1]],
     //     }),
     //   );

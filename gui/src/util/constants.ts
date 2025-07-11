@@ -1,1 +1,1 @@
-export const PEARAI_AUTH_URL = 'http://localhost:3000';
+export const DROPSTONE_AUTH_URL = 'https://dropstone-server-bjlp.onrender.com';

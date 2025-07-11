@@ -32,6 +32,7 @@ import { handleIntegrationShortcutKey } from "./util/integrationUtils";
 import { getExtensionUri } from "./util/vscode";
 import type { VsCodeWebviewProtocol } from "./webviewProtocol";
 import { PEARAI_CHAT_VIEW_ID, PEARAI_OVERLAY_VIEW_ID, PEARAI_SEARCH_VIEW_ID } from "./util/pearai/pearaiViewTypes";
+import { safelyLoadConfig, safelySaveConfig } from "./util/configSafety";
 
 
 let fullScreenPanel: vscode.WebviewPanel | undefined;
@@ -39,7 +40,7 @@ let fullScreenPanel: vscode.WebviewPanel | undefined;
 function getFullScreenTab() {
   const tabs = vscode.window.tabGroups.all.flatMap((tabGroup) => tabGroup.tabs);
   return tabs.find((tab) =>
-    (tab.input as any)?.viewType?.endsWith("pearai.chatView"),
+    (tab.input as any)?.viewType?.endsWith("dropstone.chatView"),
   );
 }
 
@@ -87,7 +88,7 @@ function addCodeToContextFromRange(
     prompt,
     // Assume `true` since range selection is currently only used for quick actions/fixes
     shouldRun: true,
-  }, ["pearai.chatView"]);
+  }, ["dropstone.chatView"]);
 }
 
 async function addHighlightedCodeToContext(
@@ -108,7 +109,7 @@ async function addHighlightedCodeToContext(
 
       webviewProtocol?.request("highlightedCode", {
         rangeInFileWithContents,
-      }, ["pearai.chatView"]);
+      }, ["dropstone.chatView"]);
 
       return;
     }
@@ -133,7 +134,7 @@ async function addHighlightedCodeToContext(
 
     webviewProtocol?.request("highlightedCode", {
       rangeInFileWithContents,
-    }, ["pearai.chatView"]);
+    }, ["dropstone.chatView"]);
   }
 }
 
@@ -177,7 +178,7 @@ async function addEntireFileToContext(
 
   webviewProtocol?.request("highlightedCode", {
     rangeInFileWithContents,
-  }, ["pearai.chatView"]);
+  }, ["dropstone.chatView"]);
 }
 
 // Copy everything over from extension.ts
@@ -244,7 +245,7 @@ const commandsMap: (
   }
 
   return {
-    "pearai.openPearAiWelcome": async () => {
+    "dropstone.openPearAiWelcome": async () => {
       vscode.commands.executeCommand(
         "markdown.showPreview",
         vscode.Uri.file(
@@ -252,7 +253,7 @@ const commandsMap: (
         ),
       );
     },
-    "pearai.welcome.importUserSettingsFromVSCode": async () => {
+    "dropstone.welcome.importUserSettingsFromVSCode": async () => {
       if (!isFirstLaunch(extensionContext)) {
         vscode.window.showInformationMessage("Welcome back! User settings import is skipped as this is not the first launch.");
         console.dir("Extension launch detected as a subsequent launch. Skipping user settings import.");
@@ -260,25 +261,25 @@ const commandsMap: (
       }
       return await importUserSettingsFromVSCode();
     },
-    "pearai.welcome.markNewOnboardingComplete": async () => {
+    "dropstone.welcome.markNewOnboardingComplete": async () => {
       await extensionContext.globalState.update(FIRST_LAUNCH_KEY, true);
-      await vscode.commands.executeCommand('pearai.unlockOverlay');
-      await vscode.commands.executeCommand('pearai.hideOverlay');
+      await vscode.commands.executeCommand('dropstone.unlockOverlay');
+      await vscode.commands.executeCommand('dropstone.hideOverlay');
       await vscode.commands.executeCommand('workbench.action.markPearAIFirstLaunchComplete');
     },
-    "pearai.restFirstLaunchInGUI": async () => {
+    "dropstone.restFirstLaunchInGUI": async () => {
       sidebar.webviewProtocol?.request("restFirstLaunchInGUI", undefined, [PEARAI_CHAT_VIEW_ID]);
     },
-    "pearai.showInteractiveContinueTutorial": async () => {
+    "dropstone.showInteractiveContinueTutorial": async () => {
       sidebar.webviewProtocol?.request("showInteractiveContinueTutorial", undefined, [PEARAI_CHAT_VIEW_ID]);
     },
-    "pearai.highlightElement": async (msg) => {
-      vscode.commands.executeCommand("pearai.highlightElements", msg.data.elementSelectors);
+    "dropstone.highlightElement": async (msg) => {
+      vscode.commands.executeCommand("dropstone.highlightElements", msg.data.elementSelectors);
     },
-    "pearai.unhighlightElement": async (msg) => {
-      vscode.commands.executeCommand("pearai.removeHighlight", msg.data.elementSelectors);
+    "dropstone.unhighlightElement": async (msg) => {
+      vscode.commands.executeCommand("dropstone.removeHighlight", msg.data.elementSelectors);
     },
-    "pearai.acceptDiff": async (newFilepath?: string | vscode.Uri) => {
+    "dropstone.acceptDiff": async (newFilepath?: string | vscode.Uri) => {
       captureCommandTelemetry("acceptDiff");
 
       if (newFilepath instanceof vscode.Uri) {
@@ -287,7 +288,7 @@ const commandsMap: (
       verticalDiffManager.clearForFilepath(newFilepath, true);
       await diffManager.acceptDiff(newFilepath);
     },
-    "pearai.rejectDiff": async (newFilepath?: string | vscode.Uri) => {
+    "dropstone.rejectDiff": async (newFilepath?: string | vscode.Uri) => {
       captureCommandTelemetry("rejectDiff");
 
       if (newFilepath instanceof vscode.Uri) {
@@ -296,15 +297,15 @@ const commandsMap: (
       verticalDiffManager.clearForFilepath(newFilepath, false);
       await diffManager.rejectDiff(newFilepath);
     },
-    "pearai.acceptVerticalDiffBlock": (filepath?: string, index?: number) => {
+    "dropstone.acceptVerticalDiffBlock": (filepath?: string, index?: number) => {
       captureCommandTelemetry("acceptVerticalDiffBlock");
       verticalDiffManager.acceptRejectVerticalDiffBlock(true, filepath, index);
     },
-    "pearai.rejectVerticalDiffBlock": (filepath?: string, index?: number) => {
+    "dropstone.rejectVerticalDiffBlock": (filepath?: string, index?: number) => {
       captureCommandTelemetry("rejectVerticalDiffBlock");
       verticalDiffManager.acceptRejectVerticalDiffBlock(false, filepath, index);
     },
-    "pearai.quickFix": async (
+    "dropstone.quickFix": async (
       range: vscode.Range,
       diagnosticMessage: string,
     ) => {
@@ -314,14 +315,14 @@ const commandsMap: (
 
       addCodeToContextFromRange(range, sidebar.webviewProtocol, prompt);
 
-      vscode.commands.executeCommand("pearai.focusContinueInput");
+      vscode.commands.executeCommand("dropstone.focusContinueInput");
     },
     // Passthrough for telemetry purposes
-    "pearai.defaultQuickAction": async (args: QuickEditShowParams) => {
+    "dropstone.defaultQuickAction": async (args: QuickEditShowParams) => {
       captureCommandTelemetry("defaultQuickAction");
-      vscode.commands.executeCommand("pearai.quickEdit", args);
+      vscode.commands.executeCommand("dropstone.quickEdit", args);
     },
-    "pearai.customQuickActionSendToChat": async (
+    "dropstone.customQuickActionSendToChat": async (
       prompt: string,
       range: vscode.Range,
     ) => {
@@ -329,9 +330,9 @@ const commandsMap: (
 
       addCodeToContextFromRange(range, sidebar.webviewProtocol, prompt);
 
-      vscode.commands.executeCommand("pearai.chatView.focus");
+      vscode.commands.executeCommand("dropstone.chatView.focus");
     },
-    "pearai.customQuickActionStreamInlineEdit": async (
+    "dropstone.customQuickActionStreamInlineEdit": async (
       prompt: string,
       range: vscode.Range,
     ) => {
@@ -339,35 +340,35 @@ const commandsMap: (
 
       streamInlineEdit("docstring", prompt, false, range);
     },
-    "pearai.toggleAuxiliaryBar": () => {
+    "dropstone.toggleAuxiliaryBar": () => {
       vscode.commands.executeCommand("workbench.action.toggleAuxiliaryBar");
     },
-    "pearai.codebaseForceReIndex": async () => {
+    "dropstone.codebaseForceReIndex": async () => {
       core.invoke("index/forceReIndex", undefined);
     },
-    "pearai.docsIndex": async () => {
+    "dropstone.docsIndex": async () => {
       core.invoke("context/indexDocs", { reIndex: false });
     },
-    "pearai.docsReIndex": async () => {
+    "dropstone.docsReIndex": async () => {
       core.invoke("context/indexDocs", { reIndex: true });
     },
-    "pearai.notifyOverlayOpened": async () => {
+    "dropstone.notifyOverlayOpened": async () => {
       sidebar.webviewProtocol?.request("pearaiOverlayOpened", undefined);
     },
-    "pearai.toggleSearch": async () => {
+    "dropstone.toggleSearch": async () => {
       await handleIntegrationShortcutKey("navigateToSearch", "perplexityMode", sidebar, [PEARAI_OVERLAY_VIEW_ID]);
     },
-    "pearai.toggleMem0": async () => {
+    "dropstone.toggleMem0": async () => {
       await handleIntegrationShortcutKey("navigateToMem0", "mem0Mode", sidebar, [PEARAI_OVERLAY_VIEW_ID]);
     },
-    "pearai.toggleInventorySettings": async () => {
+    "dropstone.toggleInventorySettings": async () => {
       await handleIntegrationShortcutKey("toggleInventorySettings", "inventory", sidebar, [PEARAI_OVERLAY_VIEW_ID]);
       vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     },
-    "pearai.toggleInventoryHome": async () => {
+    "dropstone.toggleInventoryHome": async () => {
       await handleIntegrationShortcutKey("navigateToInventoryHome", "home", sidebar, [PEARAI_OVERLAY_VIEW_ID, PEARAI_CHAT_VIEW_ID]);
     },
-    "pearai.startOnboarding": async () => {
+    "dropstone.startOnboarding": async () => {
       if (isFirstLaunch(extensionContext)) {
         setTimeout(() => {
           core.invoke("index/setPaused", true);
@@ -376,12 +377,12 @@ const commandsMap: (
           core.invoke("index/setPaused", false);
         }, 6000);
       }
-      // await vscode.commands.executeCommand("pearai.showOverlay");
-      // await vscode.commands.executeCommand("pearai.showInteractiveContinueTutorial");
+      // await vscode.commands.executeCommand("dropstone.showOverlay");
+      // await vscode.commands.executeCommand("dropstone.showInteractiveContinueTutorial");
     },
-    "pearai.developer.restFirstLaunch": async () => {
+    "dropstone.developer.restFirstLaunch": async () => {
       vscode.commands.executeCommand("workbench.action.resetPearAIFirstLaunchKey");
-      vscode.commands.executeCommand("pearai.restFirstLaunchInGUI");
+      vscode.commands.executeCommand("dropstone.restFirstLaunchInGUI");
       extensionContext.globalState.update(FIRST_LAUNCH_KEY, false);
       vscode.window.showInformationMessage("Successfully reset Dropstone first launch flag, RELOAD WINDOW TO SEE WELCOME PAGE", 'Reload Window')
         .then(selection => {
@@ -391,53 +392,52 @@ const commandsMap: (
         });
       console.log("FIRST PEARAI LAUNCH FLAG RESET");
     },
-    "pearai.focusAgentView": async () => {
+    "dropstone.focusAgentView": async () => {
       try {
         vscode.commands.executeCommand('workbench.action.switchToPearAIIntegrationIconBar', { view: 'agent' });
       } catch (e) {
-        console.error("Failed to focus pearai-roo-cline sidebar:", e);
+        console.error("Failed to focus dropstone-roo-cline sidebar:", e);
       }
-      vscode.commands.executeCommand("pearai-roo-cline.SidebarProvider.focus");
-
+      vscode.commands.executeCommand("dropstone-roo-cline.SidebarProvider.focus");
     },
-    "pearai.focusPearAIMem0View": async () => {
+    "dropstone.focusPearAIMem0View": async () => {
       try {
         vscode.commands.executeCommand('workbench.action.switchToPearAIIntegrationIconBar', { view: 'memory' });
       } catch (e) {
-        console.error("Failed to focus pearai-roo-cline sidebar:", e);
+        console.error("Failed to focus dropstone-roo-cline sidebar:", e);
       }
-      vscode.commands.executeCommand("pearai.mem0View.focus");
+      vscode.commands.executeCommand("dropstone.mem0View.focus");
     },
-    "pearai.focusPearAISearchView": async () => {
+    "dropstone.focusPearAISearchView": async () => {
       try {
         vscode.commands.executeCommand('workbench.action.switchToPearAIIntegrationIconBar', { view: 'search' });
       } catch (e) {
-        console.error("Failed to focus pearai-roo-cline sidebar:", e);
+        console.error("Failed to focus dropstone-roo-cline sidebar:", e);
       }
-      vscode.commands.executeCommand("pearai.searchView.focus");
+      vscode.commands.executeCommand("dropstone.searchView.focus");
     },
-    "pearai.focusContinueInput": async () => {
+    "dropstone.focusContinueInput": async () => {
       try {
         vscode.commands.executeCommand('workbench.action.switchToPearAIIntegrationIconBar', { view: 'chat' });
       } catch (e) {
-        console.error("Failed to focus pearai-roo-cline sidebar:", e);
+        console.error("Failed to focus dropstone-roo-cline sidebar:", e);
       }
       const fullScreenTab = getFullScreenTab();
       if (!fullScreenTab) {
         // focus sidebar
-        vscode.commands.executeCommand("pearai.chatView.focus");
+        vscode.commands.executeCommand("dropstone.chatView.focus");
       } else {
         // focus fullscreen
         fullScreenPanel?.reveal();
       }
-      sidebar.webviewProtocol?.request("focusContinueInput", undefined, ["pearai.chatView"]);
+      sidebar.webviewProtocol?.request("focusContinueInput", undefined, ["dropstone.chatView"]);
       await addHighlightedCodeToContext(sidebar.webviewProtocol);
     },
-    "pearai.focusContinueInputWithoutClear": async () => {
+    "dropstone.focusContinueInputWithoutClear": async () => {
       try {
         vscode.commands.executeCommand('workbench.action.switchToPearAIIntegrationIconBar', { view: 'chat' });
       } catch (e) {
-        console.error("Failed to focus pearai-roo-cline sidebar:", e);
+        console.error("Failed to focus dropstone-roo-cline sidebar:", e);
       }
       const fullScreenTab = getFullScreenTab();
 
@@ -457,7 +457,7 @@ const commandsMap: (
         // Handle opening the GUI otherwise
         if (!fullScreenTab) {
           // focus sidebar
-          vscode.commands.executeCommand("pearai.chatView.focus");
+          vscode.commands.executeCommand("dropstone.chatView.focus");
         } else {
           // focus fullscreen
           fullScreenPanel?.reveal();
@@ -471,12 +471,12 @@ const commandsMap: (
         await addHighlightedCodeToContext(sidebar.webviewProtocol);
       }
     },
-    "pearai.quickEdit": async (args: QuickEditShowParams) => {
+    "dropstone.quickEdit": async (args: QuickEditShowParams) => {
       captureCommandTelemetry("quickEdit");
       quickEdit.show(args);
       sidebar.webviewProtocol?.request("quickEdit", undefined, [PEARAI_CHAT_VIEW_ID]);
     },
-    "pearai.writeCommentsForCode": async () => {
+    "dropstone.writeCommentsForCode": async () => {
       captureCommandTelemetry("writeCommentsForCode");
 
       streamInlineEdit(
@@ -484,7 +484,7 @@ const commandsMap: (
         "Write comments for this code. Do not change anything about the code itself.",
       );
     },
-    "pearai.writeDocstringForCode": async () => {
+    "dropstone.writeDocstringForCode": async () => {
       captureCommandTelemetry("writeDocstringForCode");
 
       streamInlineEdit(
@@ -493,7 +493,7 @@ const commandsMap: (
         true,
       );
     },
-    "pearai.fixCode": async () => {
+    "dropstone.fixCode": async () => {
       captureCommandTelemetry("fixCode");
 
       streamInlineEdit(
@@ -501,22 +501,22 @@ const commandsMap: (
         "Fix this code. If it is already 100% correct, simply rewrite the code.",
       );
     },
-    "pearai.optimizeCode": async () => {
+    "dropstone.optimizeCode": async () => {
       captureCommandTelemetry("optimizeCode");
       streamInlineEdit("optimize", "Optimize this code");
     },
-    "pearai.fixGrammar": async () => {
+    "dropstone.fixGrammar": async () => {
       captureCommandTelemetry("fixGrammar");
       streamInlineEdit(
         "fixGrammar",
         "If there are any grammar or spelling mistakes in this writing, fix them. Do not make other large changes to the writing.",
       );
     },
-    "pearai.viewLogs": async () => {
+    "dropstone.viewLogs": async () => {
       captureCommandTelemetry("viewLogs");
 
-      // Open ~/.pearai/pearai.log
-      const logFile = path.join(os.homedir(), ".pearai", "pearai.log");
+      // Open ~/.pearai/dropstone.log
+      const logFile = path.join(os.homedir(), ".pearai", "dropstone.log");
       // Make sure the file/directory exist
       if (!fs.existsSync(logFile)) {
         fs.mkdirSync(path.dirname(logFile), { recursive: true });
@@ -526,40 +526,40 @@ const commandsMap: (
       const uri = vscode.Uri.file(logFile);
       await vscode.window.showTextDocument(uri);
     },
-    "pearai.debugTerminal": async () => {
+    "dropstone.debugTerminal": async () => {
       captureCommandTelemetry("debugTerminal");
 
       const terminalContents = await ide.getTerminalContents();
 
-      vscode.commands.executeCommand("pearai.chatView.focus");
+      vscode.commands.executeCommand("dropstone.chatView.focus");
 
       sidebar.webviewProtocol?.request("userInput", {
         input: `I got the following error, can you please help explain how to fix it?\n\n${terminalContents.trim()}`,
-      }, ["pearai.chatView"]);
+      }, ["dropstone.chatView"]);
     },
-    "pearai.hideInlineTip": () => {
+    "dropstone.hideInlineTip": () => {
       vscode.workspace
         .getConfiguration("pearai")
         .update("showInlineTip", false, vscode.ConfigurationTarget.Global);
     },
 
     // Commands without keyboard shortcuts
-    "pearai.addModel": () => {
+    "dropstone.addModel": () => {
       captureCommandTelemetry("addModel");
 
-      vscode.commands.executeCommand("pearai.chatView.focus");
-      sidebar.webviewProtocol?.request("addModel", undefined, ["pearai.chatView"]);
+      vscode.commands.executeCommand("dropstone.chatView.focus");
+      sidebar.webviewProtocol?.request("addModel", undefined, ["dropstone.chatView"]);
     },
-    "pearai.openSettingsUI": () => {
-      vscode.commands.executeCommand("pearai.chatView.focus");
-      sidebar.webviewProtocol?.request("openSettings", undefined, ["pearai.chatView"]);
+    "dropstone.openSettingsUI": () => {
+      vscode.commands.executeCommand("dropstone.chatView.focus");
+      sidebar.webviewProtocol?.request("openSettings", undefined, ["dropstone.chatView"]);
     },
-    "pearai.sendMainUserInput": (text: string) => {
+    "dropstone.sendMainUserInput": (text: string) => {
       sidebar.webviewProtocol?.request("userInput", {
         input: text,
       });
     },
-    "pearai.selectRange": (startLine: number, endLine: number) => {
+    "dropstone.selectRange": (startLine: number, endLine: number) => {
       if (!vscode.window.activeTextEditor) {
         return;
       }
@@ -570,7 +570,7 @@ const commandsMap: (
         0,
       );
     },
-    "pearai.foldAndUnfold": (
+    "dropstone.foldAndUnfold": (
       foldSelectionLines: number[],
       unfoldSelectionLines: number[],
     ) => {
@@ -581,32 +581,32 @@ const commandsMap: (
         selectionLines: foldSelectionLines,
       });
     },
-    "pearai.sendToTerminal": (text: string) => {
+    "dropstone.sendToTerminal": (text: string) => {
       captureCommandTelemetry("sendToTerminal");
       ide.runCommand(text);
     },
     // Note: Unfortunately I don't see a way to get the view ID passed in as an argument here from package.json, so this is what I have for now -@nang-149
-    "pearai.newSession": async () => {
+    "dropstone.newSession": async () => {
       sidebar.webviewProtocol?.request("newSession", undefined, [PEARAI_CHAT_VIEW_ID]);
       const currentFile = await ide.getCurrentFile();
       sidebar.webviewProtocol?.request("setActiveFilePath", currentFile, [PEARAI_CHAT_VIEW_ID]);
     },
-    "pearai.newSessionSearch": async () => {
+    "dropstone.newSessionSearch": async () => {
       sidebar.webviewProtocol?.request("newSessionSearch", undefined, [PEARAI_SEARCH_VIEW_ID]);
       const currentFile = await ide.getCurrentFile();
       sidebar.webviewProtocol?.request("setActiveFilePath", currentFile, [PEARAI_SEARCH_VIEW_ID]);
     },
-    "pearai.viewHistory": () => {
+    "dropstone.viewHistory": () => {
       sidebar.webviewProtocol?.request("viewHistory", undefined, [
         PEARAI_CHAT_VIEW_ID,
       ]);
     },
-    "pearai.viewHistorySearch": () => {
+    "dropstone.viewHistorySearch": () => {
       sidebar.webviewProtocol?.request("viewHistory", undefined, [
         PEARAI_SEARCH_VIEW_ID,
       ]);
     },
-    "pearai.toggleFullScreen": () => {
+    "dropstone.toggleFullScreen": () => {
       // Check if full screen is already open by checking open tabs
       const fullScreenTab = getFullScreenTab();
 
@@ -633,7 +633,7 @@ const commandsMap: (
 
       //create the full screen panel
       let panel = vscode.window.createWebviewPanel(
-        "pearai.chatViewFullscreen",
+        "dropstone.chatViewFullscreen",
         "PearAI",
         vscode.ViewColumn.One,
         {
@@ -655,43 +655,43 @@ const commandsMap: (
       panel.onDidDispose(
         () => {
           sidebar.resetWebviewProtocolWebview();
-          vscode.commands.executeCommand("pearai.focusContinueInput");
+          vscode.commands.executeCommand("dropstone.focusContinueInput");
         },
         null,
         extensionContext.subscriptions,
       );
     },
-    "pearai.perplexityMode": async () => {
+    "dropstone.perplexityMode": async () => {
       await handleIntegrationShortcutKey("navigateToSearch", "perplexityMode", sidebar, [PEARAI_OVERLAY_VIEW_ID]);
     },
-    "pearai.addPerplexityContext": (msg) => {
+    "dropstone.addPerplexityContext": (msg) => {
       const fullScreenTab = getFullScreenTab();
       if (!fullScreenTab) {
         // focus sidebar
-        vscode.commands.executeCommand("pearai.chatView.focus");
+        vscode.commands.executeCommand("dropstone.chatView.focus");
       }
-      sidebar.webviewProtocol?.request("addPerplexityContextinChat", msg.data, ["pearai.chatView"]);
+      sidebar.webviewProtocol?.request("addPerplexityContextinChat", msg.data, ["dropstone.chatView"]);
     },
-    "pearai.openConfigJson": () => {
+    "dropstone.openConfigJson": () => {
       ide.openFile(getConfigJsonPath());
     },
-    "pearai.selectFilesAsContext": (
+    "dropstone.selectFilesAsContext": (
       firstUri: vscode.Uri,
       uris: vscode.Uri[],
     ) => {
-      vscode.commands.executeCommand("pearai.chatView.focus");
+      vscode.commands.executeCommand("dropstone.chatView.focus");
 
       for (const uri of uris) {
         addEntireFileToContext(uri, false, sidebar.webviewProtocol);
       }
     },
-    "pearai.logAutocompleteOutcome": (
+    "dropstone.logAutocompleteOutcome": (
       completionId: string,
       completionProvider: CompletionProvider,
     ) => {
       completionProvider.accept(completionId);
     },
-    "pearai.toggleTabAutocompleteEnabled": () => {
+    "dropstone.toggleTabAutocompleteEnabled": () => {
       captureCommandTelemetry("toggleTabAutocompleteEnabled");
 
       const config = vscode.workspace.getConfiguration("pearai");
@@ -727,7 +727,7 @@ const commandsMap: (
         }
       }
     },
-    "pearai.openTabAutocompleteConfigMenu": async () => {
+    "dropstone.openTabAutocompleteConfigMenu": async () => {
       captureCommandTelemetry("openTabAutocompleteConfigMenu");
 
       const config = vscode.workspace.getConfiguration("pearai");
@@ -809,13 +809,13 @@ const commandsMap: (
           );
           configHandler.reloadConfig();
         } else if (selectedOption === "$(feedback) Give feedback") {
-          vscode.commands.executeCommand("pearai.giveAutocompleteFeedback");
+          vscode.commands.executeCommand("dropstone.giveAutocompleteFeedback");
         }
         quickPick.dispose();
       });
       quickPick.show();
     },
-    "pearai.giveAutocompleteFeedback": async () => {
+    "dropstone.giveAutocompleteFeedback": async () => {
       const feedback = await vscode.window.showInputBox({
         ignoreFocusOut: true,
         prompt:
@@ -829,8 +829,8 @@ const commandsMap: (
         client.sendFeedback(feedback, lastLines);
       }
     },
-    "pearai.debug2": async () => {
-      const extensionUrl = `${vscode.env.uriScheme}://pearai.pearai/auth?token=TOKEN&refresh=REFRESH`;
+    "dropstone.debug2": async () => {
+      const extensionUrl = `${vscode.env.uriScheme}://dropstone.pearai/auth?token=TOKEN&refresh=REFRESH`;
       const extensionUrlParsed = vscode.Uri.parse(extensionUrl);
       const callbackUri = await vscode.env.asExternalUri(
         vscode.Uri.parse(extensionUrl),
@@ -838,10 +838,10 @@ const commandsMap: (
 
       vscode.window.showInformationMessage(`${callbackUri.toString(true)}`);
 
-      const creds = await vscode.commands.executeCommand("pearai.getPearAuth");
+      const creds = await vscode.commands.executeCommand("dropstone.getPearAuth");
       console.log("auth:", creds);
     },
-    "pearai.getPearAuth": async () => {
+    "dropstone.getPearAuth": async () => {
       // TODO: This may need some work, for now we dont have vscode ExtensionContext access in the ideProtocol.ts so this will do
       const accessToken = await extensionContext.secrets.get("pearai-token");
       const refreshToken = await extensionContext.secrets.get("pearai-refresh");
@@ -853,30 +853,78 @@ const commandsMap: (
 
       return creds;
     },
-    "pearai.login": async () => {
-      const extensionUrl = `${vscode.env.uriScheme}://pearai.pearai/auth`;
-      const callbackUri = await vscode.env.asExternalUri(
-        vscode.Uri.parse(extensionUrl),
-      );
-
-      // TODO: Open the proxy location with vscode redirect
-      await vscode.env.openExternal(
-        await vscode.env.asExternalUri(
-          vscode.Uri.parse(
-            `http://localhost:3000?callback=${callbackUri.toString()}`, // Change to localhost if running locally
-          ),
-        ),
-      );
+    "dropstone.login": async () => {
+      // Open the login page at localhost:3002/login
+      await vscode.env.openExternal(vscode.Uri.parse("http://localhost:3002/login"));
     },
-    "pearai.logout": async () => {
+    "dropstone.logout": async () => {
       await extensionContext.secrets.delete("pearai-token");
       await extensionContext.secrets.delete("pearai-refresh");
       core.invoke("llm/setPearAICredentials", { accessToken: undefined, refreshToken: undefined });
+      
+      // Also clear Dropstone API keys from config.json to prevent requests after logout
+      try {
+        console.log('Clearing Dropstone authentication...');
+
+        // Clear the token from VS Code settings
+        await vscode.workspace.getConfiguration().update("dropstone.dropstoneApiKey", "", vscode.ConfigurationTarget.Global);
+
+        // Clear the token from the .dropstone/config.json file
+        const configPath = path.join(os.homedir(), ".dropstone", "config.json");
+        console.log('Loading config from:', configPath);
+
+        let config = safelyLoadConfig(configPath);
+        console.log('Current config models count:', config.models?.length || 0);
+
+        // Clear JWT token from ALL models that point to the Dropstone server
+        let clearedCount = 0;
+        if (config.models) {
+          config.models.forEach((model: any, index: number) => {
+            console.log(`Checking model ${index}: ${model.title}, apiBase: ${model.apiBase}`);
+
+            if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
+              console.log(`Clearing authentication for model ${index}: ${model.title}`);
+
+              // Clear the Authorization header
+              if (model.requestOptions && model.requestOptions.headers && model.requestOptions.headers.Authorization) {
+                delete model.requestOptions.headers.Authorization;
+                console.log(`Cleared Authorization header for model ${index}`);
+              }
+
+              // Clear the apiKey field if it exists
+              if (model.apiKey !== undefined) {
+                model.apiKey = "";
+                console.log(`Cleared apiKey for model ${index}`);
+              }
+
+              clearedCount++;
+            }
+          });
+        }
+
+        // Save the updated config
+        console.log(`Saving config with ${clearedCount} cleared models`);
+        const success = safelySaveConfig(configPath, config);
+
+        if (success) {
+          console.log(`Successfully cleared JWT token from ${clearedCount} Dropstone models`);
+          // Reload the config to pick up changes
+          await configHandler.reloadConfig();
+          console.log('Configuration reloaded after clearing auth');
+        } else {
+          console.error("Failed to save cleared config to file");
+        }
+
+        console.log("Successfully cleared Dropstone authentication during logout");
+      } catch (error) {
+        console.error("Error clearing Dropstone auth during logout:", error);
+      }
+      
       vscode.commands.executeCommand("dropstone.pearaiLogout")
       sidebar.webviewProtocol?.request("pearAISignedOut", undefined);
       vscode.window.showInformationMessage("PearAI: Successfully logged out!");
     },
-    "pearai.updateUserAuth": async (data: {
+    "dropstone.updateUserAuth": async (data: {
       accessToken: string;
       refreshToken: string;
       fromLogin?: boolean;
@@ -898,7 +946,7 @@ const commandsMap: (
         vscode.window.showInformationMessage("PearAI: Successfully logged in!");
       }
     },
-    // "pearai.manualLogin": async () => {
+    // "dropstone.manualLogin": async () => {
     //   const accessToken = await vscode.window.showInputBox({
     //     prompt: "Enter your Access Token",
     //     ignoreFocusOut: true,
@@ -921,27 +969,27 @@ const commandsMap: (
     //     return;
     //   }
 
-    //   vscode.commands.executeCommand("pearai.updateUserAuth", { accessToken, refreshToken });
+    //   vscode.commands.executeCommand("dropstone.updateUserAuth", { accessToken, refreshToken });
     // },
-    "pearai.closeChat": () => {
+    "dropstone.closeChat": () => {
       vscode.commands.executeCommand("workbench.action.toggleAuxiliaryBar");
     },
-    "pearai.loadRecentChat": () => {
-      sidebar.webviewProtocol?.request("loadMostRecentChat", undefined, ["pearai.chatView"]);
-      sidebar.webviewProtocol?.request("focusContinueInput", undefined, ["pearai.chatView"]);
+    "dropstone.loadRecentChat": () => {
+      sidebar.webviewProtocol?.request("loadMostRecentChat", undefined, ["dropstone.chatView"]);
+      sidebar.webviewProtocol?.request("focusContinueInput", undefined, ["dropstone.chatView"]);
     },
-    "pearai.resizeAuxiliaryBarWidth": () => {
+    "dropstone.resizeAuxiliaryBarWidth": () => {
       vscode.commands.executeCommand(
         "workbench.action.resizeAuxiliaryBarWidth",
       );
     },
-    "pearai.winshortcutResizeAuxiliaryBarWidth": () => {
-      vscode.commands.executeCommand("pearai.resizeAuxiliaryBarWidth");
+    "dropstone.winshortcutResizeAuxiliaryBarWidth": () => {
+      vscode.commands.executeCommand("dropstone.resizeAuxiliaryBarWidth");
     },
-    "pearai.macResizeAuxiliaryBarWidth": () => {
-      vscode.commands.executeCommand("pearai.resizeAuxiliaryBarWidth");
+    "dropstone.macResizeAuxiliaryBarWidth": () => {
+      vscode.commands.executeCommand("dropstone.resizeAuxiliaryBarWidth");
     },
-    "pearai.freeModelSwitch": (msg) => {
+    "dropstone.freeModelSwitch": (msg) => {
       const warnMsg = msg.warningMsg;
       const flagSet = extensionContext.globalState.get("freeModelSwitched");
       if (!warnMsg && flagSet) {
@@ -954,10 +1002,10 @@ const commandsMap: (
         // limit reached, switching to free model
         vscode.window.showInformationMessage(msg.warningMsg);
         extensionContext.globalState.update("freeModelSwitched", true);
-        sidebar.webviewProtocol?.request("switchModel", "Dropstone Model (Recommended)", ["pearai.chatView"]);
+        sidebar.webviewProtocol?.request("switchModel", "Dropstone Model (Recommended)", ["dropstone.chatView"]);
       }
     },
-    "pearai.checkPearAITokens": async () => {
+    "dropstone.checkPearAITokens": async () => {
       const result = await core.invoke("llm/checkPearAITokens", undefined);
       if (result?.tokensEdited && result.accessToken && result.refreshToken) {
         const creds = {
@@ -969,7 +1017,7 @@ const commandsMap: (
       }
     },
 
-    "pearai.patchWSL": async () => {
+    "dropstone.patchWSL": async () => {
       if (process.platform !== 'win32') {
         vscode.window.showWarningMessage("WSL is for Windows only.");
         return;

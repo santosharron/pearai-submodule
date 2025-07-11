@@ -120,7 +120,7 @@ export class DiffManager {
 
     if (
       this.extensionContext.globalState.get<boolean>(
-        "pearai.showDiffInfoMessage",
+        "dropstone.showDiffInfoMessage",
       ) !== false
     ) {
       vscode.window
@@ -133,7 +133,7 @@ export class DiffManager {
           if (selection === "Don't show again") {
             // Get the global state
             this.extensionContext.globalState.update(
-              "pearai.showDiffInfoMessage",
+              "dropstone.showDiffInfoMessage",
               false,
             );
           }

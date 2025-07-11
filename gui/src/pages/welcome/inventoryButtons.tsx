@@ -1,7 +1,7 @@
 // This is the inventory buttons that are shown on the splash screen
 // These are dummy buttons
 import { vscSidebarBorder } from "@/components";
-import { getLogoPath } from "@/pages/welcome/setup/ImportExtensions";
+import { getLogoPath } from "./setup/ImportExtensions";
 import { useState } from "react";
 
 const menuItems = [
@@ -10,11 +10,11 @@ const menuItems = [
         name: "Agent",
         icon: "creator-no-bg.svg",
         tooltip: "Agent",
-        backgroundColor: "bg-gradient-to-b from-[#007BFF] to-[#0056CC]",
-        textColor: "#E3F2FD",
-        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(0,123,255,0.8)]",
+        backgroundColor: "bg-[#1e1e1e]",
+        textColor: "#4da6ff",
+        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(77,166,255,0.8)]",
         expandedWidth: "w-[75px]",
-        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#FFFFFF80]",
+        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#4da6ff80]",
         textMargin: "mb-[2.7px]"
     },
     {
@@ -22,11 +22,11 @@ const menuItems = [
         name: "Chat",
         icon: "chat-no-bg.svg",
         tooltip: "Chat",
-        bgGradient: "bg-gradient-to-b from-[#1976D2] to-[#0D47A1]",
-        textColor: "#E3F2FD",
-        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(25,118,210,0.8)]",
+        backgroundColor: "bg-[#1e1e1e]",
+        textColor: "#4da6ff",
+        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(77,166,255,0.8)]",
         expandedWidth: "w-[65px]",
-        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#FFFFFF80]",
+        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#4da6ff80]",
         textMargin: "mb-[2.5px]"
     },
     {
@@ -34,11 +34,11 @@ const menuItems = [
         name: "Search",
         icon: "search-no-bg.svg",
         tooltip: "Search",
-        backgroundColor: "bg-gradient-to-b from-[#2196F3] to-[#1565C0]",
-        textColor: "#E3F2FD",
-        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(33,150,243,0.8)]",
+        backgroundColor: "bg-[#1e1e1e]",
+        textColor: "#4da6ff",
+        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(77,166,255,0.8)]",
         expandedWidth: "w-[78px]",
-        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#FFFFFF80]",
+        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#4da6ff80]",
         textMargin: "mb-[2.5px]"
     },
     {
@@ -46,11 +46,11 @@ const menuItems = [
         name: "Memory",
         icon: "mem0-no-bg.svg",
         tooltip: "Memory",
-        backgroundColor: "bg-gradient-to-b from-[#42A5F5] to-[#1E88E5]",
-        textColor: "#E3F2FD",
-        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(66,165,245,0.8)]",
+        backgroundColor: "bg-[#1e1e1e]",
+        textColor: "#4da6ff",
+        glow: "shadow-[0px_0px_57.60000228881836px_9.600000381469727px_rgba(77,166,255,0.8)]",
         expandedWidth: "w-[88px]",
-        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#FFFFFF80]",
+        boxShadow: "shadow-[inset_0px_0px_0px_1.2px_#4da6ff80]",
         textMargin: "mb-[2.6px]"
     }
 ];
@@ -79,7 +79,7 @@ const InventoryButtons = ({ activeItemID = "agent" }: { activeItemID?: string })
                             <div
                                 key={`${item.tooltip}-${index}`}
                                 className={` h-7
-                                    ${item.backgroundColor || item.bgGradient}
+                                    ${item.backgroundColor}
                                     ${activeItemID === item.id ? item.glow : ""}
                                     ${activeItemID !== item.id ? "z-10" : "z-5"}
                                     rounded-[10px] flex items-center

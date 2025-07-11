@@ -74,7 +74,7 @@ export function TutorialCard({ onClose }: TutorialCardProps) {
             className="align-middle pr-3"
           />
           <span>
-            <a href="https://trypear.ai" target="_blank">
+            <a href="https://dropstone.io" target="_blank">
               Read our documentation
             </a>{" "}
             to learn more

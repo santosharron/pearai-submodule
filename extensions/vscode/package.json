@@ -1,23 +1,23 @@
 {
-  "_comment": "This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to PearAI. pearai-submodule is a fork of Continue (https://github.com/continuedev/continue).",
-  "name": "pearai",
-  "publisher": "pearai",
+  "_comment": "This file has been modified significantly from its original contents. New commands have been added, and there has been renaming from Continue to Dropstone.",
+  "name": "dropstone",
+  "publisher": "dropstone",
   "icon": "media/icon.png",
   "version": "1.8.9",
   "repository": {
     "type": "git",
-    "url": "https://github.com/trypear/pearai-submodule"
+    "url": "https://github.com/santosharron/pearai-submodule"
   },
   "extensionKind": [
     "ui",
     "workspace"
   ],
   "bugs": {
-    "url": "https://github.com/trypear/pearai-app/issues"
+    "url": "https://dropstone.io/contact"
   },
-  "homepage": "https://trypear.ai",
-  "qna": "https://github.com/trypear/pearai-app/issues/new/choose",
-  "displayName": "PearAI",
+  "homepage": "https://dropstone.io",
+  "qna": "https://dropstone.io/qna",
+  "displayName": "Dropstone",
   "license": "Apache-2.0",
   "pricing": "Free",
   "description": "Supercharge your development with AI",
@@ -60,592 +60,616 @@
       {
         "filenames": [
           "config.json",
-          ".pearairc.json"
+          ".dropstonerc.json"
         ],
         "id": "jsonc"
       }
     ],
     "configuration": {
-      "title": "PearAI",
+      "title": "Dropstone",
       "properties": {
-        "pearai.telemetryEnabled": {
+        "dropstone.telemetryEnabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "PearAI collects anonymous usage data, cleaned of PII, to help us improve the product for our users. Read more  at [pearai.dev › Telemetry](https://trypear.ai/telemetry)."
+          "markdownDescription": "Dropstone collects anonymous usage data, cleaned of PII, to help us improve the product for our users. Read more  at [dropstone.dev › Telemetry](https://dropstone.io/telemetry)."
         },
-        "pearai.enableContinueForTeams": {
+        "dropstone.enableContinueForTeams": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "_(Requires window reload)_ Enable PearAI for teams beta features. To sign in, click the person icon in the bottom right of the sidebar."
+          "markdownDescription": "_(Requires window reload)_ Enable Dropstone for teams beta features. To sign in, click the person icon in the bottom right of the sidebar."
         },
-        "pearai.showInlineTip": {
+        "dropstone.showInlineTip": {
           "type": "boolean",
           "default": true,
-          "description": "Show inline suggestion to use the PearAI keyboard shortcuts (e.g. \"Cmd/Ctrl L to select code, Cmd/Ctrl I to edit\")."
+          "description": "Show inline suggestion to use the Dropstone keyboard shortcuts (e.g. \"Cmd/Ctrl L to select code, Cmd/Ctrl I to edit\")."
         },
-        "pearai.enableQuickActions": {
+        "dropstone.enableQuickActions": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Enable the experimental Quick Actions feature. Read our walkthrough to learn about configuration and how to share feedback: [pearai.dev › Walkthrough: Quick Actions (experimental)](https://trypear.ai/features/quick-actions)"
+          "markdownDescription": "Enable the experimental Quick Actions feature. Read our walkthrough to learn about configuration and how to share feedback: [dropstone.dev › Walkthrough: Quick Actions (experimental)](https://dropstone.io/features/quick-actions)"
         },
-        "pearai.enableTabAutocomplete": {
+        "dropstone.enableTabAutocomplete": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Enable PearAI's tab autocomplete feature. Read our walkthrough to learn about configuration and how to share feedback: [pearai.dev › Walkthrough: Tab Autocomplete (beta)](https://trypear.ai/docs/tab-autocomplete)"
+          "markdownDescription": "Enable Dropstone's tab autocomplete feature. Read our walkthrough to learn about configuration and how to share feedback: [dropstone.dev › Walkthrough: Tab Autocomplete (beta)](https://dropstone.io/docs/tab-autocomplete)"
         },
-        "pearai.pauseTabAutocompleteOnBattery": {
+        "dropstone.pauseTabAutocompleteOnBattery": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Pause PearAI's tab autocomplete feature when your battery is low."
+          "markdownDescription": "Pause Dropstone's tab autocomplete feature when your battery is low."
         },
-        "pearai.pauseCodebaseIndexOnStart": {
+        "dropstone.pauseCodebaseIndexOnStart": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Pause PearAI's codebase index on start."
+          "markdownDescription": "Pause Dropstone's codebase index on start."
         },
-        "pearai.enableDebugLogs": {
+        "dropstone.enableDebugLogs": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Enable PearAI Debug Logs in the Output panel."
+          "markdownDescription": "Enable Dropstone Debug Logs in the Output panel."
         },
-        "pearai.remoteConfigServerUrl": {
+        "dropstone.remoteConfigServerUrl": {
           "type": "string",
           "default": null,
           "markdownDescription": "If your team is set up to use shared configuration, enter the server URL here and your user token below to enable automatic syncing."
         },
-        "pearai.userToken": {
+        "dropstone.userToken": {
           "type": "string",
           "default": null,
           "markdownDescription": "If your team is set up to use shared configuration, enter your user token here and your server URL above to enable automatic syncing."
         },
-        "pearai.remoteConfigSyncPeriod": {
+        "dropstone.remoteConfigSyncPeriod": {
           "type": "number",
           "default": 60,
           "description": "The period of time in minutes between automatic syncs."
         },
-        "pearai.dropstoneApiKey": {
+        "dropstone.dropstoneApiKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "API key for Dropstone authentication. This is automatically managed by the PearAI extension."
+          "markdownDescription": "API key for Dropstone authentication. This is automatically managed by the Dropstone extension."
         }
       }
     },
     "commands": [
       {
-        "command": "pearai.acceptDiff",
-        "category": "PearAI",
+        "command": "dropstone.acceptDiff",
+        "category": "Dropstone",
         "title": "Accept Diff",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.rejectDiff",
-        "category": "PearAI",
+        "command": "dropstone.rejectDiff",
+        "category": "Dropstone",
         "title": "Reject Diff",
-        "group": "PearAI",
+        "group": "Dropstone",
         "icon": "$(stop)"
       },
       {
-        "command": "pearai.acceptVerticalDiffBlock",
-        "category": "PearAI",
+        "command": "dropstone.acceptVerticalDiffBlock",
+        "category": "Dropstone",
         "title": "Accept Vertical Diff Block",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.rejectVerticalDiffBlock",
-        "category": "PearAI",
+        "command": "dropstone.rejectVerticalDiffBlock",
+        "category": "Dropstone",
         "title": "Reject Vertical Diff Block",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.quickEdit",
-        "category": "PearAI",
+        "command": "dropstone.quickEdit",
+        "category": "Dropstone",
         "title": "Generate Code",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.toggleCreator",
-        "category": "PearAI",
-        "title": "Toggle PearAI Creator",
-        "group": "PearAI"
+        "command": "dropstone.toggleCreator",
+        "category": "Dropstone",
+        "title": "Toggle Dropstone Creator",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.toggleSearch",
-        "category": "PearAI",
-        "title": "Toggle PearAI Search",
-        "group": "PearAI"
+        "command": "dropstone.toggleSearch",
+        "category": "Dropstone",
+        "title": "Toggle Dropstone Search",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.toggleMem0",
-        "category": "PearAI",
-        "title": "Toggle PearAI Memory",
-        "group": "PearAI"
+        "command": "dropstone.toggleMem0",
+        "category": "Dropstone",
+        "title": "Toggle Dropstone Memory",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.toggleInventorySettings",
-        "category": "PearAI",
-        "title": "Toggle PearAI Inventory",
-        "group": "PearAI"
+        "command": "dropstone.toggleInventorySettings",
+        "category": "Dropstone",
+        "title": "Toggle Dropstone Inventory",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.startOnboarding",
-        "category": "PearAI Developer",
-        "title": "Start PearAI Onboarding",
-        "group": "PearAI"
+        "command": "dropstone.startOnboarding",
+        "category": "Dropstone Developer",
+        "title": "Start Dropstone Onboarding",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.developer.restFirstLaunch",
-        "category": "PearAI Developer",
-        "title": "Reset PearAI Onboarding",
-        "group": "PearAI"
+        "command": "dropstone.developer.restFirstLaunch",
+        "category": "Dropstone Developer",
+        "title": "Reset Dropstone Onboarding",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.focusAgentView",
-        "category": "PearAI",
-        "title": "Focus PearAI Agent View",
-        "group": "PearAI"
+        "command": "dropstone.focusAgentView",
+        "category": "Dropstone",
+        "title": "Focus Dropstone Agent View",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.focusPearAISearchView",
-        "category": "PearAI",
-        "title": "Focus PearAI Search View",
-        "group": "PearAI"
+        "command": "dropstone.focusDropstoneSearchView",
+        "category": "Dropstone",
+        "title": "Focus Dropstone Search View",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.focusPearAIMem0View",
-        "category": "PearAI",
-        "title": "Focus PearAI Memory View",
-        "group": "PearAI"
+        "command": "dropstone.focusDropstoneMem0View",
+        "category": "Dropstone",
+        "title": "Focus Dropstone Memory View",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.focusContinueInput",
-        "category": "PearAI",
+        "command": "dropstone.focusContinueInput",
+        "category": "Dropstone",
         "title": "Add Highlighted Code to Context",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.focusContinueInputWithoutClear",
-        "category": "PearAI",
+        "command": "dropstone.focusContinueInputWithoutClear",
+        "category": "Dropstone",
         "title": "Add Highlighted Code to Context",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.debugTerminal",
-        "category": "PearAI",
-        "title": "PearAI: Debug Terminal",
-        "group": "PearAI"
+        "command": "dropstone.debugTerminal",
+        "category": "Dropstone",
+        "title": "Dropstone: Debug Terminal",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.toggleFullScreen",
-        "category": "PearAI",
+        "command": "dropstone.toggleFullScreen",
+        "category": "Dropstone",
         "title": "Toggle Full Screen",
         "icon": "$(fullscreen)",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.openConfigJson",
-        "category": "PearAI",
+        "command": "dropstone.openConfigJson",
+        "category": "Dropstone",
         "title": "Open config.json",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.openPearAiWelcome",
-        "category": "PearAI",
-        "title": "Open Welcome page for PearAI",
-        "group": "PearAI"
+        "command": "dropstone.openPearAiWelcome",
+        "category": "Dropstone",
+        "title": "Open Welcome page for Dropstone",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.toggleTabAutocompleteEnabled",
-        "category": "PearAI",
+        "command": "dropstone.toggleTabAutocompleteEnabled",
+        "category": "Dropstone",
         "title": "Toggle Autocomplete Enabled",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.selectFilesAsContext",
-        "category": "PearAI",
-        "title": "PearAI: Select Files as Context",
-        "group": "PearAI"
+        "command": "dropstone.selectFilesAsContext",
+        "category": "Dropstone",
+        "title": "Dropstone: Select Files as Context",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.newSession",
-        "category": "PearAI",
+        "command": "dropstone.newSession",
+        "category": "Dropstone",
         "title": "New Session",
         "icon": "$(add)",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.newSessionSearch",
-        "category": "PearAI",
+        "command": "dropstone.newSessionSearch",
+        "category": "Dropstone",
         "title": "New Search Session",
         "icon": "$(add)",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.viewHistory",
-        "category": "PearAI",
+        "command": "dropstone.viewHistory",
+        "category": "Dropstone",
         "title": "View History",
         "icon": "$(history)",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.viewHistorySearch",
-        "category": "PearAI",
+        "command": "dropstone.viewHistorySearch",
+        "category": "Dropstone",
         "title": "View Search History",
         "icon": "$(history)",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.writeCommentsForCode",
-        "category": "PearAI",
+        "command": "dropstone.writeCommentsForCode",
+        "category": "Dropstone",
         "title": "Write Comments for this Code",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.writeDocstringForCode",
-        "category": "PearAI",
+        "command": "dropstone.writeDocstringForCode",
+        "category": "Dropstone",
         "title": "Write a Docstring for this Code",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.fixCode",
-        "category": "PearAI",
+        "command": "dropstone.fixCode",
+        "category": "Dropstone",
         "title": "Fix this Code",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.optimizeCode",
-        "category": "PearAI",
+        "command": "dropstone.optimizeCode",
+        "category": "Dropstone",
         "title": "Optimize this Code",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.fixGrammar",
-        "category": "PearAI",
+        "command": "dropstone.fixGrammar",
+        "category": "Dropstone",
         "title": "Fix Grammar / Spelling",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.codebaseForceReIndex",
-        "category": "PearAI",
+        "command": "dropstone.codebaseForceReIndex",
+        "category": "Dropstone",
         "title": "Codebase Force Re-Index",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.docsIndex",
-        "category": "PearAI",
+        "command": "dropstone.docsIndex",
+        "category": "Dropstone",
         "title": "Docs Index",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.docsReIndex",
-        "category": "PearAI",
+        "command": "dropstone.docsReIndex",
+        "category": "Dropstone",
         "title": "Docs Force Re-Index",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.login",
-        "category": "PearAI",
-        "title": "Login to PearAI",
-        "group": "PearAI"
+        "command": "dropstone.login",
+        "category": "Dropstone",
+        "title": "Login to Dropstone",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.logout",
-        "category": "PearAI",
-        "title": "Logout of PearAI",
-        "group": "PearAI"
+        "command": "dropstone.logout",
+        "category": "Dropstone",
+        "title": "Logout of Dropstone",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.manualLogin",
-        "category": "PearAI Developer",
-        "title": "Manual PearAI Login",
-        "group": "PearAI"
+        "command": "dropstone.manualLogin",
+        "category": "Dropstone Developer",
+        "title": "Manual Dropstone Login",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.loadRecentChat",
-        "category": "PearAI",
+        "command": "dropstone.loadRecentChat",
+        "category": "Dropstone",
         "title": "Load Recent Chat",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.resizeAuxiliaryBarWidth",
-        "category": "PearAI",
+        "command": "dropstone.resizeAuxiliaryBarWidth",
+        "category": "Dropstone",
         "title": "Resize Chat",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.macResizeAuxiliaryBarWidth",
-        "category": "PearAI",
+        "command": "dropstone.macResizeAuxiliaryBarWidth",
+        "category": "Dropstone",
         "title": "Big Chat - CMD + [",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.winResizeAuxiliaryBarWidth",
-        "category": "PearAI",
+        "command": "dropstone.winResizeAuxiliaryBarWidth",
+        "category": "Dropstone",
         "title": "Big Chat - CTRL + [",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.patchWSL",
+        "command": "dropstone.patchWSL",
         "category": "Shell",
         "title": "Patch WSL",
         "group": "Shell"
       },
       {
-        "command": "pearai.perplexityMode",
-        "category": "PearAI",
-        "title": "Open PearAI Search",
-        "group": "PearAI"
+        "command": "dropstone.perplexityMode",
+        "category": "Dropstone",
+        "title": "Open Dropstone Search",
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.showInteractiveContinueTutorial",
-        "category": "PearAI",
+        "command": "dropstone.showInteractiveContinueTutorial",
+        "category": "Dropstone",
         "title": "Show Chat Tutorial",
-        "group": "PearAI"
+        "group": "Dropstone"
       },
       {
-        "command": "pearai.notifyOverlayOpened",
+        "command": "dropstone.notifyOverlayOpened",
         "title": "Dev - Overlay Opened",
-        "group": "PearAI"
+        "group": "Dropstone"
+      },
+      {
+        "command": "dropstone.toggleOverlay",
+        "category": "Dropstone",
+        "title": "Toggle Overlay",
+        "group": "Dropstone"
+      },
+      {
+        "command": "dropstone.toggleAuxiliaryBar",
+        "category": "Dropstone",
+        "title": "Toggle Auxiliary Bar",
+        "group": "Dropstone"
+      },
+      {
+        "command": "dropstone.quickEditHistoryUp",
+        "category": "Dropstone",
+        "title": "Quick Edit History Up",
+        "group": "Dropstone"
+      },
+      {
+        "command": "dropstone.quickEditHistoryDown",
+        "category": "Dropstone",
+        "title": "Quick Edit History Down",
+        "group": "Dropstone"
       }
     ],
     "keybindings": [
       {
-        "command": "pearai.toggleOverlay",
+        "command": "dropstone.toggleOverlay",
         "mac": "cmd+e",
         "key": "ctrl+e"
       },
       {
-        "command": "pearai.toggleInventorySettings",
+        "command": "dropstone.toggleInventorySettings",
         "mac": "cmd+shift+1",
         "key": "ctrl+shift+1"
       },
       {
-        "command": "pearai.toggleCreator",
+        "command": "dropstone.toggleCreator",
         "mac": "cmd+1",
         "key": "ctrl+1"
       },
       {
-        "command": "pearai.toggleSearch",
+        "command": "dropstone.toggleSearch",
         "mac": "cmd+2",
         "key": "ctrl+2"
       },
       {
-        "command": "pearai.toggleMem0",
+        "command": "dropstone.toggleMem0",
         "mac": "cmd+3",
         "key": "ctrl+4"
       },
       {
-        "command": "pearai.focusContinueInputWithoutClear",
+        "command": "dropstone.focusContinueInputWithoutClear",
         "mac": "cmd+shift+l",
         "key": "ctrl+shift+l"
       },
       {
-        "command": "pearai.toggleAuxiliaryBar",
+        "command": "dropstone.toggleAuxiliaryBar",
         "mac": "alt+cmd+l",
         "key": "alt+ctrl+l"
       },
       {
-        "command": "pearai.acceptDiff",
+        "command": "dropstone.acceptDiff",
         "mac": "shift+cmd+enter",
         "key": "shift+ctrl+enter"
       },
       {
-        "command": "pearai.rejectDiff",
+        "command": "dropstone.rejectDiff",
         "mac": "shift+cmd+backspace",
         "key": "shift+ctrl+backspace"
       },
       {
-        "command": "pearai.rejectDiff",
+        "command": "dropstone.rejectDiff",
         "mac": "cmd+z",
         "key": "ctrl+z",
-        "when": "pearai.diffVisible"
+        "when": "dropstone.diffVisible"
       },
       {
-        "command": "pearai.quickEditHistoryUp",
+        "command": "dropstone.quickEditHistoryUp",
         "mac": "up",
         "key": "up",
-        "when": "false && pearai.quickEditHistoryFocused"
+        "when": "false && dropstone.quickEditHistoryFocused"
       },
       {
-        "command": "pearai.quickEditHistoryDown",
+        "command": "dropstone.quickEditHistoryDown",
         "mac": "down",
         "key": "down",
-        "when": "false && pearai.quickEditHistoryFocused"
+        "when": "false && dropstone.quickEditHistoryFocused"
       },
       {
-        "command": "pearai.acceptVerticalDiffBlock",
+        "command": "dropstone.acceptVerticalDiffBlock",
         "mac": "alt+cmd+y",
         "key": "alt+ctrl+y"
       },
       {
-        "command": "pearai.rejectVerticalDiffBlock",
+        "command": "dropstone.rejectVerticalDiffBlock",
         "mac": "alt+cmd+n",
         "key": "alt+ctrl+n"
       },
       {
-        "command": "pearai.quickEdit",
+        "command": "dropstone.quickEdit",
         "mac": "cmd+i",
         "key": "ctrl+i"
       },
       {
-        "command": "pearai.debugTerminal",
+        "command": "dropstone.debugTerminal",
         "mac": "cmd+shift+r",
         "key": "ctrl+shift+r"
       },
       {
-        "command": "pearai.toggleFullScreen",
+        "command": "dropstone.toggleFullScreen",
         "mac": "cmd+k cmd+m",
         "key": "ctrl+k ctrl+m",
         "when": "!terminalFocus"
       },
       {
-        "command": "pearai.toggleTabAutocompleteEnabled",
+        "command": "dropstone.toggleTabAutocompleteEnabled",
         "mac": "cmd+k cmd+a",
         "key": "ctrl+k ctrl+a",
         "when": "!terminalFocus"
       },
       {
-        "command": "pearai.loadRecentChat",
+        "command": "dropstone.loadRecentChat",
         "mac": "cmd+0",
         "key": "ctrl+0"
       },
       {
-        "command": "pearai.resizeAuxiliaryBarWidth",
+        "command": "dropstone.resizeAuxiliaryBarWidth",
         "mac": "cmd+\\",
         "key": "ctrl+\\"
       },
       {
-        "command": "pearai.viewHistory",
+        "command": "dropstone.viewHistory",
         "mac": "cmd+h",
         "key": "ctrl+h"
       }
     ],
     "submenus": [
       {
-        "id": "pearai.continueSubMenu",
-        "label": "PearAI"
+        "id": "dropstone.continueSubMenu",
+        "label": "Dropstone"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "pearai.quickEdit"
+          "command": "dropstone.quickEdit"
         },
         {
-          "command": "pearai.toggleCreator"
+          "command": "dropstone.toggleCreator"
         },
         {
-          "command": "pearai.toggleSearch"
+          "command": "dropstone.toggleSearch"
         },
         {
-          "command": "pearai.toggleInventorySettings"
+          "command": "dropstone.toggleInventorySettings"
         },
         {
-          "command": "pearai.focusContinueInput"
+          "command": "dropstone.focusContinueInput"
         },
         {
-          "command": "pearai.focusContinueInputWithoutClear"
+          "command": "dropstone.focusContinueInputWithoutClear"
         },
         {
-          "command": "pearai.debugTerminal"
+          "command": "dropstone.debugTerminal"
         },
         {
-          "command": "pearai.toggleFullScreen"
+          "command": "dropstone.toggleFullScreen"
         },
         {
-          "command": "pearai.newSession"
+          "command": "dropstone.newSession"
         },
         {
-          "command": "pearai.showInteractiveContinueTutorial"
+          "command": "dropstone.showInteractiveContinueTutorial"
         }
       ],
       "editor/context": [
         {
-          "submenu": "pearai.continueSubMenu",
+          "submenu": "dropstone.continueSubMenu",
           "group": "0_acontinue"
         }
       ],
       "editor/title/run": [
         {
-          "command": "pearai.rejectDiff",
-          "group": "PearAI",
-          "when": "pearai.streamingDiff"
+          "command": "dropstone.rejectDiff",
+          "group": "Dropstone",
+          "when": "dropstone.streamingDiff"
         }
       ],
-      "pearai.continueSubMenu": [
+      "dropstone.continueSubMenu": [
         {
-          "command": "pearai.focusContinueInputWithoutClear",
-          "group": "PearAI",
+          "command": "dropstone.focusContinueInputWithoutClear",
+          "group": "Dropstone",
           "when": "editorHasSelection"
         },
         {
-          "command": "pearai.writeCommentsForCode",
-          "group": "PearAI",
+          "command": "dropstone.writeCommentsForCode",
+          "group": "Dropstone",
           "when": "editorHasSelection"
         },
         {
-          "command": "pearai.writeDocstringForCode",
-          "group": "PearAI",
+          "command": "dropstone.writeDocstringForCode",
+          "group": "Dropstone",
           "when": "editorHasSelection"
         },
         {
-          "command": "pearai.fixCode",
-          "group": "PearAI",
+          "command": "dropstone.fixCode",
+          "group": "Dropstone",
           "when": "editorHasSelection"
         },
         {
-          "command": "pearai.optimizeCode",
-          "group": "PearAI",
+          "command": "dropstone.optimizeCode",
+          "group": "Dropstone",
           "when": "editorHasSelection"
         },
         {
-          "command": "pearai.fixGrammar",
-          "group": "PearAI",
+          "command": "dropstone.fixGrammar",
+          "group": "Dropstone",
           "when": "editorHasSelection && editorLangId == 'markdown'"
         }
       ],
       "explorer/context": [
         {
-          "command": "pearai.selectFilesAsContext",
+          "command": "dropstone.selectFilesAsContext",
           "group": "1_debug@1"
         }
       ],
       "view/title": [
         {
-          "command": "pearai.newSession",
+          "command": "dropstone.newSession",
           "group": "navigation@1",
-          "when": "view == pearai.chatView"
+          "when": "view == dropstone.chatView"
         },
         {
-          "command": "pearai.newSessionSearch",
+          "command": "dropstone.newSessionSearch",
           "group": "navigation@1",
-          "when": "view == pearai.searchView"
+          "when": "view == dropstone.searchView"
         },
         {
-          "command": "pearai.toggleFullScreen",
+          "command": "dropstone.toggleFullScreen",
           "group": "navigation@1",
-          "when": "view == pearai.chatView"
+          "when": "view == dropstone.chatView"
         },
         {
-          "command": "pearai.viewHistory",
+          "command": "dropstone.viewHistory",
           "group": "navigation@1",
-          "when": "view == pearai.chatView"
+          "when": "view == dropstone.chatView"
         },
         {
-          "command": "pearai.viewHistorySearch",
+          "command": "dropstone.viewHistorySearch",
           "group": "navigation@1",
-          "when": "view == pearai.searchView"
+          "when": "view == dropstone.searchView"
         }
       ],
       "editor/title": [
         {
-          "command": "pearai.toggleFullScreen",
+          "command": "dropstone.toggleFullScreen",
           "group": "navigation@1",
-          "when": "activeWebviewPanelId == pearai.chatView || activeWebviewPanelId == pearai.searchView"
+          "when": "activeWebviewPanelId == dropstone.chatView || activeWebviewPanelId == dropstone.searchView"
         }
       ],
       "terminal/context": [
         {
-          "command": "pearai.debugTerminal",
+          "command": "dropstone.debugTerminal",
           "group": "navigation@top"
         }
       ]
@@ -653,52 +677,52 @@
     "viewsContainers": {
       "auxiliarybar": [
         {
-          "id": "pearaiChat",
+          "id": "dropstoneChat",
           "title": "Dropstone Chat",
           "icon": "media/sidebar-icon.png"
         },
         {
-          "id": "pearaiSearch",
+          "id": "dropstoneSearch",
           "title": "Dropstone Search",
           "icon": "media/sidebar-icon.png"
         },
         {
-          "id": "pearaiMemory",
+          "id": "dropstoneMemory",
           "title": "Dropstone Memory",
           "icon": "media/sidebar-icon.png"
         }
       ]
     },
     "views": {
-      "pearaiChat": [
+      "dropstoneChat": [
         {
           "type": "webview",
-          "id": "pearai.chatView",
+          "id": "dropstone.chatView",
           "name": "Dropstone Chat",
           "visibility": "visible"
         }
       ],
-      "pearaiSearch": [
+      "dropstoneSearch": [
         {
           "type": "webview",
-          "id": "pearai.searchView",
+          "id": "dropstone.searchView",
           "name": "Dropstone Search",
           "visibility": "visible"
         }
       ],
-      "pearaiMemory": [
+      "dropstoneMemory": [
         {
           "type": "webview",
-          "id": "pearai.mem0View",
+          "id": "dropstone.mem0View",
           "name": "Dropstone Memory",
           "visibility": "visible"
         }
       ]
     },
-    "authenticationProviders": [
+    "authentication": [
       {
-        "id": "pearai",
-        "label": "PearAI"
+        "id": "dropstone",
+        "label": "Dropstone"
       }
     ],
     "jsonValidation": [
@@ -707,7 +731,7 @@
         "url": "./config_schema.json"
       },
       {
-        "fileMatch": ".pearairc.json",
+        "fileMatch": ".dropstonerc.json",
         "url": "./continue_rc_schema.json"
       }
     ]

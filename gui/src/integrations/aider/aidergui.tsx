@@ -634,7 +634,7 @@
 //       <div className="text-[10px] text-muted-foreground mt-4 flex justify-end pr-2 pb-6">
 //         *View PearAI Disclaimer page{" "}
 //         <Link
-//           to="https://trypear.ai/disclaimer/"
+//           to="https://dropstone.io/disclaimer/"
 //           target="_blank"
 //           className="text-muted-foreground no-underline hover:no-underline ml-1"
 //         >

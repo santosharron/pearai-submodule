@@ -122,7 +122,7 @@ export class VerticalPerLineDiffManager {
 
     this.disableDocumentChangeListener();
 
-    vscode.commands.executeCommand("setContext", "pearai.diffVisible", false);
+    vscode.commands.executeCommand("setContext", "dropstone.diffVisible", false);
   }
 
   async acceptRejectVerticalDiffBlock(
@@ -203,7 +203,7 @@ export class VerticalPerLineDiffManager {
     quickEdit?: string,
     range?: vscode.Range,
   ) {
-    vscode.commands.executeCommand("setContext", "pearai.diffVisible", true);
+    vscode.commands.executeCommand("setContext", "dropstone.diffVisible", true);
 
     let editor = vscode.window.activeTextEditor;
 
@@ -313,7 +313,7 @@ export class VerticalPerLineDiffManager {
       );
     }
 
-    vscode.commands.executeCommand("setContext", "pearai.streamingDiff", true);
+    vscode.commands.executeCommand("setContext", "dropstone.streamingDiff", true);
 
     try {
       await diffHandler.run(
@@ -344,7 +344,7 @@ export class VerticalPerLineDiffManager {
             if (selection === "Login to Dropstone") {
               vscode.env.openExternal(
                 vscode.Uri.parse(
-                  "https://trypear.ai/signin?callback=pearai://pearai.pearai/auth",
+                  "https://dropstone.io/signin?callback=pearai://dropstone.pearai/auth",
                 ),
               );
             }
@@ -359,7 +359,7 @@ export class VerticalPerLineDiffManager {
             if (selection === "Login to Dropstone") {
               vscode.env.openExternal(
                 vscode.Uri.parse(
-                  "http://localhost:3000/login",
+                  "https://dropstone-server-bjlp.onrender.com/login",
                 ),
               );
             }
@@ -372,7 +372,7 @@ export class VerticalPerLineDiffManager {
     } finally {
       vscode.commands.executeCommand(
         "setContext",
-        "pearai.streamingDiff",
+        "dropstone.streamingDiff",
         false,
       );
     }

@@ -93,7 +93,7 @@ export function setupStatusBar(
     ? "$(loading~spin) Dropstone"
     : statusBarItemText(status);
   statusBarItem.tooltip = statusBarItemTooltip(status ?? statusBarStatus);
-  statusBarItem.command = "pearai.openTabAutocompleteConfigMenu";
+  statusBarItem.command = "dropstone.openTabAutocompleteConfigMenu";
 
   statusBarItem.show();
   if (status !== undefined) {

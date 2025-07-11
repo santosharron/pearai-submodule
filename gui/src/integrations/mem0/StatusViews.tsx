@@ -41,8 +41,8 @@ export const DisabledView = ({ hasUnsavedChanges }: { hasUnsavedChanges: boolean
   return (
     <StatusViewLayout>
       <ContentWrapper>
-        <div className="text-2xl font-['SF Pro']">Dropstone Memory Disabled</div>
-        <div className="opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+        <div className="text-2xl font-['Inter']">Dropstone Memory Disabled</div>
+        <div className="opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
           {hasUnsavedChanges ? (
             "You have unsaved changes to memories"
           ) : (
@@ -68,8 +68,8 @@ export const DisabledView = ({ hasUnsavedChanges }: { hasUnsavedChanges: boolean
 export const UpdatingView = () => (
   <StatusViewLayout>
     <ContentWrapper>
-      <div className="text-2xl font-['SF Pro']">Updating Memories...</div>
-      <div className="opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+      <div className="text-2xl font-['Inter']">Updating Memories...</div>
+      <div className="opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
         please wait while we save your changes
       </div>
     </ContentWrapper>
@@ -79,8 +79,8 @@ export const UpdatingView = () => (
 export const LoadingView = () => (
   <StatusViewLayout>
     <ContentWrapper>
-      <div className="text-2xl font-['SF Pro']">Loading Memories...</div>
-      <div className="opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+      <div className="text-2xl font-['Inter']">Loading Memories...</div>
+      <div className="opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
         Powered by Mem0
       </div>
     </ContentWrapper>
@@ -101,13 +101,13 @@ export const EmptyView = ({ onAddMemory }: { onAddMemory: () => void }) => (
 
       <div className="w-[300px] h-[240px] absolute bottom-0 overflow-hidden flex-col justify-start items-start gap-5 inline-flex z-10">
         <div className="flex flex-col text-left">
-          <div className="text-2xl font-['SF Pro']">Dropstone Memory</div>
-          <div className="h-[18px] opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">Local Memory Storage</div>
+          <div className="text-2xl font-['Inter']">Dropstone Memory</div>
+          <div className="h-[18px] opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">Local Memory Storage</div>
         </div>
-        <div className="w-[300px] h-[140px] overflow-hidden text-left opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+        <div className="w-[300px] h-[140px] overflow-hidden text-left opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
           Dropstone Memory allows you to add information for Dropstone to remember. Add memories to personalize your building experience!
         </div>
-        <div className="w-[300px] h-[100px] overflow-hidden text-left opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+        <div className="w-[300px] h-[100px] overflow-hidden text-left opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
           No memories yet – Click the button below to add memories.
         </div>
 
@@ -130,8 +130,8 @@ export const EmptyView = ({ onAddMemory }: { onAddMemory: () => void }) => (
 export const NoResultsView = () => (
   <StatusViewLayout>
     <ContentWrapper>
-      <div className="text-2xl font-['SF Pro']">No Memories Found</div>
-      <div className="opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px]">
+      <div className="text-2xl font-['Inter']">No Memories Found</div>
+      <div className="opacity-50 text-xs font-normal font-['Inter'] leading-[18px]">
         No memories match your search
       </div>
     </ContentWrapper>

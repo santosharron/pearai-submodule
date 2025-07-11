@@ -1,0 +1,1 @@
+export const MEMORIES_FILE = 'dropstone_memories.json'; 

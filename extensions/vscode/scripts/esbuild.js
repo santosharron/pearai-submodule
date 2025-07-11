@@ -32,5 +32,34 @@ const esbuildConfig = {
 		await ctx.watch();
 	} else {
 		await esbuild.build(esbuildConfig);
+
+		// BEGIN SQLITE3 AND XHR WORKER COPY
+		const fs = require("fs");
+		const fspath = require("path");
+		try {
+			// sqlite binding
+			const srcBinding = fspath.resolve(__dirname, "../node_modules/sqlite3/build/Release/node_sqlite3.node");
+			const destBinding = fspath.resolve(__dirname, "../out/build/Release/node_sqlite3.node");
+			if (fs.existsSync(srcBinding)) {
+				fs.mkdirSync(fspath.dirname(destBinding), { recursive: true });
+				fs.copyFileSync(srcBinding, destBinding);
+				console.log("[esbuild] Copied sqlite3 native binding to", destBinding);
+			} else {
+				console.warn("[esbuild] sqlite3 native binding not found at", srcBinding);
+			}
+
+			// xhr-sync-worker
+			const srcWorker = fspath.resolve(__dirname, "../node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js");
+			const destWorker = fspath.resolve(__dirname, "../out/xhr-sync-worker.js");
+			if (fs.existsSync(srcWorker)) {
+				fs.copyFileSync(srcWorker, destWorker);
+				console.log("[esbuild] Copied xhr-sync-worker to", destWorker);
+			} else {
+				console.warn("[esbuild] xhr-sync-worker.js not found at", srcWorker);
+			}
+		} catch (err) {
+			console.warn("[esbuild] Failed to copy native/worker files:", err.message);
+		}
+		// END SQLITE3 AND XHR WORKER COPY
 	}
 })();

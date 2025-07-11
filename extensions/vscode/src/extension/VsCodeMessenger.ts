@@ -93,25 +93,25 @@ export class VsCodeMessenger {
     });
     // welcome stuff
     this.onWebview("markNewOnboardingComplete", (msg) => {
-      vscode.commands.executeCommand("pearai.welcome.markNewOnboardingComplete");
+      vscode.commands.executeCommand("dropstone.welcome.markNewOnboardingComplete");
     });
     this.onWebview("closeOverlay", (msg) => {
-      vscode.commands.executeCommand("pearai.hideOverlay");
+      vscode.commands.executeCommand("dropstone.hideOverlay");
       vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     });
     this.onWebview("lockOverlay", (msg) => {
-      vscode.commands.executeCommand("pearai.lockOverlay");
+      vscode.commands.executeCommand("dropstone.lockOverlay");
     });
     this.onWebview("unlockOverlay", (msg) => {
-      vscode.commands.executeCommand("pearai.unlockOverlay");
+      vscode.commands.executeCommand("dropstone.unlockOverlay");
     });
     this.onWebview("hideOverlayLoadingMessage", (msg) => {
-      vscode.commands.executeCommand("pearai.hideOverlayLoadingMessage");
+      vscode.commands.executeCommand("dropstone.hideOverlayLoadingMessage");
     });
     this.onWebview("importUserSettingsFromVSCode", async (msg) => {
       try {
         return await vscode.commands.executeCommand(
-          "pearai.welcome.importUserSettingsFromVSCode",
+          "dropstone.welcome.importUserSettingsFromVSCode",
         );
       } catch (error) {
         console.log("importUserSettingsFromVSCode rejectionReason", error);
@@ -176,10 +176,10 @@ export class VsCodeMessenger {
       return 0;
     });
     this.onWebview("openInventoryHome", (msg) => {
-      vscode.commands.executeCommand("pearai.toggleInventoryHome");
+      vscode.commands.executeCommand("dropstone.toggleInventoryHome");
     });
     this.onWebview("openInventorySettings", (msg) => {
-      vscode.commands.executeCommand("pearai.toggleInventorySettings");
+      vscode.commands.executeCommand("dropstone.toggleInventorySettings");
     });
     this.onWebview("pearAIinstallation", (msg) => {
       const { tools } = msg.data;
@@ -199,13 +199,13 @@ export class VsCodeMessenger {
       }
     });
     this.onWebview("closePearAIOverlay", (msg) => {
-      vscode.commands.executeCommand("pearai.unlockOverlay");
+      vscode.commands.executeCommand("dropstone.unlockOverlay");
     });
     this.onWebview("highlightElement", (msg) => {
-      vscode.commands.executeCommand("pearai.highlightElement", msg);
+      vscode.commands.executeCommand("dropstone.highlightElement", msg);
     });
     this.onWebview("unhighlightElement", (msg) => {
-      vscode.commands.executeCommand("pearai.unhighlightElement", msg);
+      vscode.commands.executeCommand("dropstone.unhighlightElement", msg);
     });
     this.onWebview("getUrlTitle", async (msg) => {
       const url = msg.data;
@@ -215,15 +215,15 @@ export class VsCodeMessenger {
       return match ? match[1] : new URL(url).hostname;
     });
     this.onWebview("perplexityMode", (msg) => {
-      vscode.commands.executeCommand("pearai.perplexityMode");
+      vscode.commands.executeCommand("dropstone.perplexityMode");
     });
     this.onWebview("addPerplexityContext", (msg) => {
-      vscode.commands.executeCommand("pearai.addPerplexityContext", msg);
-      vscode.commands.executeCommand("pearai.hideOverlay");
+      vscode.commands.executeCommand("dropstone.addPerplexityContext", msg);
+      vscode.commands.executeCommand("dropstone.hideOverlay");
     });
     this.onWebview("toggleDevTools", (msg) => {
       vscode.commands.executeCommand("workbench.action.toggleDevTools");
-      vscode.commands.executeCommand("pearai.viewLogs");
+      vscode.commands.executeCommand("dropstone.viewLogs");
     });
     this.onWebview("reloadWindow", (msg) => {
       vscode.commands.executeCommand("workbench.action.reloadWindow");
@@ -232,28 +232,32 @@ export class VsCodeMessenger {
       vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     });
     this.onWebview("toggleFullScreen", (msg) => {
-      vscode.commands.executeCommand("pearai.toggleFullScreen");
+      vscode.commands.executeCommand("dropstone.toggleFullScreen");
     });
     this.onWebview("bigChat", (msg) => {
-      vscode.commands.executeCommand("pearai.resizeAuxiliaryBarWidth");
+      vscode.commands.executeCommand("dropstone.resizeAuxiliaryBarWidth");
     });
     this.onWebview("pearaiLogin", (msg) => {
-      vscode.commands.executeCommand("pearai.login");
+      vscode.commands.executeCommand("dropstone.login");
+    });
+    this.onWebview("dropstoneLogin", (msg) => {
+      // Open the login page in the user's default browser
+      vscode.env.openExternal(vscode.Uri.parse("http://localhost:3002/login"));
     });
     this.onWebview("pearaiLogout", (msg) => {
-      vscode.commands.executeCommand("pearai.logout");
+      vscode.commands.executeCommand("dropstone.logout");
     });
     this.onWebview("lastChat", (msg) => {
-      vscode.commands.executeCommand("pearai.loadRecentChat");
+      vscode.commands.executeCommand("dropstone.loadRecentChat");
     });
     this.onWebview("closeChat", (msg) => {
-      vscode.commands.executeCommand("pearai.closeChat");
+      vscode.commands.executeCommand("dropstone.closeChat");
     });
     this.onWebview("openHistory", (msg) => {
-      vscode.commands.executeCommand("pearai.viewHistory");
+      vscode.commands.executeCommand("dropstone.viewHistory");
     });
     this.onWebview("appendSelected", (msg) => {
-      vscode.commands.executeCommand("pearai.focusContinueInputWithoutClear");
+      vscode.commands.executeCommand("dropstone.focusContinueInputWithoutClear");
     });
     // History
     this.onWebview("saveFile", async (msg) => {
@@ -376,7 +380,7 @@ export class VsCodeMessenger {
     // Accept the changes ✅
     this.onWebview("acceptRelaceDiff", async (msg) => {
       try {
-        vscode.commands.executeCommand("pearai.acceptDiff");
+        vscode.commands.executeCommand("dropstone.acceptDiff");
         this.webviewProtocol.request("setRelaceDiffState", {diffVisible: false});
       } catch (error) {
         vscode.window.showErrorMessage(`Failed to apply changes: ${error}`);
@@ -386,7 +390,7 @@ export class VsCodeMessenger {
     // Reject the changes ❌
     this.onWebview("rejectRelaceDiff", async (msg) => {
       try {
-        vscode.commands.executeCommand("pearai.rejectDiff");
+        vscode.commands.executeCommand("dropstone.rejectDiff");
         this.webviewProtocol.request("setRelaceDiffState", {diffVisible: false});
       } catch (error) {
         vscode.window.showErrorMessage(`Failed to reject changes: ${error}`);
@@ -554,7 +558,7 @@ export class VsCodeMessenger {
         console.log('Clearing Dropstone authentication...');
 
         // Clear the token from VS Code settings
-        await vscode.workspace.getConfiguration().update("pearai.dropstoneApiKey", "", vscode.ConfigurationTarget.Global);
+        await vscode.workspace.getConfiguration().update("dropstone.dropstoneApiKey", "", vscode.ConfigurationTarget.Global);
 
         // Clear the token from the .dropstone/config.json file
         const configPath = path.join(os.homedir(), ".dropstone", "config.json");
@@ -569,7 +573,7 @@ export class VsCodeMessenger {
           config.models.forEach((model: any, index: number) => {
             console.log(`Checking model ${index}: ${model.title}, apiBase: ${model.apiBase}`);
 
-            if (model.apiBase === "http://localhost:3000/v1") {
+            if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
               console.log(`Clearing authentication for model ${index}: ${model.title}`);
 
               // Clear the Authorization header
@@ -613,7 +617,7 @@ export class VsCodeMessenger {
         // Find and clear JWT token from Dropstone LLM instances
         if (coreConfig.models) {
           coreConfig.models.forEach((model: any, index: number) => {
-            if (model.apiBase === "http://localhost:3000/v1") {
+            if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
               console.log(`Clearing core config model ${index}: ${model.title}`);
               model.apiKey = "";
             }
@@ -621,6 +625,14 @@ export class VsCodeMessenger {
         }
 
         console.log("Successfully cleared Dropstone authentication from extension storage");
+
+        // Notify webview that authentication has been cleared
+        this.webviewProtocol.send("dropstoneAuthExpired", { error: "Authentication cleared" });
+        console.log('Sent authentication expiration notification to webview');
+
+        // Also send sync message to ensure bidirectional synchronization
+        this.webviewProtocol.send("dropstoneAuthExpired", { error: "Authentication sync logout" });
+        console.log('Sent authentication sync logout message');
       } catch (error) {
         console.error("Failed to clear Dropstone authentication:", error);
         throw error;
@@ -633,7 +645,7 @@ export class VsCodeMessenger {
         console.log('Saving Dropstone authentication with token:', token?.substring(0, 20) + '...');
 
         // Save the token to VS Code settings for persistence
-        await vscode.workspace.getConfiguration().update("pearai.dropstoneApiKey", token, vscode.ConfigurationTarget.Global);
+        await vscode.workspace.getConfiguration().update("dropstone.dropstoneApiKey", token, vscode.ConfigurationTarget.Global);
 
         // Also save to the .dropstone/config.json file
         const configPath = path.join(os.homedir(), ".dropstone", "config.json");
@@ -652,7 +664,7 @@ export class VsCodeMessenger {
         config.models.forEach((model: any, index: number) => {
           console.log(`Checking model ${index}: ${model.title}, apiBase: ${model.apiBase}`);
 
-          if (model.apiBase === "http://localhost:3000/v1") {
+          if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
             console.log(`Updating model ${index}: ${model.title}`);
 
             // Ensure requestOptions structure exists
@@ -693,16 +705,15 @@ export class VsCodeMessenger {
           // Force a small delay to ensure config is fully reloaded
           await new Promise(resolve => setTimeout(resolve, 500));
 
-          // Notify webview that authentication has been updated
+          // Notify webview of authentication update
           this.webviewProtocol.send("dropstoneAuthUpdated", { token, updatedCount });
           console.log('Sent authentication update notification to webview');
 
+          return { success: true };
         } else {
           console.error("Failed to save config to file");
           throw new Error("Failed to save config to file");
         }
-
-        return { success, updatedCount };
       } catch (error) {
         console.error("Failed to save Dropstone authentication:", error);
         return { success: false, error: String(error) };

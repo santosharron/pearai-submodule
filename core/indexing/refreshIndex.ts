@@ -69,12 +69,12 @@ export class SqliteDb {
 
     // Add unique constraints if they don't exist
     await db.exec(
-      `CREATE UNIQUE INDEX IF NOT EXISTS idx_tag_catalog_unique 
+      `CREATE UNIQUE INDEX IF NOT EXISTS idx_tag_catalog_unique
      ON tag_catalog(dir, branch, artifactId, path, cacheKey)`,
     );
 
     await db.exec(
-      `CREATE UNIQUE INDEX IF NOT EXISTS idx_global_cache_unique 
+      `CREATE UNIQUE INDEX IF NOT EXISTS idx_global_cache_unique
      ON global_cache(cacheKey, dir, branch, artifactId)`,
     );
   }

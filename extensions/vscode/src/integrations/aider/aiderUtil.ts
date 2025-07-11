@@ -150,7 +150,7 @@
 //   extensionContext: vscode.ExtensionContext,
 // ) {
 //   // Check if aider is already open by checking open tabs
-//   const aiderTab = getIntegrationTab("pearai.aiderGUIView");
+//   const aiderTab = getIntegrationTab("dropstone.aiderGUIView");
 //   console.log("Aider tab found:", aiderTab);
 //   console.log("Aider tab active:", aiderTab?.isActive);
 //   console.log("Aider panel exists:", !!aiderPanel);
@@ -169,7 +169,7 @@
 
 //   //create the full screen panel
 //   let panel = vscode.window.createWebviewPanel(
-//     "pearai.aiderGUIView",
+//     "dropstone.aiderGUIView",
 //     "PearAI Creator (Powered by aider)",
 //     vscode.ViewColumn.One,
 //     {
@@ -191,7 +191,7 @@
 //   sidebar.webviewProtocol?.request(
 //     "focusContinueInputWithNewSession",
 //     undefined,
-//     ["pearai.aiderGUIView"],
+//     ["dropstone.aiderGUIView"],
 //   );
 
 //   //When panel closes, reset the webview and focus
@@ -201,7 +201,7 @@
 //       // core.invoke("llm/killAiderProcess", undefined);
 
 //       // The following order is important as it does not reset the history in chat when closing creator
-//       vscode.commands.executeCommand("pearai.focusContinueInput");
+//       vscode.commands.executeCommand("dropstone.focusContinueInput");
 //       sidebar.resetWebviewProtocolWebview();
 //     },
 //     null,

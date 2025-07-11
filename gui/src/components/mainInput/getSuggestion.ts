@@ -215,7 +215,7 @@ export function getContextProviderDropdownOptions(
         action: () => {
           ideMessenger.request(
             "openUrl",
-            "https://trypear.ai/docs/at-commands",
+            "https://dropstone.io/docs/at-commands",
           );
         },
         description: "",

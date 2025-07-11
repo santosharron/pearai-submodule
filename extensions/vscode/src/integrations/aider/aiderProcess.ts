@@ -62,7 +62,7 @@
 //         await execSync(`pipx uninstall aider-chat`);
 //         await execSync(`pipx install --python python3.9 aider-chat==${PEARAI_AIDER_VERSION}`);
 //         console.log('Successfully reinstalled aider-chat');
-//         await vscode.commands.executeCommand("pearai.aiderResetSession");
+//         await vscode.commands.executeCommand("dropstone.aiderResetSession");
 //         await vscode.window.showInformationMessage('Successfully upgraded aider!');
 //         return;
 //       } catch (error) {
@@ -73,7 +73,7 @@
 //       try {
 //         await execSync(`pipx upgrade --python python3.9 aider-chat`);
 //         console.log('Successfully upgraded aider-chat');
-//         await vscode.commands.executeCommand("pearai.aiderResetSession");
+//         await vscode.commands.executeCommand("dropstone.aiderResetSession");
 //         await vscode.window.showInformationMessage('Successfully upgraded aider!');
 //         return;
 //       } catch (error) {
@@ -310,7 +310,7 @@
 //       ...newState,
 //       timeStamp: Date.now()
 //     };
-//     vscode.commands.executeCommand("pearai.setAiderProcessState", this._state);
+//     vscode.commands.executeCommand("dropstone.setAiderProcessState", this._state);
 //   }
 
 //   private captureAiderOutput(data: Buffer, type: 'stdout' | 'stderr'): void {
@@ -479,7 +479,7 @@
 //         if (selection === "View Troubleshooting") {
 //           vscode.env.openExternal(
 //             vscode.Uri.parse(
-//               "https://trypear.ai/blog/how-to-setup-aider-in-pearai",
+//               "https://dropstone.io/blog/how-to-setup-aider-in-pearai",
 //             ),
 //           );
 //         }

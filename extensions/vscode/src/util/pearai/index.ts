@@ -1,2 +1,2 @@
 export * from './pearaiViewTypes';
-export * from './pearaiMemory';
+export * from './dropstoneMemory';

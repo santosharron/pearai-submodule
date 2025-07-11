@@ -62,7 +62,7 @@ export const DEFAULT_IGNORE_FILETYPES = [
   "*.env",
   "*.gitignore",
   "*.gitkeep",
-  "*.pearaiignore",
+  "*.dropstoneignore",
   "config.json",
   "*.csv",
   "*.uasset",

@@ -196,6 +196,11 @@ export async function llmFromDescription(
     options.apiKey = ideSettings.dropstoneApiKey;
   }
 
+  // Pass PearAI credentials getter to PearAIServer
+  if (desc.provider === "dropstone") {
+    (options as any).getPearAICredentials = getCredentials;
+  }
+
   return new cls(options);
 }
 

@@ -79,7 +79,7 @@ const Sidebar = ({
       className="p-2 w-44 flex flex-col items-start justify-start bg-sidebar-background"
       style={{ borderRight: `1px solid ${lightGray}20`  }}
     >
-      
+
       {/* Settings Section */}
       <SidebarSection
         title="SETTINGS"
@@ -113,7 +113,7 @@ const SidebarSection = ({
   return (
     <div className="flex flex-col w-full border-solidd border-yellow-400">
       <div className="flex px-2 pt-5 pb-2 justify-center items-center gap-1">
-        <div className="grow opacity-50 text-[10px] font-bold font-['SF Pro'] tracking-tight">
+        <div className="grow opacity-50 text-[10px] font-bold font-['Inter'] tracking-tight">
           {title}
         </div>
       </div>
@@ -130,7 +130,7 @@ const SidebarSection = ({
               <img src={getLogoPath(item?.icon)} className="size-6 mr-1" />
             </div>
           )}
-          <div className="text-xs font-normal font-['SF Pro']">
+          <div className="text-xs font-normal font-['Inter']">
             {item.title}
           </div>
         </div>

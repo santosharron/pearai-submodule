@@ -32,7 +32,7 @@ function handleSelectionChange(e: vscode.TextEditorSelectionChangeEvent) {
   const line = Math.max(0, selection.start.line - 1);
 
   const hoverMarkdown = new vscode.MarkdownString(
-    `Click [here](command:pearai.hideInlineTip) to hide these suggestions`,
+    `Click [here](command:dropstone.hideInlineTip) to hide these suggestions`,
   );
   hoverMarkdown.isTrusted = true;
   hoverMarkdown.supportHtml = true;

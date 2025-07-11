@@ -11,13 +11,29 @@ export const useAccountSettings = () => {
   const [isUsageLoading, setIsUsageLoading] = useState(false);
   const ideMessenger = useContext(IdeMessengerContext);
 
-  const fetchUsageData = async (authData: Auth) => {
+  // Helper to resolve a usable JWT token – prefer explicit authData but fall
+  // back to the cached Dropstone token (written by DropstoneAuthContext)
+  const resolveToken = (authData?: Auth): string | null => {
+    if (authData?.accessToken) {
+      return authData.accessToken;
+    }
+    const stored = localStorage.getItem("dropstone_token");
+    return stored ?? null;
+  };
+
+  const fetchUsageData = async (authData?: Auth) => {
+    const token = resolveToken(authData);
+    if (!token) {
+      console.warn("[useAccountSettings] No JWT token available for fetchUsageData");
+      return;
+    }
+
     setIsUsageLoading(true);
     try {
       const response = await fetch(`${SERVER_URL}/get-usage`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${authData.accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -34,12 +50,18 @@ export const useAccountSettings = () => {
     }
   };
 
-  const fetchAccountData = async (authData: Auth) => {
+  const fetchAccountData = async (authData?: Auth) => {
+    const token = resolveToken(authData);
+    if (!token) {
+      console.warn("[useAccountSettings] No JWT token available for fetchAccountData");
+      return;
+    }
+
     try {
       const response = await fetch(`${SERVER_URL}/account`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${authData.accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -48,20 +70,89 @@ export const useAccountSettings = () => {
         throw new Error(`HTTP error! {fetchAccountData} Status: ${response.status}`);
       }
       const data = await response.json();
-      localStorage.setItem('pearai_account_details', JSON.stringify(data));
+      localStorage.setItem('dropstone_account_details', JSON.stringify(data));
+      console.log('[useAccountSettings] Saved dropstone_account_details to localStorage', data);
+      // Also cache token so that other webviews pick it up immediately
+      localStorage.setItem('dropstone_token', token);
+      console.log('[useAccountSettings] Saved dropstone_token to localStorage', token);
       setAccountDetails(data);
+
+      // Synchronize auth with Dropstone Chat / Roo-Code extension
+      try {
+        // @ts-ignore – not part of protocol typings
+        await ideMessenger.post('auth_sync_login', {
+          token,
+          userInfo: data,
+        });
+        // @ts-ignore – not part of protocol typings
+        await ideMessenger.post('invokeVSCodeCommandById', {
+          commandId: 'dropstone-roo-cline.pearaiLogin',
+          args: [{ token, userInfo: data }],
+        });
+      } catch (syncErr) {
+        console.error('Failed to sync authentication with Dropstone components:', syncErr);
+      }
     } catch (err) {
       console.error("Error fetching account data", err);
     }
   };
 
+  // -------------------------------------------------------------------
+  // Check auth with extension and persist it locally so that the GUI can
+  // restore login state on the next launch without waiting for the
+  // extension round-trip.
+  // -------------------------------------------------------------------
   const checkAuth = async () => {
     try {
       const res = await ideMessenger.request("getPearAuth", undefined);
-      setAuth(res);
-      return res;
+
+      // -----------------------------------------------------------------
+      // Decide what token we should ultimately use in the UI. We prefer the
+      // extension-provided credentials, but if they are missing we fall back
+      // to any previously cached auth that might still be valid. This prevents
+      // us from erroneously logging the user out when the extension has not
+      // yet initialised.
+      // -----------------------------------------------------------------
+
+      let effectiveAuth: Auth | null | undefined = res;
+
+      if (res?.accessToken) {
+        console.log('[AccountSettings] checkAuth received token from extension');
+        localStorage.setItem("dropstone_auth", JSON.stringify(res));
+        localStorage.setItem("dropstone_token", res.accessToken);
+        console.log('[useAccountSettings] Saved dropstone_auth & dropstone_token to localStorage (from checkAuth)');
+      } else {
+        // No token from the extension – see if we already have a cached one.
+        const cachedAuthRaw = localStorage.getItem("dropstone_auth");
+        if (cachedAuthRaw) {
+          try {
+            effectiveAuth = JSON.parse(cachedAuthRaw);
+            if (effectiveAuth?.accessToken) {
+              console.log('[AccountSettings] checkAuth fell back to cached token');
+              // Ensure the token is also present under the unified key so other
+              // webviews pick it up instantly.
+              localStorage.setItem('dropstone_token', effectiveAuth.accessToken);
+            }
+          } catch (err) {
+            console.warn('Failed to parse cached dropstone_auth', err);
+          }
+        }
+
+        // If we still have no usable credentials, clean up any stale cache so
+        // the UI shows a logged-out state.
+        if (!effectiveAuth?.accessToken) {
+          console.log('[AccountSettings] checkAuth found no valid token – clearing cache');
+          localStorage.removeItem("dropstone_auth");
+          localStorage.removeItem("pearai_auth"); // legacy key cleanup
+          localStorage.removeItem("dropstone_token");
+        }
+      }
+
+      setAuth(effectiveAuth ?? null);
+      return effectiveAuth ?? null;
     } catch (error) {
       console.error("Error checking auth status:", error);
+      return null;
     }
   };
 
@@ -70,12 +161,28 @@ export const useAccountSettings = () => {
   };
 
   const handleLogout = () => {
+    // Remove cached Dropstone token so other webviews detect logout immediately
+    localStorage.removeItem('dropstone_token');
+
     clearUserData();
+
+    // Notify extension host and other webviews about logout
+    // @ts-ignore – not part of protocol typings
+    ideMessenger.post('auth_sync_logout', undefined);
+    // @ts-ignore – not part of protocol typings
+    ideMessenger.post('invokeVSCodeCommandById', {
+      commandId: 'dropstone-roo-cline.dropstoneLogout',
+    });
+
     ideMessenger.post("pearaiLogout", undefined);
   };
 
   const clearUserData = () => {
-    localStorage.removeItem('pearai_account_details');
+    localStorage.removeItem('dropstone_account_details');
+    localStorage.removeItem('dropstone_auth');
+    localStorage.removeItem('pearai_auth'); // legacy cleanup
+    localStorage.removeItem('dropstone_token');
+    console.log('[useAccountSettings] Cleared localStorage items dropstone_account_details, dropstone_auth, dropstone_token');
     setAuth(null);
     setUsageDetails(null);
     setAccountDetails(null);
@@ -93,23 +200,42 @@ export const useAccountSettings = () => {
 
   const refreshData = async () => {
     const authData = await checkAuth();
-    if (authData) {
-      await Promise.all([fetchUsageData(authData), fetchAccountData(authData)]);
-    }
+    await Promise.all([fetchUsageData(authData), fetchAccountData(authData)]);
   };
 
   useEffect(() => {
-    const cachedAccountDetails = localStorage.getItem('pearai_account_details');
+    // Hydrate cached account details
+    const cachedAccountDetails = localStorage.getItem('dropstone_account_details');
     if (cachedAccountDetails) {
+      console.log('[AccountSettings] Hydrating cached accountDetails');
       try {
-        const parsedDetails = JSON.parse(cachedAccountDetails);
-        setAccountDetails(parsedDetails);
+        setAccountDetails(JSON.parse(cachedAccountDetails));
       } catch (parseError) {
         console.error("Failed to parse cached account details:", parseError);
       }
     }
 
+    // Hydrate cached auth immediately; this avoids a flash of the login
+    // button while waiting for the extension response.
+    const cachedAuth = localStorage.getItem('dropstone_auth');
+    if (cachedAuth) {
+      console.log('[AccountSettings] Hydrating cached auth');
+      try {
+        const parsedAuth = JSON.parse(cachedAuth);
+        setAuth(parsedAuth);
+        // Ensure cross-webview token cache
+        if (parsedAuth?.accessToken) {
+          console.log('[AccountSettings] Restored token from cached auth');
+          localStorage.setItem('dropstone_token', parsedAuth.accessToken);
+        }
+      } catch (parseErr) {
+        console.warn('Failed to parse cached auth', parseErr);
+      }
+    }
+
+    // Always refresh so we have latest data; this will also update cache
     refreshData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
@@ -128,4 +254,4 @@ export const useAccountSettings = () => {
     fetchAccountData,
     refreshData,
   };
-}; 
+};

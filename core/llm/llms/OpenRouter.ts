@@ -13,8 +13,8 @@ class OpenRouter extends OpenAI {
   protected _getHeaders() {
     return {
       ...super._getHeaders(),
-      "HTTP-Referer": "https://github.com/trypear/pearai-submodule",
-      "X-Title": "pearai",
+      "HTTP-Referer": "https://dropstone.io/",
+      "X-Title": "Dropstone",
     };
   }
 }

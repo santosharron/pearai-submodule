@@ -32,7 +32,7 @@ class ContinueQuickFixProvider implements vscode.CodeActionProvider {
     );
 
     quickFix.command = {
-      command: "pearai.quickFix",
+      command: "dropstone.quickFix",
       title: "PearAI Quick Fix",
       arguments: [surroundingRange, diagnostic.message],
     };

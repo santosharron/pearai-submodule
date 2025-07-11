@@ -42,7 +42,7 @@ export const STATIC_DROPSTONE_MODELS: StaticModel[] = [
 // Function to check if dropstone server is connected
 export const checkDropstoneConnection = async (): Promise<boolean> => {
   try {
-    const response = await fetch('http://localhost:3000/api/models/public', {
+    const response = await fetch('https://dropstone-server-bjlp.onrender.com/api/models/public', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const getDropstoneModels = async (token?: string): Promise<StaticModel[]>
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch('http://localhost:3000/api/models', {
+    const response = await fetch('https://dropstone-server-bjlp.onrender.com/api/models', {
       method: 'GET',
       headers
     });
@@ -81,7 +81,7 @@ export const getDropstoneModels = async (token?: string): Promise<StaticModel[]>
     }
 
     // If authenticated request fails, try public endpoint
-    const publicResponse = await fetch('http://localhost:3000/api/models/public', {
+    const publicResponse = await fetch('https://dropstone-server-bjlp.onrender.com/api/models/public', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ export const convertStaticModelsToPackages = (models: StaticModel[]): any[] => {
       model: model.id,
       contextLength: 100000,
       provider: "openai", // Use openai provider for OpenAI-compatible API
-      apiBase: "http://localhost:3000/v1",
+      apiBase: "https://dropstone-server-bjlp.onrender.com/v1",
       systemMessage: "You are an expert software developer. You give helpful and concise responses based on latest documentation and software engineering best practices.",
     },
     icon: getModelIcon(model.provider),
@@ -184,6 +184,6 @@ const getModelIcon = (provider: string): string => {
     case 'google':
       return 'gemini.png';
     default:
-      return 'pearai.png';
+      return 'dropstone.png';
   }
 };

@@ -1,12 +1,13 @@
 import {
   PhotoIcon as OutlinePhotoIcon,
   PlusIcon,
+  ArrowUpIcon,
 } from "@heroicons/react/24/outline";
 import {
   ArrowTurnDownLeftIcon
 } from "@heroicons/react/16/solid";
 import { Button } from "@/components/ui/button";
-import { InputModifiers } from "core";
+import { InputModifiers, ModelDescription } from "core";
 import { modelSupportsImages } from "core/llm/autodetect";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +31,7 @@ import {
   getMetaKeyLabel,
   isMetaEquivalentKeyPressed,
 } from "../../util";
-import { setDefaultModel } from "../../redux/slices/stateSlice";
+import { setDefaultModel, setConfig } from "../../redux/slices/stateSlice";
 import { RootState } from "@/redux/store";
 import { useLocation } from "react-router-dom";
 import { ShortcutButton } from "../ui/shortcutButton";
@@ -74,6 +75,73 @@ function InputToolbar(props: InputToolbarProps) {
 
   const dispatch = useDispatch();
   const location = useLocation();
+  const currentConfig = useSelector((state: RootState) => state.state.config);
+
+  // Function to fetch models from the public API
+  const fetchModelsFromAPI = async () => {
+    try {
+      const response = await fetch('/api/models/public', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.models && Object.keys(data.models).length > 0) {
+          // Convert API models to the format expected by the config
+          const apiModels: ModelDescription[] = Object.values(data.models).map((model: any) => ({
+            title: model.name,
+            provider: "custom" as const,
+            model: model.id,
+            contextLength: model.maxTokens || 100000,
+            systemMessage: "You are an expert software developer. You give helpful and concise responses based on latest documentation and software engineering best practices.",
+            apiBase: "https://dropstone-server-bjlp.onrender.com/v1",
+            requestOptions: {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+          }));
+          
+          // Check if we have new models that aren't in the current config
+          const newModels = apiModels.filter(apiModel => 
+            !currentConfig.models.some(existingModel => 
+              existingModel.title === apiModel.title || 
+              existingModel.model === apiModel.model
+            )
+          );
+
+          // If we have new models, update the config
+          if (newModels.length > 0) {
+            console.log(`Found ${newModels.length} new models from API:`, newModels.map(m => m.title));
+            
+            const updatedConfig = {
+              ...currentConfig,
+              models: [...currentConfig.models, ...newModels]
+            };
+            
+            dispatch(setConfig(updatedConfig));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch models from API:', error);
+    }
+  };
+
+  // Fetch models on component mount and set up periodic fetching
+  useEffect(() => {
+    // Initial fetch
+    fetchModelsFromAPI();
+
+    // Set up periodic fetching every 30 seconds
+    const interval = setInterval(fetchModelsFromAPI, 30000);
+
+    return () => clearInterval(interval);
+  }, [currentConfig]);
 
   useEffect(() => {
     if (perplexityMode) {
@@ -214,7 +282,7 @@ function InputToolbar(props: InputToolbarProps) {
       <Button
         className={cn("gap-1 h-6 text-xs px-2", perplexityMode ?
           "bg-[#08a6a1] text-white"
-          : "bg-gradient-to-r from-[#3B82F6] to-[#1E3A8A] text-white hover:from-[#2563EB] hover:to-[#1E40AF] transition-all duration-300")}
+          : "bg-[#1e40af] text-white hover:bg-[#1e3a8a] transition-all duration-300")}
 
         onClick={(e) => {
           props.onEnter?.({
@@ -223,8 +291,7 @@ function InputToolbar(props: InputToolbarProps) {
           });
         }}
       >
-        <ArrowTurnDownLeftIcon width="12px" height="12px" />
-        Send
+        Send <ArrowUpIcon width="12px" height="12px" />
       </Button>
       {/* <EnterButton
             offFocus={props.usingCodebase}

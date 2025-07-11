@@ -517,7 +517,7 @@ function GUI() {
                           <span className="flex items-center gap-2">
                             Your chat is getting lengthy, which may run slower and use tokens faster.
                             Consider starting a new chat to optimize performance and maintain better context.
-                            <Link to="command:pearai.newSession">
+                            <Link to="command:dropstone.newSession">
                               <Button className="min-w-20" style={{ backgroundColor: `${vscBadgeBackground}` }}>
                                 New chat
                               </Button>

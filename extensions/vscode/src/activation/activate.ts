@@ -61,7 +61,7 @@ export async function activateExtension(context: vscode.ExtensionContext) {
 
   // If state is set and is true, it's not first launch
   if (context.globalState.get(OLD_FIRST_LAUNCH_KEY)) {
-    vscode.commands.executeCommand("pearai.welcome.markNewOnboardingComplete")
+    vscode.commands.executeCommand("dropstone.welcome.markNewOnboardingComplete")
     // mark the old key false, so that this condition only runs once and never again.
     await context.globalState.update(OLD_FIRST_LAUNCH_KEY, false);
   }
@@ -76,19 +76,19 @@ export async function activateExtension(context: vscode.ExtensionContext) {
   //     ),
   //   );
 
-  //   vscode.commands.executeCommand("pearai.focusContinueInput");
+  //   vscode.commands.executeCommand("dropstone.focusContinueInput");
   // });
 
 
   // for DEV'ing welcome page
   // if (true || isFirstLaunch(context)) {
-  //   vscode.commands.executeCommand("pearai.startOnboarding");
+  //   vscode.commands.executeCommand("dropstone.startOnboarding");
   // }
 
   setupPearAppLayout(context);
 
   if (isFirstLaunch(context)) {
-    vscode.commands.executeCommand("pearai.startOnboarding");
+    vscode.commands.executeCommand("dropstone.startOnboarding");
   }
 
 
@@ -152,7 +152,7 @@ const setupPearAppLayout = async (context: vscode.ExtensionContext) => {
       await vscode.commands.executeCommand('workbench.action.toggleAuxiliaryBar');
     }
     // Default to agent view
-    vscode.commands.executeCommand("pearai.focusAgentView");
+    vscode.commands.executeCommand("dropstone.focusAgentView");
   }
 
   if (isFirstLaunch(context)) {

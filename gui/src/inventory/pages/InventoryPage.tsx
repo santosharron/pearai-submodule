@@ -451,7 +451,7 @@ export default function AIToolInventory() {
         break;
       case AIToolID.SIDEBARCHAT:
         ideMessenger.post("invokeVSCodeCommandById", {
-          commandId: "pearai.chatView.focus", // pearai focus chat
+          commandId: "dropstone.chatView.focus", // pearai focus chat
         });
         ideMessenger.post("closeOverlay", undefined);
         break;
@@ -569,7 +569,7 @@ export default function AIToolInventory() {
                 <div className="text-[10px] text-muted-foreground mt-4">
                   *View PearAI Disclaimer page{" "}
                   <Link
-                    to="https://trypear.ai/disclaimer/"
+                    to="https://dropstone.io/disclaimer/"
                     target="_blank"
                     className="text-muted-foreground no-underline hover:no-underline"
                   >

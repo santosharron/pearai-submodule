@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Input } from '..';
 import styled from 'styled-components';
 import { lightGray, vscBackground, vscForeground } from '..';
 import { X } from 'lucide-react';
+import { IdeMessengerContext } from "@/context/IdeMessenger";
 
 const DialogOverlay = styled.div`
   position: fixed;
@@ -224,6 +225,7 @@ export const DropstoneAuthDialog: React.FC<DropstoneAuthDialogProps> = ({
   onClose,
   onAuthenticate
 }) => {
+  const ideMessenger = useContext(IdeMessengerContext);
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -270,7 +272,18 @@ export const DropstoneAuthDialog: React.FC<DropstoneAuthDialogProps> = ({
   };
 
   const openDropstoneServer = () => {
-    window.open('http://localhost:3002/dashboard', '_blank');
+    const url = 'http://localhost:3002/dashboard';
+    try {
+      // Prefer VS Code command to open external URL when running inside the IDE
+      // @ts-ignore – not part of protocol typings
+      ideMessenger?.post('invokeVSCodeCommandById', {
+        commandId: 'vscode.openExternal',
+        args: [url],
+      });
+    } catch (err) {
+      console.warn('Failed to open link via VS Code command, falling back to window.open', err);
+      window.open(url, '_blank');
+    }
   };
 
   const handleClose = () => {

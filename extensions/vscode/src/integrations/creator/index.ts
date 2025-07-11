@@ -296,7 +296,7 @@ export class PearAICreatorMode implements IPearAICreatorMode {
 
     // Then navigate to the inventory settings page
     // TODO: navigate to the right page on the overlay
-    await vscode.commands.executeCommand("pearai.showOverlay.feedback");
+    await vscode.commands.executeCommand("dropstone.showOverlay.feedback");
   }
 
   public getFeedbackMessages(): any[] | undefined {

@@ -6,7 +6,7 @@ import com.intellij.openapi.util.TextRange
 
 class InputBoxCodeVision: CodeVisionProvider<Unit> {
     companion object {
-        const val id: String = "pearai.code.vision"
+        const val id: String = "dropstone.code.vision"
     }
 
     override val name: String

@@ -3,7 +3,7 @@ import { ContinueGUIWebviewViewProvider } from "../../ContinueGUIWebviewViewProv
 import { getIntegrationTab } from "../../util/integrationUtils";
 
 let perplexityPanel: vscode.WebviewPanel | undefined;
-const webviewName = "pearai.perplexityGUIView";
+const webviewName = "dropstone.perplexityGUIView";
 
 export async function handlePerplexityMode(
   sidebar: ContinueGUIWebviewViewProvider,
@@ -49,7 +49,7 @@ export async function handlePerplexityMode(
   panel.onDidDispose(
     () => {
       // The following order is important as it does not reset the history in chat when closing creator
-      vscode.commands.executeCommand("pearai.focusContinueInput");
+      vscode.commands.executeCommand("dropstone.focusContinueInput");
       sidebar.resetWebviewProtocolWebview();
     },
     null,

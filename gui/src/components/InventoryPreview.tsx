@@ -5,19 +5,19 @@ const menuItems = [
     icon: "chat-default.svg",
     path: "/inventory",
     tooltip: "Inventory",
-    command: "pearai.toggleInventoryHome",
+    command: "dropstone.toggleInventoryHome",
   },
   {
     icon: "search-default.svg",
     path: "/inventory/perplexityMode",
     tooltip: "Search",
-    command: "pearai.toggleSearch",
+    command: "dropstone.toggleSearch",
   },
   {
     icon: "memory-default.svg",
     path: "/inventory/mem0Mode",
     tooltip: "Memory",
-    command: "pearai.toggleMem0",
+    command: "dropstone.toggleMem0",
   }
 ];
 

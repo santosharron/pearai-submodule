@@ -62,7 +62,7 @@ export class PearAICredentials {
         if (tokens.accessToken !== this.accessToken) {
           this.accessToken = tokens.accessToken;
           console.log(
-            "PearAI access token changed from:",
+            "Drppstone access token changed from:",
             this.accessToken,
             "to:",
             tokens.accessToken
@@ -72,7 +72,7 @@ export class PearAICredentials {
         if (tokens.refreshToken !== this.refreshToken) {
           this.refreshToken = tokens.refreshToken;
           console.log(
-            "PearAI refresh token changed from:",
+            "Dropstone refresh token changed from:",
             this.refreshToken,
             "to:",
             tokens.refreshToken

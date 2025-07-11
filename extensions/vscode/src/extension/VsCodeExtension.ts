@@ -53,8 +53,8 @@ export class VsCodeExtension {
   constructor(context: vscode.ExtensionContext) {
     // Register auth provider
     this.workOsAuthProvider = new WorkOsAuthProvider(context);
-    // this.workOsAuthProvider.initialize();
-    // context.subscriptions.push(this.workOsAuthProvider);
+    this.workOsAuthProvider.initialize();
+    context.subscriptions.push(this.workOsAuthProvider);
 
     let resolveWebviewProtocol: any = undefined;
     this.webviewProtocolPromise = new Promise<VsCodeWebviewProtocol>(
@@ -164,7 +164,7 @@ export class VsCodeExtension {
         handleUri(uri: vscode.Uri) {
           console.log(uri);
           console.log("Received a custom URI!");
-          if (uri.authority === "pearai.pearai") {
+          if (uri.authority === "dropstone.pearai") {
             if (uri.path === "/ping") {
               vscode.window.showInformationMessage(
                 "PearAI received a custom URI!",
@@ -176,7 +176,7 @@ export class VsCodeExtension {
                 refreshToken: queryParams.get("refreshToken"),
                 fromLogin: true,
               };
-              vscode.commands.executeCommand("pearai.updateUserAuth", data);
+              vscode.commands.executeCommand("dropstone.updateUserAuth", data);
             }
           }
         },
@@ -217,7 +217,7 @@ export class VsCodeExtension {
 
     // Listen for configuration changes that affect authentication
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration("pearai.dropstoneApiKey")) {
+      if (event.affectsConfiguration("dropstone.dropstoneApiKey")) {
         // Reload config when dropstoneApiKey changes
         this.configHandler.reloadConfig();
       }
@@ -339,7 +339,7 @@ export class VsCodeExtension {
     vscode.authentication.onDidChangeSessions(async (e) => {
       if (e.provider.id === "github") {
         this.configHandler.reloadConfig();
-      } else if (e.provider.id === "pearai") {
+      } else if (e.provider.id === "dropstone") {
         const sessionInfo = await getControlPlaneSessionInfo(true);
         this.webviewProtocolPromise.then(async (webviewProtocol) => {
           webviewProtocol.request("didChangeControlPlaneSessionInfo", {

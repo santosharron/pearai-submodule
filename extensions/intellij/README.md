@@ -6,7 +6,7 @@
 
 <div align="center">
 
-**[PearAI](https://trypear.ai) is the leading open-source AI code assistant. You can connect any models and any context to build custom autocomplete and chat experiences inside [VS Code](https://marketplace.visualstudio.com/items?itemName=Continue.continue) and [JetBrains](https://plugins.jetbrains.com/plugin/22707-continue-extension)**
+**[PearAI](https://dropstone.io) is the leading open-source AI code assistant. You can connect any models and any context to build custom autocomplete and chat experiences inside [VS Code](https://marketplace.visualstudio.com/items?itemName=Continue.continue) and [JetBrains](https://plugins.jetbrains.com/plugin/22707-continue-extension)**
 
 </div>
 
@@ -42,7 +42,7 @@
 
 You can try out PearAI with our free trial models before configuring your setup.
 
-Learn more about the models and providers [here](https://pearai.dev/docs/setup/overview).
+Learn more about the models and providers [here](https://dropstone.dev/docs/setup/overview).
 
 ## License
 

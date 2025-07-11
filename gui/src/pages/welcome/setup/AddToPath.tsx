@@ -8,7 +8,7 @@ export default function AddToPath({
 
   return (
     <div className="flex flex-col items-center gap-5 justify-center w-full h-full overflow-hidden text-foreground relative">
-      <div className="text-center text-2xl font-['SF Pro']">Access Drosptone directly from your terminal.</div>
+      <div className="text-center text-2xl font-['Inter']">Access Drosptone directly from your terminal.</div>
 
       <Terminal />
       <div className="flex flex-col items-center gap-4 absolute bottom-14">

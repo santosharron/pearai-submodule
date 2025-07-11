@@ -21,12 +21,12 @@ export class SuggestionsCodeLensProvider implements vscode.CodeLensProvider {
       codeLenses.push(
         new vscode.CodeLens(range, {
           title: "Accept",
-          command: "pearai.acceptSuggestion",
+          command: "dropstone.acceptSuggestion",
           arguments: [suggestion],
         }),
         new vscode.CodeLens(range, {
           title: "Reject",
-          command: "pearai.rejectSuggestion",
+          command: "dropstone.rejectSuggestion",
           arguments: [suggestion],
         }),
       );

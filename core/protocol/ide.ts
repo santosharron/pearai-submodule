@@ -106,7 +106,7 @@ export type ToIdeFromWebviewOrCoreProtocol = {
 
   /* dont overuse invokeVSCodeCommandById, use it only for devving,
   and if you find yourself writing redundant code just to invoke a
-  command not related to pearai. (workbench, other extension)
+  command not related to dropstone. (workbench, other extension)
   */
   invokeVSCodeCommandById: [
     { commandId: string; args?: any[] },

@@ -32,7 +32,7 @@ declare global {
     initialRoute?: string;
     isFirstLaunch?: boolean;
     isPearOverlay?: boolean;
-    viewType?: 'pearai.chatView' | 'pearai.mem0View' | 'pearai.searchView';
+    viewType?: 'dropstone.chatView' | 'dropstone.mem0View' | 'dropstone.searchView';
   }
 }
 
@@ -49,9 +49,9 @@ const router = createMemoryRouter(
         },
         {
           path: "/",
-          element: window.viewType === 'pearai.chatView' ? <GUI /> :
-                   window.viewType === 'pearai.searchView' ? <PerplexityGUI /> :
-                   window.viewType === 'pearai.mem0View' ? <Mem0SidebarGUI /> :
+          element: window.viewType === 'dropstone.chatView' ? <GUI /> :
+                   window.viewType === 'dropstone.searchView' ? <PerplexityGUI /> :
+                   window.viewType === 'dropstone.mem0View' ? <Mem0SidebarGUI /> :
                   <GUI />, // default to GUI if viewType is undefined or different
 
         },
@@ -62,8 +62,8 @@ const router = createMemoryRouter(
         {
           path: "/history",
           element: <History from={
-            window.viewType === 'pearai.chatView' ? 'continue' :
-            window.viewType === 'pearai.searchView' ? 'perplexity' :
+            window.viewType === 'dropstone.chatView' ? 'continue' :
+            window.viewType === 'dropstone.searchView' ? 'perplexity' :
             'continue' // default fallback
           }/>
         },

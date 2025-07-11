@@ -49,13 +49,13 @@ export function getIntegrationTab(webviewName: string) {
 }
 
 export async function handleIntegrationShortcutKey(protocol: keyof ToWebviewProtocol, integrationName: string, sidebar: ContinueGUIWebviewViewProvider, webviews: string[]) {
-  const isOverlayVisible = await vscode.commands.executeCommand('pearai.isOverlayVisible');
+  const isOverlayVisible = await vscode.commands.executeCommand('dropstone.isOverlayVisible');
 
   let currentTab = await sidebar.webviewProtocol.request("getCurrentTab", undefined, webviews);
 
   if (isOverlayVisible && currentTab === integrationName) {
     // close overlay
-    await vscode.commands.executeCommand("pearai.hideOverlay");
+    await vscode.commands.executeCommand("dropstone.hideOverlay");
     await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     return;
   }
@@ -65,7 +65,7 @@ export async function handleIntegrationShortcutKey(protocol: keyof ToWebviewProt
   if (!isOverlayVisible) {
     // If overlay isn't open, open it first
     // Navigate to creator tab via webview protocol
-    await vscode.commands.executeCommand("pearai.showOverlay");
+    await vscode.commands.executeCommand("dropstone.showOverlay");
   }
 }
 

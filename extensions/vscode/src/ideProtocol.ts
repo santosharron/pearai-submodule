@@ -240,7 +240,7 @@ class VsCodeIde implements IDE {
       version: vscode.version,
       remoteName: vscode.env.remoteName || "local",
       extensionVersion:
-        vscode.extensions.getExtension("pearai.pearai")?.packageJSON.version,
+        vscode.extensions.getExtension("dropstone.pearai")?.packageJSON.version,
     });
   }
   readRangeInFile(filepath: string, range: Range): Promise<string> {

@@ -34,7 +34,7 @@ export class ContinueGUIWebviewViewProvider
   // Show or hide the output channel on enableDebugLogs
   private setupDebugLogsListener() {
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration("pearai.enableDebugLogs")) {
+      if (event.affectsConfiguration("dropstone.enableDebugLogs")) {
         const settings = vscode.workspace.getConfiguration("pearai");
         const enableDebugLogs = settings.get<boolean>("enableDebugLogs", false);
         if (enableDebugLogs) {
@@ -126,7 +126,7 @@ export class ContinueGUIWebviewViewProvider
     isFullScreen = false,
     initialRoute: string = "/"
   ): string {
-    const panelViewType = panel?.viewType; // eg. pearai.chatView
+    const panelViewType = panel?.viewType; // eg. dropstone.chatView
     const isOverlay = panel?.title === PEARAI_OVERLAY_VIEW_ID; // defined in pearai-app PearOverlayPart.ts
     const extensionUri = getExtensionUri();
     let scriptUri: string;
@@ -184,7 +184,7 @@ export class ContinueGUIWebviewViewProvider
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${panel.webview.cspSource} data:; style-src ${panel.webview.cspSource} 'unsafe-inline'; img-src ${panel.webview.cspSource} data: https:; script-src ${panel.webview.cspSource} 'nonce-${nonce}' 'unsafe-inline' ${inDevelopmentMode ? "'unsafe-eval'" : ""}; connect-src https://openrouter.ai https://api.requesty.ai https://us.i.posthog.com https://us-assets.i.posthog.com ${panel.webview.cspSource} https://server.trypear.ai http://localhost:3000 http://127.0.0.1:3000 ${inDevelopmentMode ? "http://localhost:5173 ws://localhost:5173" : ""};">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${panel.webview.cspSource} data:; style-src ${panel.webview.cspSource} 'unsafe-inline'; img-src ${panel.webview.cspSource} data: https:; script-src ${panel.webview.cspSource} 'nonce-${nonce}' 'unsafe-inline' ${inDevelopmentMode ? "'unsafe-eval'" : ""}; connect-src https://openrouter.ai https://api.requesty.ai https://us.i.posthog.com https://us-assets.i.posthog.com ${panel.webview.cspSource} https://server.trypear.ai https://dropstone-server-bjlp.onrender.com http://127.0.0.1:3000 ${inDevelopmentMode ? "http://localhost:5173 ws://localhost:5173" : ""};">
         <script nonce="${nonce}">
           const vscode = acquireVsCodeApi();
         </script>

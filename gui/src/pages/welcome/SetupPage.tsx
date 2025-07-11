@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sparkles, Bot, Search, Download, LogIn, User, Command, Terminal, Import, Move, Check } from "lucide-react";
 import { IdeMessengerContext } from "@/context/IdeMessenger";
+import { useDropstoneAuth } from "@/context/DropstoneAuthContext";
 import ImportExtensions from "./setup/ImportExtensions";
 import SignIn from "./setup/SignIn";
 import InstallTools from "./setup/InstallTools";
@@ -28,6 +29,7 @@ export interface Tool {
 
 export default function SetupPage({ onNext }: { onNext: () => void }) {
   const dispatch = useDispatch();
+  const { isLoggedIn, showAuthDialog } = useDropstoneAuth();
   const [currentFeature, setCurrentFeature] = useState(0);
   const onboardingState = useSelector((state: RootState) => state.state.onboardingState);
   const visitedSteps = onboardingState.visitedSteps || [];
@@ -171,7 +173,15 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
   //#region Sign In
 
   const handleSignIn = () => {
-    ideMessenger.post("pearaiLogin", undefined);
+    if (!isLoggedIn) {
+      // Show the Dropstone authentication dialog or redirect to login
+      showAuthDialog();
+      // Also open the login page in the browser
+      ideMessenger.post("pearaiLogin", undefined);
+    } else {
+      // User is already logged in, proceed to next step
+      handleNextClick();
+    }
   };
 
   const handleSignUp = () => {
@@ -221,7 +231,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
       component: <ImportExtensions importError={extensionsImportError} isDone={isDoneImportingExtensions} />,
       button: !isDoneImportingExtensions ? <Button
         disabled={isImportingExtensions}
-        className="text-xs font-['SF Pro']"
+        className="text-xs font-['Inter']"
         onClick={handleImportExtensions}
       >
         <div className="flex items-center justify-between w-full gap-2">
@@ -258,7 +268,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
         :
         <Button
           onClick={handleNextClick}
-          className="text-xs font-['SF Pro']"
+          className="text-xs font-['Inter']"
         >Next</Button>,
     },
     // {
@@ -268,7 +278,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
     //   component: <AddToPath onNext={handleNextClick} pathAdded={pathAdded} />,
     //   platformSpecific: "mac",
     //   button: <Button
-    //     className="text-xs font-['SF Pro']"
+    //     className="text-xs font-['Inter']"
     //     onClick={handleAddToPath}
     //   >
     //     <div className="flex items-center justify-between w-full gap-2">
@@ -309,7 +319,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
       description: "Change Dropstone to a light or dark theme.",
       component: <ChangeColorScheme handleThemeChange={handleThemeChange} />,
       button: <Button
-        className="text-xs font-['SF Pro']"
+        className="text-xs font-['Inter']"
         onClick={handleNextClick}
       >
         <div className="flex items-center justify-between w-full">
@@ -323,7 +333,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
       description: "Install recommended tools to enhance your Drosptone experience.",
       component: <InstallTools onNext={handleNextClick} tools={tools} checkedTools={checkedTools} setCheckedTools={setCheckedTools} attemptedInstalls={attemptedInstalls} />,
       button: <Button
-        className="text-xs font-['SF Pro']"
+        className="text-xs font-['Inter']"
         onClick={handleInstallChecked}
       >
         {getInstallToolsButtonText()}
@@ -333,21 +343,21 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
       icon: <User className="h-6 w-6" />,
       title: "Sign in",
       description: "Have Drosptone work for free out of the box by signing in.",
-      component: <SignIn onNext={handleNextClick} />,
+      component: <SignIn onNext={handleNextClick} isLoggedIn={isLoggedIn} />,
       button: <>
         <Button
-          className="text-xs font-['SF Pro']"
+          className="text-xs font-['Inter']"
           onClick={handleSignIn}
         >
-          Sign In
+          {isLoggedIn ? "Continue" : "Sign In"}
         </Button>
 
-        <Button
-          className="text-xs font-['SF Pro']"
+        {/* <Button
+          className="text-xs font-['Inter']"
           onClick={handleSignUp}
         >
           Sign Up
-        </Button>
+        </Button> */}
       </>
     },
   ];
@@ -427,7 +437,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
 
     <div className="h-full flex-col justify-center items-center inline-flex overflow-hidden select-none">
       <div className="h-[80%] w-[50%] flex-col justify-center items-center gap-7 flex">
-        <div className="text-4xl font-['SF Pro']">Setup</div>
+        <div className="text-4xl font-['Inter']">Setup</div>
         <div className="w-full justify-start items-start gap-5 inline-flex">
           {setupSteps.map((step, index) => (
             <div key={index} className="grow shrink basis-0 p-3 rounded-lg  justify-start items-center gap-3 flex overflow-hidden cursor-pointer"
@@ -459,7 +469,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
                 )}
               </div>
               <div className="w-48 flex-col justify-center items-center gap-1 inline-flex">
-                <div className="self-stretch text-xs font-normal font-['SF Pro'] leading-[18px]">{step.title}</div>
+                <div className="self-stretch text-xs font-normal font-['Inter'] leading-[18px]">{step.title}</div>
               </div>
             </div>
           ))}
@@ -471,7 +481,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
           </div>
         </div>
         <div className="self-stretch justify-center items-center gap-4 inline-flex">
-          <div className="opacity-50 text-xs font-normal font-['SF Pro'] leading-[18px] cursor-pointer"
+          <div className="opacity-50 text-xs font-normal font-['Inter'] leading-[18px] cursor-pointer"
             onClick={() => {
               if (currentFeature === 2) {
                 localStorage.setItem('onboardingSelectedTools', JSON.stringify([]));
@@ -481,7 +491,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
           {process.env.NODE_ENV === "development" &&
             <Button
               onClick={() => handleBackClick()}
-              className="text-xs font-['SF Pro']"
+              className="text-xs font-['Inter']"
               style={{ background: vscInputBackground }}
             >Back (shown in dev)</Button>
           }

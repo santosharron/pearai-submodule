@@ -242,6 +242,7 @@ async function copyNodeModules() {
     "@esbuild",
     "@lancedb",
     "@vscode/ripgrep",
+    "sqlite3",
   ];
   fs.mkdirSync("out/node_modules", { recursive: true });
 
@@ -388,6 +389,39 @@ async function copySqliteBinary() {
       },
     );
   });
+
+  // Copy sqlite3 binary to additional locations where bindings package might look for it
+  const sqlite3BinaryPath = path.join(__dirname, "../../../core/node_modules/sqlite3/build/Release/node_sqlite3.node");
+  const additionalPaths = [
+    path.join(__dirname, "../out/build/Release/node_sqlite3.node"),
+    path.join(__dirname, "../out/build/Debug/node_sqlite3.node"),
+    path.join(__dirname, "../out/build/default/node_sqlite3.node"),
+    path.join(__dirname, "../out/out/Release/node_sqlite3.node"),
+    path.join(__dirname, "../out/out/Debug/node_sqlite3.node"),
+    path.join(__dirname, "../out/Release/node_sqlite3.node"),
+    path.join(__dirname, "../out/Debug/node_sqlite3.node"),
+    path.join(__dirname, "../out/addon-build/release/install-root/node_sqlite3.node"),
+    path.join(__dirname, "../out/addon-build/debug/install-root/node_sqlite3.node"),
+    path.join(__dirname, "../out/addon-build/default/install-root/node_sqlite3.node"),
+  ];
+
+  if (fs.existsSync(sqlite3BinaryPath)) {
+    for (const targetPath of additionalPaths) {
+      try {
+        // Ensure the directory exists
+        const targetDir = path.dirname(targetPath);
+        fs.mkdirSync(targetDir, { recursive: true });
+
+        // Copy the binary
+        fs.copyFileSync(sqlite3BinaryPath, targetPath);
+        console.log(`[info] Copied sqlite3 binary to ${targetPath}`);
+      } catch (error) {
+        console.warn(`[warn] Failed to copy sqlite3 binary to ${targetPath}:`, error.message);
+      }
+    }
+  } else {
+    console.warn("[warn] sqlite3 binary not found at expected location:", sqlite3BinaryPath);
+  }
 }
 
 async function downloadRipgrepBinary(target) {

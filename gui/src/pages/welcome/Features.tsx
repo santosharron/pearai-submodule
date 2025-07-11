@@ -9,47 +9,42 @@ import { IdeMessengerContext } from "@/context/IdeMessenger";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setOnboardingState } from "@/redux/slices/stateSlice";
-import { getLogoPath } from "@/pages/welcome/setup/ImportExtensions";
+import { getLogoPath } from "./setup/ImportExtensions";
 import { Link } from "react-router-dom";
 import InventoryButtons from "./inventoryButtons";
 import { motion } from "framer-motion";
 import { vscInputBackground } from "@/components";
-
-const getAssetPath = (assetName: string) => {
-  return `${window.vscMediaUrl}/assets/${assetName}`;
-};
 
 export const features = [
   {
     id: "agent",
     icon: "inventory-creator.svg",
     title: "Code automatically with Drosptone Agent",
-    description: "Autonomous coding agent, powered by Roo Code / Cline",
-    video: getAssetPath("pearai-agent-welcome.mp4"),
+    description: "Autonomous coding agent, powered by D1 Engine",
+    image: getLogoPath("dropstone-agent-splash.svg"),
   },
   {
     id: "chat",
     icon: "inventory-chat.svg",
     title: "Make specific in-line changes and ask questions with Dropstone Chat",
     description: "AI chat assistant, powered by Continue",
-    video: getAssetPath("pearai-chat-welcome.mp4"),
+    image: getLogoPath("dropstone-chat-splash.svg"),
   },
   {
     id: "search",
     icon: "inventory-search.svg",
     title: "Dropstone Search",
     description: "Search anything on the web and get the latest information.",
-    video: getAssetPath("pearai-search-welcome.mp4"),
+    image: getLogoPath("dropstone-search-splash.svg"),
   },
   {
     id: "memory",
     icon: "inventory-mem0.svg",
     title: "Dropstone Memory",
     description: "Add information for Drosptone to remember about you and your projects.",
-    video: getAssetPath("pearai-memory-welcome.mp4"),
+    image: getLogoPath("dropstone-memory-splash.svg"),
   },
 ];
-
 
 export default function Features({ onNext, pseudoRender }: { onNext: () => void, pseudoRender: boolean }) {
   const dispatch = useDispatch();
@@ -75,16 +70,16 @@ export default function Features({ onNext, pseudoRender }: { onNext: () => void,
     });
   }, [ideMessenger]);
 
-  const [videoSrc, setVideoSrc] = useState(features[0].video);
+  const [videoSrc, setVideoSrc] = useState(features[0].image);
 
   useEffect(() => {
     setIsLoading(true);
     const img = new Image();
     img.onload = () => {
       setIsLoading(false);
-      setVideoSrc(features[currentFeature].video);
+      setVideoSrc(features[currentFeature].image);
     };
-    img.src = features[currentFeature].video;
+    img.src = features[currentFeature].image;
   }, [currentFeature]);
 
   useEffect(() => {
@@ -176,15 +171,12 @@ export default function Features({ onNext, pseudoRender }: { onNext: () => void,
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <FeatureDescription currentFeature={currentFeature} />
-            <div className="w-[50%] h-fit flex flex-row gap-2 ">
-              <video
-                ref={videoRefs[0]}
-                src={features[0].video}
-                className={`rounded-lg w-full h-full object-cover ${currentFeature === 0 ? "flex" : "hidden"}`}
-                muted
-                autoPlay
-                playsInline
-                loop
+            <div className="w-[50%] h-fit flex flex-row gap-2 justify-center items-center">
+              <img
+                src={features[0].image}
+                alt="Agent Splash"
+                className="w-96 h-96 object-contain"
+                style={{ maxWidth: '100%', maxHeight: '384px' }}
               />
             </div>
           </motion.div>
@@ -195,15 +187,12 @@ export default function Features({ onNext, pseudoRender }: { onNext: () => void,
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <FeatureDescription currentFeature={currentFeature} />
-            <div className="w-[50%] h-fit flex flex-row gap-2 ">
-              <video
-                ref={videoRefs[1]}
-                src={features[1].video}
-                className={`rounded-lg w-full h-full object-cover inset-0 ${currentFeature === 1 ? "flex" : "hidden"}`}
-                muted
-                autoPlay
-                playsInline
-                loop
+            <div className="w-[50%] h-fit flex flex-row gap-2 justify-center items-center">
+              <img
+                src={features[1].image}
+                alt="Chat Splash"
+                className="w-96 h-96 object-contain"
+                style={{ maxWidth: '100%', maxHeight: '384px' }}
               />
             </div>
           </motion.div>
@@ -214,15 +203,12 @@ export default function Features({ onNext, pseudoRender }: { onNext: () => void,
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <FeatureDescription currentFeature={currentFeature} />
-            <div className="w-[50%] h-fit flex flex-row gap-2 ">
-              <video
-                ref={videoRefs[2]}
-                src={features[2].video}
-                className={`rounded-lg w-full h-full object-cover inset-0 ${currentFeature === 2 ? "flex" : "hidden"}`}
-                muted
-                autoPlay
-                playsInline
-                loop
+            <div className="w-[50%] h-fit flex flex-row gap-2 justify-center items-center">
+              <img
+                src={features[2].image}
+                alt="Search Splash"
+                className="w-96 h-96 object-contain"
+                style={{ maxWidth: '100%', maxHeight: '384px' }}
               />
             </div>
           </motion.div>
@@ -233,31 +219,28 @@ export default function Features({ onNext, pseudoRender }: { onNext: () => void,
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <FeatureDescription currentFeature={currentFeature} />
-            <div className="w-[50%] h-fit flex flex-row gap-2 ">
-              <video
-                ref={videoRefs[3]}
-                src={features[3].video}
-                className={`rounded-lg w-full h-full object-cover inset-0 ${currentFeature === 3 ? "flex" : "hidden"}`}
-                muted
-                autoPlay
-                playsInline
-                loop
+            <div className="w-[50%] h-fit flex flex-row gap-2 justify-center items-center">
+              <img
+                src={features[3].image}
+                alt="Memory Splash"
+                className="w-96 h-96 object-contain"
+                style={{ maxWidth: '100%', maxHeight: '384px' }}
               />
             </div>
           </motion.div>
         </div>
         <div className="flex gap-2">
-          <Button className="text-xs font-['SF Pro']" onClick={handleNextClick}>
-            Next
+          <Button className="mx-auto w-[300px] rounded-lg justify-center items-center gap-1 inline-flex overflow-hidden" onClick={handleNextClick}>
+          <div className="text-xs font-['Inter']">Next</div>
           </Button>
           {process.env.NODE_ENV === "development" && (
             <>
-              <Button className="text-xs font-['SF Pro']" onClick={handleBackClick}
+              <Button className="text-xs font-['Inter']" onClick={handleBackClick}
                 style={{ background: vscInputBackground }}
               >
                 Back (shown in dev)
               </Button>
-              <Button className="text-xs font-['SF Pro']" onClick={resetVideos}
+              <Button className="text-xs font-['Inter']" onClick={resetVideos}
                 style={{ background: vscInputBackground }}
               >reset (shown in dev)</Button>
             </>
@@ -272,11 +255,11 @@ export default function Features({ onNext, pseudoRender }: { onNext: () => void,
 const FeatureDescription = ({ currentFeature }: { currentFeature: number }) => {
   return (
     <div className=" flex-col justify-start items-center gap-2 inline-flex">
-      <div key={`title-${currentFeature}`} className="text-4xl font-['SF Pro']"
+      <div key={`title-${currentFeature}`} className="text-xl font-['Inter']"
       >
         {features[currentFeature].title}
       </div>
-      <div className="text-xs font-normal font-['SF Pro'] leading-[18px]"
+      <div className="text-sm font-normal font-['Inter'] leading-[18px]"
       >
         {features[currentFeature].description}
       </div>
