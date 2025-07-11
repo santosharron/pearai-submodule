@@ -12,12 +12,14 @@ export default function SignIn({ onNext, isLoggedIn }: { onNext: () => void, isL
 
   useWebviewListener("pearAISignedIn", async () => {
     console.log("PearAI authentication completed");
+    console.log("[SignIn] Calling onNext() from pearAISignedIn");
     onNext();
   });
 
   // Listen for Dropstone authentication updates
   useWebviewListener("dropstoneAuthUpdated", async (data) => {
     console.log("Dropstone authentication updated:", data);
+    console.log("[SignIn] Calling onNext() from dropstoneAuthUpdated");
     setIsAuthenticating(false);
     onNext();
   });
@@ -59,6 +61,14 @@ export default function SignIn({ onNext, isLoggedIn }: { onNext: () => void, isL
   const isAuthenticated = isDropstoneLoggedIn || isLoggedIn;
   const userDisplayInfo = userInfo || { name: 'User' };
 
+  console.log('[SignIn] Component rendered', {
+    isAuthenticated,
+    isDropstoneLoggedIn,
+    isLoggedIn,
+    userInfo,
+    userDisplayInfo
+  });
+
   return (
     <div className="flex flex-col items-center justify-center md:p-6 lg:p-10 gap-5">
       <div className="flex flex-col items-center justify-center gap-1">
@@ -78,7 +88,10 @@ export default function SignIn({ onNext, isLoggedIn }: { onNext: () => void, isL
             Ready to continue with Dropstone
           </div>
           <Button
-            onClick={onNext}
+            onClick={() => {
+              console.log("[SignIn] Continue button clicked");
+              onNext();
+            }}
             className="!bg-green-600 !text-white !border-none hover:!bg-green-700 rounded-full px-6 py-2 font-medium transition-colors duration-200"
           >
             Continue

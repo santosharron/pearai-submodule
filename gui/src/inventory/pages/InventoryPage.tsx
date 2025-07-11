@@ -244,45 +244,45 @@ export default function AIToolInventory() {
       poweredBy: "Continue",
       enabled: true,
     },
-    {
-      id: AIToolID.AUTOCOMPLETE,
-      name: "Autocomplete",
-      description: (
-        <span>
-          Fast code autocomplete suggestions. Recommended as a standalone
-          extension.
-        </span>
-      ),
-      icon: "inventory-autocomplete.svg",
-      whenToUse: (
-        <span>
-          When you need instant code completions while typing. Autocomplete
-          offers real-time suggestions and completes your code with minimal
-          latency, perfect for maintaining flow while coding.
-        </span>
-      ),
-      strengths: [
-        <span>Lightning-fast completions</span>,
-        <span>Context-aware suggestions</span>,
-        <span>Low latency response times</span>,
-        <span>Predicts where your cursor should go next</span>,
-      ],
-      installNeeded: true,
-      isInstalled: isSuperMavenInstalled,
-      installCommand: async () => {
-        if (isSuperMavenInstalled) {
-          return ideMessenger.post("uninstallVscodeExtension", {
-            extensionId: "supermaven.supermaven",
-          });
-        }
-        ideMessenger.post("installVscodeExtension", {
-          extensionId: "supermaven.supermaven",
-        });
-      },
-      poweredBy: "Supermaven",
-      enabled: true,
-      note: "While we develop our own autocomplete service, we recommend Supermaven's autocomplete as an alternate standalone extension. They offer a great service and a free tier (requires separate login).",
-    },
+    // {
+    //   id: AIToolID.AUTOCOMPLETE,
+    //   name: "Autocomplete",
+    //   description: (
+    //     <span>
+    //       Fast code autocomplete suggestions. Recommended as a standalone
+    //       extension.
+    //     </span>
+    //   ),
+    //   icon: "inventory-autocomplete.svg",
+    //   whenToUse: (
+    //     <span>
+    //       When you need instant code completions while typing. Autocomplete
+    //       offers real-time suggestions and completes your code with minimal
+    //       latency, perfect for maintaining flow while coding.
+    //     </span>
+    //   ),
+    //   strengths: [
+    //     <span>Lightning-fast completions</span>,
+    //     <span>Context-aware suggestions</span>,
+    //     <span>Low latency response times</span>,
+    //     <span>Predicts where your cursor should go next</span>,
+    //   ],
+    //   installNeeded: true,
+    //   isInstalled: isSuperMavenInstalled,
+    //   installCommand: async () => {
+    //     if (isSuperMavenInstalled) {
+    //       return ideMessenger.post("uninstallVscodeExtension", {
+    //       extensionId: "supermaven.supermaven",
+    //     });
+    //     }
+    //     ideMessenger.post("installVscodeExtension", {
+    //       extensionId: "supermaven.supermaven",
+    //     });
+    //   },
+    //   poweredBy: "Supermaven",
+    //   enabled: true,
+    //   note: "While we develop our own autocomplete service, we recommend Supermaven's autocomplete as an alternate standalone extension. They offer a great service and a free tier (requires separate login).",
+    // },
     {
       id: AIToolID.AGENT,
       name: "PearAI Agent",

@@ -4,7 +4,7 @@ import { ContinueGUIWebviewViewProvider } from "../ContinueGUIWebviewViewProvide
 import { ToWebviewProtocol } from "../../../../core/protocol/index.js";
 
 export enum InstallableTool {
-  SUPERMAVEN = "supermaven"
+  // SUPERMAVEN = "supermaven"
 }
 
 export interface ToolCommand {
@@ -33,10 +33,10 @@ export interface MemoryChange {
 export type ToolType = typeof InstallableTool[keyof typeof InstallableTool];
 
 export const TOOL_COMMANDS: Record<ToolType, ToolCommand> = {
-  [InstallableTool.SUPERMAVEN]: {
-    command: "workbench.extensions.installExtension",
-    args: "supermaven.supermaven"
-  }
+  // [InstallableTool.SUPERMAVEN]: {
+  //   command: "workbench.extensions.installExtension",
+  //   args: "supermaven.supermaven"
+  // }
 };
 
 

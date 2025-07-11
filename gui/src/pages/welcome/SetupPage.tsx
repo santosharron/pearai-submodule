@@ -44,8 +44,15 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
   };
 
   const handleNextClick = () => {
+    console.log('[SetupPage] handleNextClick called', {
+      currentFeature,
+      allSetupStepsLength: allSetupSteps.length,
+      condition: currentFeature < allSetupSteps.length - 1
+    });
+    
     if (currentFeature < allSetupSteps.length - 1) {
       const nextFeature = currentFeature + 1;
+      console.log('[SetupPage] Moving to next feature:', nextFeature);
       setCurrentFeature(nextFeature);
       if (!visitedSteps.includes(nextFeature)) {
         dispatch(setOnboardingState({ ...onboardingState, visitedSteps: [...visitedSteps, nextFeature] }));
@@ -53,6 +60,7 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
       setTimestamp(Date.now());
     } else {
       // Proceed to the next step if the last feature
+      console.log('[SetupPage] Setup complete, calling onNext()');
       onNext();
     }
   };
@@ -110,13 +118,13 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
     //     icon: "inventory-creator.svg",
     //     preInstalled: false
     // },
-    {
-      id: "supermaven",
-      name: "Dropstone Predict",
-      description: "Dropstone Predict is our upcoming code autocomplete tool. While it's under development, we recommend using Supermaven* as a standalone extension within Dropstone for code autocompletion. Selecting this option will install Supermaven.",
-      icon: "inventory-autocomplete.svg",
-      preInstalled: false
-    }
+    // {
+    //   id: "supermaven",
+    //   name: "Dropstone Predict",
+    //   description: "Dropstone Predict is our upcoming code autocomplete tool. While it's under development, we recommend using Supermaven* as a standalone extension within Dropstone for code autocompletion. Selecting this option will install Supermaven.",
+    //   icon: "inventory-autocomplete.svg",
+    //   preInstalled: false
+    // }
   ];
 
 
@@ -327,18 +335,18 @@ export default function SetupPage({ onNext }: { onNext: () => void }) {
         </div>
       </Button>,
     },
-    {
-      icon: <Download className="h-6 w-6" />,
-      title: "Install Additional Tools",
-      description: "Install recommended tools to enhance your Drosptone experience.",
-      component: <InstallTools onNext={handleNextClick} tools={tools} checkedTools={checkedTools} setCheckedTools={setCheckedTools} attemptedInstalls={attemptedInstalls} />,
-      button: <Button
-        className="text-xs font-['Inter']"
-        onClick={handleInstallChecked}
-      >
-        {getInstallToolsButtonText()}
-      </Button>
-    },
+    // {
+    //   icon: <Download className="h-6 w-6" />,
+    //   title: "Install Additional Tools",
+    //   description: "Install recommended tools to enhance your Drosptone experience.",
+    //   component: <InstallTools onNext={handleNextClick} tools={tools} checkedTools={checkedTools} setCheckedTools={setCheckedTools} attemptedInstalls={attemptedInstalls} />,
+    //   button: <Button
+    //     className="text-xs font-['Inter']"
+    //     onClick={handleInstallChecked}
+    //   >
+    //     {getInstallToolsButtonText()}
+    //   </Button>
+    // },
     {
       icon: <User className="h-6 w-6" />,
       title: "Sign in",

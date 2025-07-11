@@ -56,7 +56,12 @@ export default function Welcome() {
       return navigate("/pearSettings");
     }
     
-    setStep((prevStep) => Math.min(prevStep + 1, 4));
+    // Skip the features page (step 1) by jumping directly to setup page (step 2)
+    if (step === 0) {
+      setStep(2);
+    } else {
+      setStep((prevStep) => Math.min(prevStep + 1, 4));
+    }
   };
 
   const handleBackStep = () => {
