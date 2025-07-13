@@ -1,1 +1,1 @@
-export const DROPSTONE_AUTH_URL = 'https://dropstone-server-bjlp.onrender.com';
+export const DROPSTONE_AUTH_URL = 'https://server.dropstone.io';

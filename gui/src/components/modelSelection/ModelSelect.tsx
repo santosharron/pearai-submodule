@@ -473,7 +473,7 @@ function ModelSelect() {
                 title: dropstoneModel.title || val,
                 provider: "openai", // Use openai provider for OpenAI-compatible API
                 model: dropstoneModel.id || val,
-                apiBase: "https://dropstone-server-bjlp.onrender.com/v1", // Correct OpenAI-compatible endpoint
+                apiBase: "https://server.dropstone.io/v1", // Correct OpenAI-compatible endpoint
                 apiKey: token || "dropstone-auth-token", // Use the auth token
                 contextLength: 100000, // Default context length for Dropstone models
                 systemMessage: "You are an expert software developer. You give helpful and concise responses based on latest documentation and software engineering best practices.",

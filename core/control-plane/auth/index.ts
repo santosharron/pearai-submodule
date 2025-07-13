@@ -9,7 +9,7 @@ export async function getAuthUrlForTokenPage(): Promise<string> {
     response_type: "code",
     client_id: CLIENT_ID,
     redirect_uri: "https://app.continue.dev/tokens/callback",
-    // redirect_uri: "https://dropstone-server-bjlp.onrender.com/tokens/callback",
+    // redirect_uri: "https://server.dropstone.io/tokens/callback",
     state: uuidv4(),
     provider: "authkit",
   };

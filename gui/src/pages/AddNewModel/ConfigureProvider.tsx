@@ -562,7 +562,7 @@ function ConfigureProvider() {
                           onClick={() =>
                             ideMessenger.post(
                               "openUrl",
-                              "https://dropstone-server-bjlp.onrender.com"
+                              "https://server.dropstone.io"
                             )
                           }
                           disabled={false}

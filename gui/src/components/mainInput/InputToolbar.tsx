@@ -98,7 +98,7 @@ function InputToolbar(props: InputToolbarProps) {
             model: model.id,
             contextLength: model.maxTokens || 100000,
             systemMessage: "You are an expert software developer. You give helpful and concise responses based on latest documentation and software engineering best practices.",
-            apiBase: "https://dropstone-server-bjlp.onrender.com/v1",
+            apiBase: "https://server.dropstone.io/v1",
             requestOptions: {
               headers: {
                 "Content-Type": "application/json"

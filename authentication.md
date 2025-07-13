@@ -58,7 +58,7 @@ const {
 
 #### 1. **Dropstone Server**
 ```
-Location: https://dropstone-server-bjlp.onrender.com
+Location: https://server.dropstone.io
 Endpoints:
 - POST /login - Username/password authentication
 - GET /api/user - Get user info (requires Bearer token)
@@ -68,7 +68,7 @@ Endpoints:
 
 #### 2. **PearAI Server**
 ```
-Location: http://localhost:3002
+Location: https://www.dropstone.io
 Endpoints:
 - /login - PearAI platform login page
 - /dashboard - User dashboard
@@ -163,8 +163,8 @@ useWebviewListener("dropstoneAuthUpdated", handleAuthUpdate);
 
 ### Backend Requirements
 
-- **Dropstone Server** running on `https://dropstone-server-bjlp.onrender.com`
-- **PearAI Server** running on `http://localhost:3002`
+- **Dropstone Server** running on `https://server.dropstone.io`
+- **PearAI Server** running on `https://www.dropstone.io`
 - **VS Code Extension** handling IDE messages and token storage
 
 ## Authentication System Documentation
@@ -417,7 +417,7 @@ const useDropstoneAuth = () => {
   const authenticate = async (usernameOrToken: string, password?: string) => {
     if (password) {
       // Username/password login
-      const response = await fetch('https://dropstone-server-bjlp.onrender.com/login', {
+      const response = await fetch('https://server.dropstone.io/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: usernameOrToken, password })
@@ -530,7 +530,7 @@ const checkAuthStatus = useCallback(async () => {
 ##### Initial Authentication
 1. User triggers authentication (via dialog or model selection)
 2. `DropstoneAuthDialog` appears for JWT token input
-3. Token is validated against `https://dropstone-server-bjlp.onrender.com/api/user`
+3. Token is validated against `https://server.dropstone.io/api/user`
 4. On success:
    - Token stored in localStorage (`dropstone_token`)
    - User info stored in localStorage (`dropstone_user`)
@@ -539,7 +539,7 @@ const checkAuthStatus = useCallback(async () => {
 
 ##### Token Validation
 ```typescript
-// Endpoint: https://dropstone-server-bjlp.onrender.com/api/user
+// Endpoint: https://server.dropstone.io/api/user
 // Headers: Authorization: Bearer <token>
 // Response: { user: { name, email, userName, isActiveSubscription, ... } }
 ```
@@ -645,7 +645,7 @@ const handleModelSelect = async (val: string) => {
       model: {
         title: dropstoneModel.title,
         provider: "openai",
-        apiBase: "https://dropstone-server-bjlp.onrender.com/v1",
+        apiBase: "https://server.dropstone.io/v1",
         apiKey: token,
         requestOptions: {
           headers: {
@@ -697,13 +697,13 @@ const handleModelSelect = async (val: string) => {
 
 ### Authentication Servers and Endpoints
 
-#### 1. **Dropstone Server** (`https://dropstone-server-bjlp.onrender.com`)
+#### 1. **Dropstone Server** (`https://server.dropstone.io`)
 - **Login**: `POST /login` - Username/password authentication
 - **User Info**: `GET /api/user` - Get user information (requires Bearer token)
 - **Models**: `GET /api/models` - Get available models (requires authentication)
 - **Public Models**: `GET /api/models/public` - Get public models (no auth required)
 
-#### 2. **PearAI Server** (`http://localhost:3002`)
+#### 2. **PearAI Server** (`https://www.dropstone.io`)
 - **Login**: `/login` - PearAI platform login
 - **Dashboard**: `/dashboard` - User dashboard for token generation
 
@@ -904,8 +904,8 @@ interface StaticModel {
 ### Configuration
 
 #### Environment Variables and Constants
-- `PEARAI_AUTH_URL`: `https://dropstone-server-bjlp.onrender.com` (Dropstone server)
-- `SERVER_URL`: `https://dropstone-server-bjlp.onrender.com` (Core server URL)
+- `PEARAI_AUTH_URL`: `https://server.dropstone.io` (Dropstone server)
+- `SERVER_URL`: `https://server.dropstone.io` (Core server URL)
 - Control plane URL: `https://control-plane-api-service-i3dqylpbqa-uc.a.run.app`
 
 #### Authentication Message Types

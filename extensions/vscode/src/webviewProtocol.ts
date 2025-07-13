@@ -244,7 +244,7 @@ export class VsCodeWebviewProtocol
                 if (selection === 'Login To Dropstone') {
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'https://dropstone-server-bjlp.onrender.com/login',
+                      'https://server.dropstone.io/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -278,7 +278,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to auth login URL
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'https://dropstone-server-bjlp.onrender.com/login',
+                      'https://server.dropstone.io/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -301,7 +301,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to Dropstone server login
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'https://dropstone-server-bjlp.onrender.com/login',
+                      'https://server.dropstone.io/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -327,7 +327,7 @@ export class VsCodeWebviewProtocol
                   // Redirect to Dropstone server login
                   vscode.env.openExternal(
                     vscode.Uri.parse(
-                      'https://dropstone-server-bjlp.onrender.com/login',
+                      'https://server.dropstone.io/login',
                     ),
                   );
                 } else if (selection === 'Show Logs') {

@@ -1,10 +1,10 @@
 ![readme](media/PearAIImage.png)
 
-<h1 align="center">Pear AI</h1>
+<h1 align="center">Dropstone</h1>
 
 <div align="center">
 
-**[PearAI](https://dropstone.io) is the leading open-source AI code assistant. You can connect any models and any context to build custom autocomplete and chat experiences inside [VS Code](https://marketplace.visualstudio.com/items?itemName=Continue.continue).**
+**This is an internal module. Visit [docs.dropstone.io](https://docs.dropstone.io) and [dropstone.io](https://dropstone.io) for more information.**
 
 </div>
 
@@ -44,10 +44,7 @@
 
 ## Getting Started
 
-You can try out PearAI with our free trial models before configuring your setup.
+This is an internal Dropstone module. For more information about Dropstone and its features, please visit:
 
-Learn more about the models and providers [here](https://dropstone.dev/docs/setup/overview).
-
-## License
-
-[Apache 2.0 © 2023 Continue Dev, Inc.](./LICENSE)
+- [docs.dropstone.io](https://docs.dropstone.io) - Documentation and setup guides
+- [dropstone.io](https://dropstone.io) - Main website

@@ -242,7 +242,7 @@ export class VsCodeMessenger {
     });
     this.onWebview("dropstoneLogin", (msg) => {
       // Open the login page in the user's default browser
-      vscode.env.openExternal(vscode.Uri.parse("http://localhost:3002/login"));
+      vscode.env.openExternal(vscode.Uri.parse("https://www.dropstone.io/login"));
     });
     this.onWebview("pearaiLogout", (msg) => {
       vscode.commands.executeCommand("dropstone.logout");
@@ -573,7 +573,7 @@ export class VsCodeMessenger {
           config.models.forEach((model: any, index: number) => {
             console.log(`Checking model ${index}: ${model.title}, apiBase: ${model.apiBase}`);
 
-            if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
+            if (model.apiBase === "https://server.dropstone.io/v1") {
               console.log(`Clearing authentication for model ${index}: ${model.title}`);
 
               // Clear the Authorization header
@@ -617,7 +617,7 @@ export class VsCodeMessenger {
         // Find and clear JWT token from Dropstone LLM instances
         if (coreConfig.models) {
           coreConfig.models.forEach((model: any, index: number) => {
-            if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
+            if (model.apiBase === "https://server.dropstone.io/v1") {
               console.log(`Clearing core config model ${index}: ${model.title}`);
               model.apiKey = "";
             }
@@ -664,7 +664,7 @@ export class VsCodeMessenger {
         config.models.forEach((model: any, index: number) => {
           console.log(`Checking model ${index}: ${model.title}, apiBase: ${model.apiBase}`);
 
-          if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
+          if (model.apiBase === "https://server.dropstone.io/v1") {
             console.log(`Updating model ${index}: ${model.title}`);
 
             // Ensure requestOptions structure exists

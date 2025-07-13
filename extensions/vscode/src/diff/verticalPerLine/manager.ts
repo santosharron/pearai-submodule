@@ -359,7 +359,7 @@ export class VerticalPerLineDiffManager {
             if (selection === "Login to Dropstone") {
               vscode.env.openExternal(
                 vscode.Uri.parse(
-                  "https://dropstone-server-bjlp.onrender.com/login",
+                  "https://server.dropstone.io/login",
                 ),
               );
             }

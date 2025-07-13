@@ -74,8 +74,8 @@ export const providers: Partial<Record<ModelProvider, ProviderInfo>> = {
         inputType: "text",
         key: "serverUrl",
         label: "Server URL",
-        placeholder: "https://dropstone-server-bjlp.onrender.com",
-        defaultValue: "https://dropstone-server-bjlp.onrender.com",
+        placeholder: "https://server.dropstone.io",
+        defaultValue: "https://server.dropstone.io",
         required: true,
       },
       {

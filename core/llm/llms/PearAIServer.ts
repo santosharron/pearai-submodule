@@ -46,11 +46,11 @@ class PearAIServer extends BaseLLM {
         const pearAIAuth = await this.getPearAICredentials();
         if (!pearAIAuth?.accessToken) {
           // User is not logged in to PearAI, don't allow Dropstone requests
-          throw new Error("PearAI authentication required: Please log in to PearAI to use Dropstone models. You can log in at http://localhost:3002/login");
+          throw new Error("PearAI authentication required: Please log in to PearAI to use Dropstone models. You can log in at https://www.dropstone.io/login");
         }
       } catch (error) {
         // If we can't check PearAI auth status, assume user is not logged in
-        throw new Error("PearAI authentication required: Please log in to PearAI to use Dropstone models. You can log in at http://localhost:3002/login");
+        throw new Error("PearAI authentication required: Please log in to PearAI to use Dropstone models. You can log in at https://www.dropstone.io/login");
       }
     }
 
@@ -72,7 +72,7 @@ class PearAIServer extends BaseLLM {
     }
 
     // At this point, no authentication token is available
-    throw new Error("Dropstone authentication required: No API key found. Please authenticate with the Dropstone server at https://dropstone-server-bjlp.onrender.com/login");
+    throw new Error("Dropstone authentication required: No API key found. Please authenticate with the Dropstone server at https://server.dropstone.io/login");
   }
 
   async *_streamChat(
@@ -115,13 +115,13 @@ class PearAIServer extends BaseLLM {
     } catch (error: any) {
       // Enhanced error handling for authentication issues
       if (error.message?.includes("403") || error.message?.includes("Forbidden") || error.message?.includes("Access denied")) {
-        throw new Error("Dropstone authentication required: Access denied. Please authenticate with the Dropstone server at https://dropstone-server-bjlp.onrender.com/login");
+        throw new Error("Dropstone authentication required: Access denied. Please authenticate with the Dropstone server at https://server.dropstone.io/login");
       } else if (error.message?.includes("401") || error.message?.includes("Unauthorized")) {
-        throw new Error("Dropstone authentication failed: Invalid or expired token. Please re-authenticate at https://dropstone-server-bjlp.onrender.com/login");
+        throw new Error("Dropstone authentication failed: Invalid or expired token. Please re-authenticate at https://server.dropstone.io/login");
       } else if (error.message?.includes("404")) {
-        throw new Error("Dropstone server endpoint not found. Please ensure the server is running on https://dropstone-server-bjlp.onrender.com");
+        throw new Error("Dropstone server endpoint not found. Please ensure the server is running on https://server.dropstone.io");
       } else if (error.message?.includes("ECONNREFUSED") || error.message?.includes("fetch")) {
-        throw new Error("Cannot connect to Dropstone server. Please ensure the server is running on https://dropstone-server-bjlp.onrender.com");
+        throw new Error("Cannot connect to Dropstone server. Please ensure the server is running on https://server.dropstone.io");
       }
       // Re-throw the original error if it's not a known authentication issue
       throw error;
@@ -165,13 +165,13 @@ class PearAIServer extends BaseLLM {
     } catch (error: any) {
       // Enhanced error handling for authentication issues
       if (error.message?.includes("403") || error.message?.includes("Forbidden") || error.message?.includes("Access denied")) {
-        throw new Error("Dropstone authentication required: Access denied. Please authenticate with the Dropstone server at https://dropstone-server-bjlp.onrender.com/login");
+        throw new Error("Dropstone authentication required: Access denied. Please authenticate with the Dropstone server at https://server.dropstone.io/login");
       } else if (error.message?.includes("401") || error.message?.includes("Unauthorized")) {
-        throw new Error("Dropstone authentication failed: Invalid or expired token. Please re-authenticate at https://dropstone-server-bjlp.onrender.com/login");
+        throw new Error("Dropstone authentication failed: Invalid or expired token. Please re-authenticate at https://server.dropstone.io/login");
       } else if (error.message?.includes("404")) {
-        throw new Error("Dropstone server endpoint not found. Please ensure the server is running on https://dropstone-server-bjlp.onrender.com");
+        throw new Error("Dropstone server endpoint not found. Please ensure the server is running on https://server.dropstone.io");
       } else if (error.message?.includes("ECONNREFUSED") || error.message?.includes("fetch")) {
-        throw new Error("Cannot connect to Dropstone server. Please ensure the server is running on https://dropstone-server-bjlp.onrender.com");
+        throw new Error("Cannot connect to Dropstone server. Please ensure the server is running on https://server.dropstone.io");
       }
       // Re-throw the original error if it's not a known authentication issue
       throw error;
@@ -200,13 +200,13 @@ class PearAIServer extends BaseLLM {
     } catch (error: any) {
       // Enhanced error handling for authentication issues
       if (error.message?.includes("403") || error.message?.includes("Forbidden") || error.message?.includes("Access denied")) {
-        throw new Error("Dropstone authentication required: Access denied. Please authenticate with the Dropstone server at https://dropstone-server-bjlp.onrender.com/login");
+        throw new Error("Dropstone authentication required: Access denied. Please authenticate with the Dropstone server at https://server.dropstone.io/login");
       } else if (error.message?.includes("401") || error.message?.includes("Unauthorized")) {
-        throw new Error("Dropstone authentication failed: Invalid or expired token. Please re-authenticate at https://dropstone-server-bjlp.onrender.com/login");
+        throw new Error("Dropstone authentication failed: Invalid or expired token. Please re-authenticate at https://server.dropstone.io/login");
       } else if (error.message?.includes("404")) {
-        throw new Error("Dropstone server endpoint not found. Please ensure the server is running on https://dropstone-server-bjlp.onrender.com");
+        throw new Error("Dropstone server endpoint not found. Please ensure the server is running on https://server.dropstone.io");
       } else if (error.message?.includes("ECONNREFUSED") || error.message?.includes("fetch")) {
-        throw new Error("Cannot connect to Dropstone server. Please ensure the server is running on https://dropstone-server-bjlp.onrender.com");
+        throw new Error("Cannot connect to Dropstone server. Please ensure the server is running on https://server.dropstone.io");
       }
       // Re-throw the original error if it's not a known authentication issue
       throw error;

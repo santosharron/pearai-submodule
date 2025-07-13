@@ -855,7 +855,7 @@ const commandsMap: (
     },
     "dropstone.login": async () => {
       // Open the login page at localhost:3002/login
-      await vscode.env.openExternal(vscode.Uri.parse("http://localhost:3002/login"));
+      await vscode.env.openExternal(vscode.Uri.parse("https://www.dropstone.io/login"));
     },
     "dropstone.logout": async () => {
       await extensionContext.secrets.delete("pearai-token");
@@ -882,7 +882,7 @@ const commandsMap: (
           config.models.forEach((model: any, index: number) => {
             console.log(`Checking model ${index}: ${model.title}, apiBase: ${model.apiBase}`);
 
-            if (model.apiBase === "https://dropstone-server-bjlp.onrender.com/v1") {
+            if (model.apiBase === "https://server.dropstone.io/v1") {
               console.log(`Clearing authentication for model ${index}: ${model.title}`);
 
               // Clear the Authorization header
