@@ -184,7 +184,7 @@ export class ContinueGUIWebviewViewProvider
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${panel.webview.cspSource} data:; style-src ${panel.webview.cspSource} 'unsafe-inline'; img-src ${panel.webview.cspSource} data: https:; script-src ${panel.webview.cspSource} 'nonce-${nonce}' 'unsafe-inline' ${inDevelopmentMode ? "'unsafe-eval'" : ""}; connect-src https://openrouter.ai https://api.requesty.ai https://us.i.posthog.com https://us-assets.i.posthog.com ${panel.webview.cspSource} https://server.trypear.ai https://server.dropstone.io http://127.0.0.1:3000 ${inDevelopmentMode ? "http://localhost:5173 ws://localhost:5173" : ""};">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${panel.webview.cspSource} data: https://fonts.googleapis.com https://fonts.gstatic.com; style-src ${panel.webview.cspSource} 'unsafe-inline' https://fonts.googleapis.com; img-src ${panel.webview.cspSource} data: https:; script-src ${panel.webview.cspSource} 'nonce-${nonce}' 'unsafe-inline' ${inDevelopmentMode ? "'unsafe-eval'" : ""}; connect-src https://openrouter.ai https://api.requesty.ai https://us.i.posthog.com https://us-assets.i.posthog.com ${panel.webview.cspSource} https://server.trypear.ai https://server.dropstone.io http://127.0.0.1:3000 ${inDevelopmentMode ? "http://localhost:5173 ws://localhost:5173" : ""};">
         <script nonce="${nonce}">
           const vscode = acquireVsCodeApi();
         </script>
