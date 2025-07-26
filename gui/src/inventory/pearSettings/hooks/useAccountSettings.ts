@@ -1,14 +1,27 @@
 import { useState, useContext, useEffect } from 'react';
 import { IdeMessengerContext } from "@/context/IdeMessenger";
 import { SERVER_URL } from "core/util/parameters";
+import { DROPSTONE_AUTH_URL } from "@/util/constants";
 import { Auth, AccountDetails, UsageDetails } from '../types';
+
+interface AgentUsageDetails {
+  agentActionsUsed: number;
+  agentActionsLimit: number;
+  agentActionsRemaining: number | 'unlimited';
+  isUnlimited: boolean;
+  lastReset: string | null;
+  nextReset: string;
+  planType: 'free' | 'premium';
+}
 
 export const useAccountSettings = () => {
   const [auth, setAuth] = useState<Auth | null>(null);
   const [showApiKey, setShowApiKey] = useState(false);
   const [usageDetails, setUsageDetails] = useState<UsageDetails | null>(null);
   const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(null);
+  const [agentUsageDetails, setAgentUsageDetails] = useState<AgentUsageDetails | null>(null);
   const [isUsageLoading, setIsUsageLoading] = useState(false);
+  const [isAgentUsageLoading, setIsAgentUsageLoading] = useState(false);
   const ideMessenger = useContext(IdeMessengerContext);
 
   // Helper to resolve a usable JWT token – prefer explicit authData but fall
@@ -47,6 +60,35 @@ export const useAccountSettings = () => {
       console.error("Error fetching usage data", err);
     } finally {
       setIsUsageLoading(false);
+    }
+  };
+
+  const fetchAgentUsageData = async (authData?: Auth) => {
+    const token = resolveToken(authData);
+    if (!token) {
+      console.warn("[useAccountSettings] No JWT token available for fetchAgentUsageData");
+      return;
+    }
+
+    setIsAgentUsageLoading(true);
+    try {
+      const response = await fetch(`${DROPSTONE_AUTH_URL}/api/agent/usage`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! {fetchAgentUsageData} Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setAgentUsageDetails(data);
+    } catch (err) {
+      console.error("Error fetching agent usage data", err);
+    } finally {
+      setIsAgentUsageLoading(false);
     }
   };
 
@@ -200,7 +242,7 @@ export const useAccountSettings = () => {
 
   const refreshData = async () => {
     const authData = await checkAuth();
-    await Promise.all([fetchUsageData(authData), fetchAccountData(authData)]);
+    await Promise.all([fetchUsageData(authData), fetchAccountData(authData), fetchAgentUsageData(authData)]);
   };
 
   useEffect(() => {
@@ -244,7 +286,9 @@ export const useAccountSettings = () => {
     setShowApiKey,
     usageDetails,
     accountDetails,
+    agentUsageDetails,
     isUsageLoading,
+    isAgentUsageLoading,
     handleLogin,
     handleLogout,
     clearUserData,
@@ -252,6 +296,7 @@ export const useAccountSettings = () => {
     checkAuth,
     fetchUsageData,
     fetchAccountData,
+    fetchAgentUsageData,
     refreshData,
   };
 };

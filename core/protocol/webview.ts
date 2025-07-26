@@ -11,6 +11,7 @@ export type ToWebviewFromIdeOrCoreProtocol = {
   pearAISignedOut: [undefined, void];
   switchModel: [string, void];
   pearaiOverlayOpened: [undefined, void];
+  clearDropstoneAuth: [undefined, void];
   addContextItem: [
     {
       historyIndex: number;

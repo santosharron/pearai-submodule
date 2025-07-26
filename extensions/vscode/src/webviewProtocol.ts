@@ -82,7 +82,7 @@ export class VsCodeWebviewProtocol
   _webviewListeners: Map<string, vscode.Disposable> = new Map();
 
   // Keep the last authenticated Dropstone token so newly created webviews can immediately hydrate.
-  private _dropstoneToken: string | undefined;
+  private _dropstoneToken: string | null | undefined;
   private _dropstoneUserInfo: any;
 
   get webviews(): Map<string, vscode.Webview> {
@@ -98,7 +98,7 @@ export class VsCodeWebviewProtocol
     const defaultViewKey = "dropstone.chatView";
 
     // Remove all entries except for the chat view
-    this._webviews.forEach((value, key) => {
+    this._webviews.forEach((_, key) => {
       if (key !== defaultViewKey) {
         this._webviews.delete(key);
       }
@@ -194,6 +194,78 @@ export class VsCodeWebviewProtocol
         return;
       }
 
+      if (msg.messageType === "auth_sync_logout") {
+        console.log('[VsCodeWebviewProtocol] received auth_sync_logout – clearing token and broadcasting clearDropstoneAuth');
+        this._dropstoneToken = null;
+        this._dropstoneUserInfo = null;
+
+        // Clear Dropstone tokens from config.json
+        try {
+          editConfigJson((config) => {
+            if (!config.models) {
+              return config;
+            }
+
+            config.models = config.models.map((m: any) => {
+              const isDropstoneModel =
+                (typeof m.apiBase === "string" && m.apiBase.includes("localhost:3000")) ||
+                (typeof m.title === "string" && m.title.toLowerCase().includes("dropstone"));
+
+              if (isDropstoneModel) {
+                m.apiKey = "";
+                // Clear authorization header
+                if (m.requestOptions?.headers) {
+                  delete m.requestOptions.headers.Authorization;
+                }
+              }
+              return m;
+            });
+
+            return config;
+          });
+
+          this.reloadConfig();
+          console.log('[VsCodeWebviewProtocol] Config reloaded after clearing token');
+        } catch (err) {
+          console.warn("Failed to clear Dropstone auth token from config.json:", err);
+        }
+
+        this.send("clearDropstoneAuth", undefined);
+        return;
+      }
+
+      // Handle simple token fetch request from newly mounted webviews
+      if (msg.messageType === "get_dropstone_token") {
+        console.log('[VsCodeWebviewProtocol] get_dropstone_token request received');
+        // If we haven't cached it yet, attempt to load from the current
+        // config.  reloadConfig might return a promise – we cast to any to
+        // support both sync/async callbacks.
+        try {
+          if (!this._dropstoneToken) {
+            console.log('[VsCodeWebviewProtocol] No cached token, loading from config');
+            const cfg: any = await (this.reloadConfig as any)();
+            const dropModel = cfg?.models?.find((m: any) =>
+              (typeof m.apiBase === "string" && m.apiBase.includes("localhost:3000")) ||
+              (typeof m.title === "string" && m.title.toLowerCase().includes("dropstone"))
+            );
+            console.log('[VsCodeWebviewProtocol] Model matched from config:', dropModel?.title);
+            if (dropModel?.apiKey) {
+              this._dropstoneToken = dropModel.apiKey;
+              console.log('[VsCodeWebviewProtocol] Token loaded from config');
+            }
+          }
+        } catch (err) {
+          console.warn("Failed to load Dropstone token from config:", err);
+        }
+        // Respond directly with token (or null) using same messageId so caller's IdeMessenger.request resolves
+        webView.postMessage({
+          messageType: msg.messageType,
+          messageId: msg.messageId,
+          data: { token: this._dropstoneToken, userInfo: this._dropstoneUserInfo },
+        });
+        return;
+      }
+
       const respond = (message: any) =>
         this.send(msg.messageType, message, msg.messageId);
 
@@ -245,6 +317,30 @@ export class VsCodeWebviewProtocol
                   vscode.env.openExternal(
                     vscode.Uri.parse(
                       'https://server.dropstone.io/login',
+                    ),
+                  );
+                } else if (selection === 'Show Logs') {
+                  vscode.commands.executeCommand(
+                    'workbench.action.toggleDevTools',
+                  );
+                }
+              });
+            return;
+          }
+
+          // Handle agent action limit exceeded errors
+          if (message.includes("Agent Action Limit Exceeded") || (message.includes("429") && message.includes("agent"))) {
+            vscode.window
+              .showWarningMessage(
+                message + " Upgrade to Premium for unlimited agent actions.",
+                'Upgrade to Premium',
+                'Show Logs',
+              )
+              .then((selection) => {
+                if (selection === 'Upgrade to Premium') {
+                  vscode.env.openExternal(
+                    vscode.Uri.parse(
+                      'https://dropstone.io/pricing',
                     ),
                   );
                 } else if (selection === 'Show Logs') {
@@ -420,38 +516,6 @@ export class VsCodeWebviewProtocol
                 }
               });
           }
-
-          // Handle simple token fetch request from newly mounted webviews
-          if (msg.messageType === "get_dropstone_token") {
-            console.log('[VsCodeWebviewProtocol] get_dropstone_token request received');
-            // If we haven't cached it yet, attempt to load from the current
-            // config.  reloadConfig might return a promise – we cast to any to
-            // support both sync/async callbacks.
-            try {
-              if (!this._dropstoneToken) {
-                console.log('[VsCodeWebviewProtocol] No cached token, loading from config');
-                const cfg: any = await (this.reloadConfig as any)();
-                const dropModel = cfg?.models?.find((m: any) =>
-                  (typeof m.apiBase === "string" && m.apiBase.includes("localhost:3000")) ||
-                  (typeof m.title === "string" && m.title.toLowerCase().includes("dropstone"))
-                );
-                console.log('[VsCodeWebviewProtocol] Model matched from config:', dropModel?.title);
-                if (dropModel?.apiKey) {
-                  this._dropstoneToken = dropModel.apiKey;
-                  console.log('[VsCodeWebviewProtocol] Token loaded from config');
-                }
-              }
-            } catch (err) {
-              console.warn("Failed to load Dropstone token from config:", err);
-            }
-            // Respond directly with token (or null) using same messageId so caller's IdeMessenger.request resolves
-            webView.postMessage({
-              messageType: msg.messageType,
-              messageId: msg.messageId,
-              data: { token: this._dropstoneToken, userInfo: this._dropstoneUserInfo },
-            });
-            return;
-          }
         }
       }
     });
@@ -501,7 +565,7 @@ export class VsCodeWebviewProtocol
 
       this.send(messageType, data, messageId, specificWebviews);
       const disposables: vscode.Disposable[] = [];
-      this.webviews.forEach((webview, name) => {
+      this.webviews.forEach((webview) => {
         const disposable = webview.onDidReceiveMessage(
           (msg: Message<ToWebviewProtocol[T][1]>) => {
             if (msg.messageId === messageId) {

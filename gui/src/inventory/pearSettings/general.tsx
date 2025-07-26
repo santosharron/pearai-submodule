@@ -22,7 +22,9 @@ const AccountSettings = () => {
     setShowApiKey,
     usageDetails,
     accountDetails,
+    agentUsageDetails,
     isUsageLoading,
+    isAgentUsageLoading,
     handleLogin,
     handleLogout,
     clearUserData,
@@ -205,6 +207,45 @@ const AccountSettings = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Agent Usage Display */}
+                {(isDropstoneLoggedIn || agentUsageDetails) && (
+                  <div className="flex flex-col w-full justify-center gap-3">
+                    <div className="border border-solid p-4 rounded-lg flex flex-col gap-3">
+                      <div className="font-normal font-['Inter']">Agent Actions</div>
+                      <div className="self-stretch justify-start items-baseline gap-1 inline-flex">
+                        <div className="text-2xl font-['Inter']">
+                          {isAgentUsageLoading ? (
+                            <LoadingPlaceholder />
+                          ) : agentUsageDetails?.isUnlimited ? (
+                            "∞"
+                          ) : (
+                            `${agentUsageDetails?.agentActionsUsed || 0}/${agentUsageDetails?.agentActionsLimit || 20}`
+                          )}
+                        </div>
+                        <div className="opacity-50 text-xs font-normal font-['Inter']">
+                          {agentUsageDetails?.isUnlimited ? "unlimited" : "used today"}
+                        </div>
+                      </div>
+                      {!agentUsageDetails?.isUnlimited && (
+                        <div data-svg-wrapper className="w-full">
+                          <Progress
+                            value={agentUsageDetails ? (agentUsageDetails.agentActionsUsed / agentUsageDetails.agentActionsLimit) * 100 : 0}
+                            className={`h-2 bg-input [&>div]:bg-button ${isAgentUsageLoading ? 'animate-pulse' : ''}`}
+                          />
+                        </div>
+                      )}
+                      <div className="opacity-50 text-xs font-normal font-['Inter']">
+                        {agentUsageDetails?.isUnlimited 
+                          ? "Premium Plan - Unlimited agent actions"
+                          : agentUsageDetails 
+                            ? `${typeof agentUsageDetails.agentActionsRemaining === 'number' ? agentUsageDetails.agentActionsRemaining : 0} actions remaining until tomorrow`
+                            : "Agent actions reset daily"
+                        }
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {usageDetails?.remaining_topup_credits && <div className="flex flex-col w-full justify-center gap-3">
                   <div className="border border-solid p-4 rounded-lg flex flex-col gap-3">
